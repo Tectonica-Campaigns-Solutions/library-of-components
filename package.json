@@ -1,0 +1,40 @@
+{
+  "name": "library-of-components",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Library of components",
+  "author": "Tectonica",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
+  },
+  "license": "0BSD",
+  "dependencies": {
+    "@gsap/react": "^2.1.0",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.4",
+    "gatsby": "^5.13.3",
+    "gatsby-plugin-image": "^3.13.1",
+    "gatsby-plugin-react-helmet": "^6.13.1",
+    "gatsby-plugin-sass": "^6.13.1",
+    "gatsby-plugin-sharp": "^5.13.1",
+    "gatsby-plugin-sitemap": "^6.13.1",
+    "gatsby-source-datocms": "^5.1.5",
+    "gatsby-source-filesystem": "^5.13.1",
+    "gatsby-transformer-sharp": "^5.13.1",
+    "gsap": "^3.12.5",
+    "react": "^18.2.0",
+    "react-datocms": "^4.1.3",
+    "react-dom": "^18.2.0",
+    "sass": "^1.71.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
