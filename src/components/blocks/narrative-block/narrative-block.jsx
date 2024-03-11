@@ -1,28 +1,38 @@
 import React from 'react';
-import AppImage from '../../image/image';
+import CustomImage from '../../image/custom-image';
 import ButtonList from '../button/button-list';
 import { isArray } from '../../../utils/array.utils';
 
 import './index.scss';
 
 const NarrativeBlock = ({ block }) => {
-  const { title, preTitle, textContent, buttons = [], image, imageAlignment = 'right' } = block;
+  const {
+    title,
+    preTitle,
+    backgroundColor,
+    content,
+    ctas = [],
+    image,
+    imageMobile,
+    alignmentImage = 'right',
+    video,
+  } = block;
 
   return (
-    <div className="narrative-block-component">
-      <div className={`row ${imageAlignment === 'left' ? 'flex-row-reverse' : ''}`}>
+    <div className={`narrative-block-component ${backgroundColor ? backgroundColor : ''}`}>
+      <div className={`row ${alignmentImage === 'left' ? 'flex-row-reverse' : ''}`}>
         <div className="col-lg-6">
           {preTitle && <h3>{preTitle}</h3>}
           {title && <h2>{title}</h2>}
 
-          {textContent && <div className="text" dangerouslySetInnerHTML={{ __html: textContent }} />}
+          {content && <div className="text" dangerouslySetInnerHTML={{ __html: content }} />}
 
-          {isArray(buttons) && <ButtonList buttons={buttons} />}
+          {isArray(ctas) && <ButtonList buttons={ctas} />}
         </div>
 
         {image && (
-          <div className={`col-lg-6 `}>
-            <AppImage image={image} objectFit="cover" />{' '}
+          <div className={`col-lg-6`}>
+            <CustomImage image={image} objectFit="cover" />
           </div>
         )}
       </div>

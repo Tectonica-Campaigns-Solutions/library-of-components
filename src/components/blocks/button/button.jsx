@@ -1,15 +1,15 @@
 import React from 'react';
-import { Link } from 'gatsby';
+import CustomLink from '../../utils/custom-link';
 
 import './index.scss';
 
 const Button = ({ block }) => {
-  const { label, to, isPrimaryStyle = false, external = false } = block;
+  const { title, link, isButton = false } = block;
 
   return (
-    <Link className={`button-block  ${isPrimaryStyle ? 'btn-primary' : ''}`} to={to} target={external ? '_blank' : ''}>
-      {label}
-    </Link>
+    <CustomLink className={`button-block  ${isButton ? 'btn-primary' : ''}`} to={link}>
+      {title}
+    </CustomLink>
   );
 };
 

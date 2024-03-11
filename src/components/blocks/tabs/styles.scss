@@ -1,0 +1,24 @@
+.tabs-block {
+  padding: 100px 0 150px 0;
+
+  h2 {
+    font-family: "Laca";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 61px;
+    line-height: 100%;
+    color: var(--ct-dark-blue);
+    margin-bottom: 25px;
+  }
+}
+
+@media screen and (max-width:768px) {
+  .tabs {
+    padding-top: 50px;
+    padding-bottom: 70px;
+
+    h2 {
+      font-size: 32px !important;
+    }
+  }
+}

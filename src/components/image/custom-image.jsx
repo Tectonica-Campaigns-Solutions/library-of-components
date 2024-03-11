@@ -1,7 +1,7 @@
 import React from 'react';
 import GlobalImage from './global-image';
 
-const AppImage = ({ image, ...props }) => {
+const CustomImage = ({ image, ...props }) => {
   return (
     <div className="image-wrapper">
       <GlobalImage image={Array.isArray(image) ? image[0] : image} {...props} />
@@ -16,4 +16,4 @@ const AppImage = ({ image, ...props }) => {
   );
 };
 
-export default AppImage;
+export default CustomImage;

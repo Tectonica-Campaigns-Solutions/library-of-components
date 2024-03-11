@@ -9,4 +9,4 @@ const CustomSeoDatoCMS = ({ seo, favicon = null, children }) => {
   );
 };
 
-export default SeoDatoCMS;
+export default CustomSeoDatoCMS;

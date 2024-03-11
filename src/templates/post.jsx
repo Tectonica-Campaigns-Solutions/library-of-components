@@ -18,23 +18,23 @@ const Page = ({ pageContext, data: { post, favicon } }) => {
 
 export default Page;
 
-export const PostQuery = graphql`
-  query PostById($id: String) {
-    favicon: datoCmsSite {
-      faviconMetaTags {
-        ...GatsbyDatoCmsFaviconMetaTags
-      }
-    }
-    post: datoCmsBasicPost(id: { eq: $id }) {
-      title
-      seo: seoMetaTags {
-        ...GatsbyDatoCmsSeoMetaTags
-      }
-      blocks {
-        ... on DatoCmsNarrativeBlock {
-          ...BlockNarrativeBlock
-        }
-      }
-    }
-  }
-`;
+// export const PostQuery = graphql`
+//   query PostById($id: String) {
+//     favicon: datoCmsSite {
+//       faviconMetaTags {
+//         ...GatsbyDatoCmsFaviconMetaTags
+//       }
+//     }
+//     post: datoCmsBasicPost(id: { eq: $id }) {
+//       title
+//       seo: seoMetaTags {
+//         ...GatsbyDatoCmsSeoMetaTags
+//       }
+//       blocks {
+//         ... on DatoCmsNarrativeBlock {
+//           ...BlockNarrativeBlock
+//         }
+//       }
+//     }
+//   }
+// `;
