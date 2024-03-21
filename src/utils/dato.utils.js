@@ -1,3 +1,5 @@
+import itemIcon from '../icons/item.svg';
+
 export const pathToModel = (model = null, slug = '') => {
   if (model === 'post') {
     return `/post/${slug}`;
@@ -37,4 +39,18 @@ export const getCtaUrl = (cta) => {
 
   const url = cta.link?.content ? '/' + cta.link?.content?.slug : cta.link?.url;
   return url;
+};
+
+// Sidebar
+export const getSidebarLinksFromBlocks = (blocks = []) => {
+  const utilsBlocks = ['DatoCmsSectionTitle'];
+
+  console.log({ blocks });
+  return blocks
+    .filter((b) => utilsBlocks.includes(b.__typename))
+    .map((b) => ({
+      id: b.id,
+      label: b.title,
+      icon: itemIcon,
+    }));
 };

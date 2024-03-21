@@ -1,7 +1,7 @@
 import React from 'react';
-import { usePagination, DOTS } from './hooks/usePagination';
+import { usePagination, DOTS } from './hooks/use-pagination';
 
-import './index.scss';
+import './styles.scss';
 
 export const PAGE_SIZE = 12;
 

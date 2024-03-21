@@ -21,6 +21,10 @@
     color: #000;
     background-color: var(--main-color);
   }
+
+  +.button-block {
+    margin-left: 1.5rem;
+  }
 }
 
 .button-list {

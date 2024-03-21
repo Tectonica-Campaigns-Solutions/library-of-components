@@ -1,0 +1,29 @@
+.app-footer {
+  padding: 50px 20px;
+  background-color: rgba(var(--bs-light-rgb));
+
+  .first-row,
+  .columns-row,
+  .extra-row {
+    margin-bottom: 1.5rem;
+  }
+
+  .extra-row {
+    .extra-links {
+      display: flex;
+      gap: 20px;
+
+      a {
+        color: var(--dark);
+        font-size: 18px;
+      }
+    }
+  }
+
+  .copyright {
+    p {
+      font-size: 13px;
+      font-style: italic;
+    }
+  }
+}

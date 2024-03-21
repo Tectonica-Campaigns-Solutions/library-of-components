@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'gatsby';
 import separatorIcon from '../../../Icons/breadcrumb-separator.svg';
 
-import './index.scss';
+import './styles.scss';
 
 const Breadcrumb = ({ breadcrumb = null, currentPage }) => {
   const renderSeparator = (index = 1) => {
