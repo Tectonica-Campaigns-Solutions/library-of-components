@@ -6,6 +6,7 @@ import Accordion from './accordion/accordion';
 import Button from './button/button';
 import CardGrid from './card/card-grid';
 import Tabs from './tabs/tabs';
+import Header from '../../layout/Header';
 
 export default function BlocksBuilder({ blocks }) {
   return (
@@ -26,6 +27,8 @@ export default function BlocksBuilder({ blocks }) {
             return <CardGrid block={block} key={block.id} />;
           case 'DatoCmsTab':
             return <Tabs block={block} key={block.id} />;
+          case 'DatoCmsNavbar':
+            return <Header />;
 
           default:
             return null;

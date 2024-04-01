@@ -1,6 +1,49 @@
 import { graphql } from 'gatsby';
 
 export const DatoCMS = graphql`
+  fragment MainNavigation on DatoCmsMenuItem {
+    title
+    externalUrl
+    isButton
+    content {
+      __typename
+      ... on DatoCmsBasicPage {
+        slug
+        model {
+          apiKey
+        }
+      }
+      ... on DatoCmsHomepage {
+        slug
+        model {
+          apiKey
+        }
+      }
+    }
+    treeChildren {
+      ... on DatoCmsMenuItem {
+        title
+        externalUrl
+        isButton
+        content {
+          __typename
+          ... on DatoCmsBasicPage {
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsHomepage {
+            slug
+            model {
+              apiKey
+            }
+          }
+        }
+      }
+    }
+  }
+
   fragment BlockNarrativeBlock on DatoCmsNarrativeBlock {
     __typename
     id: originalId

@@ -11,8 +11,8 @@ const Dashboard = ({ pageTitle, sidebarLinks = [], children }) => {
         </Link>
       </header>
 
-      <div className="container-fluid pt-4" style={{ overflowX: 'hidden' }}>
-        <div className="row h-100">
+      <div className="container-fluid pt-4" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
+        <div className="row" style={{ minHeight: 'inherit' }}>
           <Sidebar links={sidebarLinks} />
 
           <main className="col-md-9 ms-sm-auto col-lg-10 p-0 m-0">
