@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'gatsby';
-import separatorIcon from '../../../Icons/breadcrumb-separator.svg';
+import separatorIcon from '../../../icons/breadcrumb-separator.svg';
 
 import './styles.scss';
 
