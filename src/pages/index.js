@@ -8,15 +8,17 @@ import Footer from '../layout/footer/footer';
 import ListPaginated from '../components/blocks/pagination/list-paginated';
 import Breadcrumb from '../components/blocks/breadcrumbs/breadcrumbs';
 
-const IndexPage = ({ data: { homepage, footer, favicon } }) => {
+const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
   const { title, seo, blocks = [] } = homepage;
   const sidebarLinks = getSidebarLinksFromBlocks(blocks);
+
+  console.log({ navbar });
 
   return (
     <>
       <CustomSeoDatoCMS seo={seo} favicon={favicon} />
 
-      <Dashboard pageTitle={title} sidebarLinks={sidebarLinks}>
+      <Dashboard pageTitle={title} sidebarLinks={sidebarLinks} extraLinks={navbar.nodes}>
         <div className="px-4">
           <BlocksBuilder blocks={blocks} />
 
@@ -56,6 +58,27 @@ export const HomepageQuery = graphql`
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
+      }
+    }
+    navbar: allDatoCmsMenuItem(filter: { root: { eq: true } }, sort: { position: ASC }) {
+      nodes {
+        title
+        content {
+          ... on DatoCmsBasicPage {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsHomepage {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+        }
       }
     }
     homepage: datoCmsHomepage {

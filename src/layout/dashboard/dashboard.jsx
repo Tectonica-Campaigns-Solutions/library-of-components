@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from '../sidebar/sidebar';
 import { Link } from 'gatsby';
 
-const Dashboard = ({ pageTitle, sidebarLinks = [], children }) => {
+const Dashboard = ({ pageTitle, sidebarLinks = [], extraLinks = [], children }) => {
   return (
     <>
       <header class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
@@ -13,7 +13,7 @@ const Dashboard = ({ pageTitle, sidebarLinks = [], children }) => {
 
       <div className="container-fluid pt-4" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
         <div className="row" style={{ minHeight: 'inherit' }}>
-          <Sidebar links={sidebarLinks} />
+          <Sidebar links={sidebarLinks} extraLinks={extraLinks} />
 
           <main className="col-md-9 ms-sm-auto col-lg-10 p-0 m-0">
             <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom px-4">

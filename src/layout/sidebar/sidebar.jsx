@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'gatsby';
 import { ReactSVG } from 'react-svg';
 
-const Sidebar = ({ links = [] }) => {
+const Sidebar = ({ links = [], extraLinks = [] }) => {
   return (
     <nav className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div className="position-fixed pt-3 sidebar-fixed">
@@ -13,6 +13,17 @@ const Sidebar = ({ links = [] }) => {
                 <Link className="nav-link p-0 py-2 d-flex gap-2" to={`#${link.id}`}>
                   <ReactSVG src={link.icon} />
                   {link.label}
+                </Link>
+              </li>
+            );
+          })}
+          <hr />
+          {extraLinks.map((link, index) => {
+            return (
+              <li className="nav-item" key={`${link.to}-${index}`}>
+                <Link className="nav-link p-0 py-2 d-flex gap-2" to={`/${link.content?.slug}`}>
+                  <ReactSVG src={link.icon} />
+                  {link.title}
                 </Link>
               </li>
             );
