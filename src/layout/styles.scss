@@ -5,7 +5,7 @@
   z-index: 999;
   background-color: transparent;
   padding: 0 30px;
-  background-color: #333;
+  background-color: transparent;
 
   .dropdown {
     &-menu {
@@ -21,7 +21,7 @@
             font-weight: 400;
             font-size: 1.25rem;
             line-height: 130%;
-            color: var(--white);
+            color: #000;
             text-transform: none;
           }
         }
@@ -33,7 +33,7 @@
 
       &:focus,
       &:hover {
-        color: #d1d1d1;
+        color: #000;
         background-color: transparent;
       }
 
@@ -44,7 +44,7 @@
   }
 
   .nav-item:has(.nav-active-item) a {
-    color: var(--black, #ffffff) !important;
+    color: #000 !important;
   }
 
   &.home-nav {
@@ -53,7 +53,7 @@
 
     #navNav ul li.nav-item {
       .dropdown-button {
-        color: #fff;
+        color: #000;
       }
 
       a.nav-link {
@@ -86,7 +86,7 @@
           font-weight: 800;
           font-size: 25px;
           line-height: 130%;
-          color: #fff;
+          color: #000;
           transition: all 0.3s ease;
           text-decoration: none;
         }

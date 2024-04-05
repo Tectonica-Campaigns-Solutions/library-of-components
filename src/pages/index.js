@@ -12,17 +12,17 @@ const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
   const { title, seo, blocks = [] } = homepage;
   const sidebarLinks = getSidebarLinksFromBlocks(blocks);
 
-  console.log({ navbar });
+  const [activeItem, setActiveItem] = React.useState(0);
 
   return (
     <>
       <CustomSeoDatoCMS seo={seo} favicon={favicon} />
 
-      <Dashboard pageTitle={title} sidebarLinks={sidebarLinks} extraLinks={navbar.nodes}>
+      <Dashboard pageTitle={title} sidebarLinks={sidebarLinks} extraLinks={navbar.nodes} setActiveItem={setActiveItem}>
         <div className="px-4">
-          <BlocksBuilder blocks={blocks} />
+          <BlocksBuilder blocks={blocks} activeItem={activeItem} />
 
-          <ListPaginated
+          {/* <ListPaginated
             list={[1, 2, 3, 4, 5, 6]}
             customPageSize={3}
             renderItem={(item) => (
@@ -42,10 +42,10 @@ const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
             )}
           />
 
-          <Breadcrumb currentPage={title} />
+          <Breadcrumb currentPage={title} /> */}
         </div>
 
-        <Footer data={footer} />
+        {/* <Footer data={footer} /> */}
       </Dashboard>
     </>
   );

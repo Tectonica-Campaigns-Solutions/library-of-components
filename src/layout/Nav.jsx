@@ -62,7 +62,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
   return (
     <nav className={`custom-navbar navbar-expand-lg ${isHome ? 'home-nav' : ''} ${expanded ? 'expanded' : ''}`}>
       <CustomLink className="navbar-brand" to={'/'}>
-        <img src={'https://www.datocms-assets.com/120090/1711043456-logo.png'} alt="CSFFDM Logo" />
+        Logo
       </CustomLink>
 
       <button

@@ -8,27 +8,59 @@ import CardGrid from './card/card-grid';
 import Tabs from './tabs/tabs';
 import Header from '../../layout/Header';
 
-export default function BlocksBuilder({ blocks }) {
+export default function BlocksBuilder({ blocks, activeItem = 0 }) {
   return (
     <>
-      {blocks.map((block) => {
+      {blocks.map((block, index) => {
         switch (block.__typename) {
           case 'DatoCmsNarrativeBlock':
-            return <NarrativeBlock block={block} key={block.id} />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <NarrativeBlock block={block} />
+              </div>
+            );
           case 'DatoCmsAcordion':
-            return <Accordion block={block} key={block.id} />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Accordion block={block} />
+              </div>
+            );
           case 'DatoCmsDivider':
-            return <Divider key={block.id} />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Divider />
+              </div>
+            );
           case 'DatoCmsSectionTitle':
-            return <SectionTitle block={block} key={block.id} />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <SectionTitle block={block} />
+              </div>
+            );
           case 'DatoCmsCta':
-            return <Button block={block} key={block.id} />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Button block={block} />
+              </div>
+            );
           case 'DatoCmsCardGrid':
-            return <CardGrid block={block} key={block.id} />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <CardGrid block={block} />
+              </div>
+            );
           case 'DatoCmsTab':
-            return <Tabs block={block} key={block.id} />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Tabs block={block} />
+              </div>
+            );
           case 'DatoCmsNavbar':
-            return <Header />;
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Header />
+              </div>
+            );
 
           default:
             return null;
