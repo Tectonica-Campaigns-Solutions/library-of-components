@@ -2,24 +2,18 @@
   padding-top: 80px;
 
   h2 {
-    font-family: 'Laca';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 49px;
-    line-height: 100%;
-    color: var(--ct-dark-blue);
-    margin-bottom: 31px;
+    letter-spacing: -.025em;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .description {
-    font-family: 'Public Sans';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 25px;
-    line-height: 130%;
-    color: var(--ct-dark-blue);
-    opacity: 0.7;
-    margin-bottom: 49px;
+    color: hsl(240 3.8% 46.1%);
+    font-size: 1rem;
+    line-height: 1.25rem;
+    margin-bottom: 1rem;
   }
 
   .testimonial {

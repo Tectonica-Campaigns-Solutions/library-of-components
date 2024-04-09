@@ -51,6 +51,7 @@ export const DatoCMS = graphql`
     preTitle
     backgroundColor
     content
+    internalName
     image {
       url
       alt
@@ -116,6 +117,7 @@ export const DatoCMS = graphql`
   fragment BlockAccordionBlock on DatoCmsAcordion {
     __typename
     id: originalId
+    internalName
     items {
       ... on DatoCmsAcordionItem {
         id
@@ -141,6 +143,7 @@ export const DatoCMS = graphql`
     id: originalId
     title
     isButton
+    internalName
     link {
       ... on DatoCmsGlobalLink {
         id
@@ -163,6 +166,7 @@ export const DatoCMS = graphql`
     __typename
     id: originalId
     title
+    internalName
     items {
       ... on DatoCmsCard {
         id
@@ -202,9 +206,17 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockBreadcrumb on DatoCmsBreadcrumb {
+    __typename
+    id: originalId
+    internalName
+    title
+  }
+
   fragment BlockTabs on DatoCmsTab {
     __typename
     id: originalId
+    internalName
     items {
       ... on DatoCmsTabItem {
         id

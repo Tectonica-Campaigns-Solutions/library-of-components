@@ -1,0 +1,50 @@
+.app-sidebar {
+
+  .logo {
+    padding-left: .75rem;
+    padding-right: .75rem;
+    margin-bottom: 1.5rem;
+
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: rgb(9, 9, 11);
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(9, 9, 11, .1);
+  }
+
+  .app-nav {
+    padding-left: .5rem;
+    padding-right: .5rem;
+    gap: .25rem;
+    display: grid;
+  }
+
+  .nav-item {
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: calc(0.5rem - 2px);
+
+    padding-left: .75rem;
+    padding-right: .75rem;
+
+    font-size: .875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      margin-right: .5rem;
+    }
+
+    &.active {
+      color: #FFF;
+      background-color: rgba(24, 24, 27, 0.9);
+    }
+  }
+}

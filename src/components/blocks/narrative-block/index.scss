@@ -1,22 +1,43 @@
 .narrative-block-component {
-  padding: 50px 0;
+  padding: 50px 10px;
 
   h2 {
-    font-size: 49px;
-    text-transform: uppercase;
+    letter-spacing: -.025em;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 2rem;
+    margin-bottom: 2.5rem;
   }
 
   h3 {
-    font-size: 20px;
-    font-weight: 400;
-    text-transform: capitalize;
+    letter-spacing: -.025em;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1rem;
   }
 
   .text {
-    margin-bottom: 1rem;
+    color: hsl(240 3.8% 46.1%);
+    font-size: .875rem;
+    line-height: 1.25rem;
   }
 
   &.dark {
-    background-color: #bbbbbb;
+    background-color: rgba(24, 24, 27, 0.9);
+    border-radius: calc(0.5rem - 2px);
+
+    h2,
+    h3,
+    .text {
+      color: #fff;
+    }
+
+    .button-block {
+      color: #fff;
+
+      &:hover {
+        color: hsl(240 5.9% 10%);
+      }
+    }
   }
 }

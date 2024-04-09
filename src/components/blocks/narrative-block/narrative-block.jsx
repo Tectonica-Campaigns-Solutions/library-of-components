@@ -21,7 +21,7 @@ const NarrativeBlock = ({ block }) => {
   return (
     <div className={`narrative-block-component ${backgroundColor ? backgroundColor : ''}`}>
       <div className={`row ${alignmentImage === 'left' ? 'flex-row-reverse' : ''}`}>
-        <div className="col-lg-6">
+        <div className="col-lg-7">
           {preTitle && <h3>{preTitle}</h3>}
           {title && <h2>{title}</h2>}
 
@@ -31,7 +31,7 @@ const NarrativeBlock = ({ block }) => {
         </div>
 
         {image && (
-          <div className={`col-lg-6`}>
+          <div className={`col-lg-5`}>
             <CustomImage image={image} objectFit="cover" />
           </div>
         )}

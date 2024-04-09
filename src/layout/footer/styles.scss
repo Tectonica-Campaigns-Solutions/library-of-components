@@ -1,6 +1,7 @@
 .app-footer {
   padding: 50px 20px;
-  background-color: rgba(var(--bs-light-rgb));
+  background-color: rgba(248, 249, 250, 1);
+  border-radius: calc(.5rem - 2px);
 
   .first-row,
   .columns-row,

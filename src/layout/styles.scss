@@ -6,11 +6,22 @@
   background-color: transparent;
   padding: 0 30px;
   background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(248, 249, 250, 1);
+  border-radius: calc(.5rem - 2px);
+
+  .navbar-brand {
+    font-size: 2rem;
+    font-weight: 800;
+  }
 
   .dropdown {
     &-menu {
       padding: 20px;
-      border-radius: 5px !important;
+      border-radius: 5px;
+      background-color: rgba(248, 249, 250, 1);
 
       &.open {
         display: block;
@@ -43,35 +54,6 @@
     }
   }
 
-  .nav-item:has(.nav-active-item) a {
-    color: #000 !important;
-  }
-
-  &.home-nav {
-    background: transparent;
-    position: absolute;
-
-    #navNav ul li.nav-item {
-      .dropdown-button {
-        color: #000;
-      }
-
-      a.nav-link {
-        color: #fff;
-
-        &.btn {
-          background-color: transparent;
-          color: #fff;
-          border: 2px solid #fff;
-        }
-      }
-
-      a.dropdown-button {
-        color: #fff;
-      }
-    }
-  }
-
   .site-nav {
     justify-content: flex-end;
 
@@ -83,7 +65,7 @@
 
         a {
           font-style: normal;
-          font-weight: 800;
+          font-weight: 700;
           font-size: 25px;
           line-height: 130%;
           color: #000;

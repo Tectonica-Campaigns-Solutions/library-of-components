@@ -10,7 +10,7 @@ const Page = ({ pageContext, data: { page, navbar, favicon } }) => {
   return (
     <main>
       <CustomDatoCMS seo={seo} favicon={favicon} />
-      <Dashboard pageTitle={title} extraLinks={navbar.nodes}>
+      <Dashboard extraLinks={navbar.nodes}>
         <div className="px-4">
           <BlocksBuilder blocks={blocks} />
         </div>

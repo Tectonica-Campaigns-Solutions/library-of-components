@@ -7,8 +7,12 @@ import Button from './button/button';
 import CardGrid from './card/card-grid';
 import Tabs from './tabs/tabs';
 import Header from '../../layout/Header';
+import Breadcrumb from './breadcrumbs/breadcrumbs';
+import Footer from '../../layout/footer/footer';
+import ListPaginated from './pagination/list-paginated';
+import FormExample from './form-example/FormExample';
 
-export default function BlocksBuilder({ blocks, activeItem = 0 }) {
+export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
   return (
     <>
       {blocks.map((block, index) => {
@@ -59,6 +63,59 @@ export default function BlocksBuilder({ blocks, activeItem = 0 }) {
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <Header />
+              </div>
+            );
+
+          case 'DatoCmsBreadcrumb':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Breadcrumb currentPage={block.title} />
+              </div>
+            );
+
+          case 'DatoCmsHeader':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Header />
+              </div>
+            );
+
+          case 'DatoCmsFooter':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Footer data={footer} />
+              </div>
+            );
+
+          case 'DatoCmsListPaginated':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <ListPaginated
+                  list={[1, 2, 3, 4, 5, 6]}
+                  customPageSize={3}
+                  renderItem={(item, index) => (
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        width: '250px',
+                        height: '300px',
+                        backgroundColor: index % 2 === 0 ? 'rgba(78, 78, 78, 0.9)' : 'rgba(24, 24, 27, 0.9)',
+                        color: '#FFF',
+                        padding: '20px',
+                        marginRight: '1rem',
+                      }}
+                    >
+                      Element {item}
+                    </div>
+                  )}
+                />
+              </div>
+            );
+
+          case 'DatoCmsForm':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <FormExample />
               </div>
             );
 

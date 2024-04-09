@@ -4,9 +4,6 @@ import Dashboard from '../layout/dashboard/dashboard';
 import BlocksBuilder from '../components/blocks/blocks-builder';
 import CustomSeoDatoCMS from '../components/custom-seo-dato-cms';
 import { getSidebarLinksFromBlocks } from '../utils/dato.utils';
-import Footer from '../layout/footer/footer';
-import ListPaginated from '../components/blocks/pagination/list-paginated';
-import Breadcrumb from '../components/blocks/breadcrumbs/breadcrumbs';
 
 const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
   const { title, seo, blocks = [] } = homepage;
@@ -18,34 +15,16 @@ const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
     <>
       <CustomSeoDatoCMS seo={seo} favicon={favicon} />
 
-      <Dashboard pageTitle={title} sidebarLinks={sidebarLinks} extraLinks={navbar.nodes} setActiveItem={setActiveItem}>
+      <Dashboard
+        pageTitle={title}
+        sidebarLinks={sidebarLinks}
+        extraLinks={navbar.nodes}
+        activeItem={activeItem}
+        setActiveItem={setActiveItem}
+      >
         <div className="px-4">
-          <BlocksBuilder blocks={blocks} activeItem={activeItem} />
-
-          {/* <ListPaginated
-            list={[1, 2, 3, 4, 5, 6]}
-            customPageSize={3}
-            renderItem={(item) => (
-              <div
-                style={{
-                  display: 'inline-block',
-                  width: '250px',
-                  height: '300px',
-                  backgroundColor: '#333',
-                  color: '#FFF',
-                  padding: '20px',
-                  marginRight: '1rem',
-                }}
-              >
-                Element {item}
-              </div>
-            )}
-          />
-
-          <Breadcrumb currentPage={title} /> */}
+          <BlocksBuilder blocks={blocks} footer={footer} activeItem={activeItem} />
         </div>
-
-        {/* <Footer data={footer} /> */}
       </Dashboard>
     </>
   );
@@ -94,6 +73,23 @@ export const HomepageQuery = graphql`
         ...BlockCta
         ...BlockCardGrid
         ...BlockTabs
+        ...BlockBreadcrumb
+        ... on DatoCmsHeader {
+          __typename
+          internalName
+        }
+        ... on DatoCmsFooter {
+          __typename
+          internalName
+        }
+        ... on DatoCmsListPaginated {
+          __typename
+          internalName
+        }
+        ... on DatoCmsForm {
+          __typename
+          internalName
+        }
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags

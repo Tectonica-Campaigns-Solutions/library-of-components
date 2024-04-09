@@ -1,29 +1,33 @@
 .button-block {
-  display: inline-block;
-  color: var(--white);
-  background-color: var(--dark);
-  border: none;
-  border-radius: 0;
+  color: rgb(24, 24, 27);
+  border: 1px solid hsl(240 5.9% 90%);
   text-decoration: none;
-  padding: 15px 20px;
-  box-shadow: 4px 4px 0px 0px var(--main-color);
-
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 150%;
-
-  &.btn-primary {
-    color: var(--main-color);
-  }
+  font-weight: 500;
+  font-size: .885rem;
+  line-height: 1.25rem;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: calc(.5rem - 2px);
+  justify-content: center;
+  align-items: center;
+  height: 2.25rem;
+  display: inline-flex;
+  cursor: pointer;
 
   &:hover {
-    color: #000;
-    background-color: var(--main-color);
+    color: rgb(24, 24, 27);
+    background-color: hsl(240 5.9% 90%);
   }
 
-  +.button-block {
-    margin-left: 1.5rem;
+  &.btn-primary {
+    color: hsl(0 0% 98%);
+    background-color: hsl(240 5.9% 10%);
+
+    &:hover {
+      background-color: hsl(240, 3%, 25%);
+    }
   }
 }
 
