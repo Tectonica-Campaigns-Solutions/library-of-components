@@ -45,7 +45,8 @@ export const getCtaUrl = (cta) => {
 export const getSidebarLinksFromBlocks = (blocks = []) => {
   return blocks.map((b) => ({
     id: b.id,
-    label: b.internalName,
+    label: b.__typename === 'DatoCmsSectionTitle' ? b.title : b.internalName,
+    wrapper: b.__typename === 'DatoCmsSectionTitle',
     icon: itemIcon,
   }));
 };

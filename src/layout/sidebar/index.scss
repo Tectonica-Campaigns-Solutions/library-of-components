@@ -47,4 +47,14 @@
       background-color: rgba(24, 24, 27, 0.9);
     }
   }
+
+  .wrapper-label {
+    font-size: .875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+
+    &:not(&:first-of-type) {
+      margin-top: 1rem;
+    }
+  }
 }

@@ -14,6 +14,10 @@ const Sidebar = ({ links = [], extraLinks = [], activeItem, setActiveItem }) => 
           </Link>
 
           {links.map((link, index) => {
+            if (link.wrapper) {
+              return <span className="wrapper-label">{link.label}</span>;
+            }
+
             return (
               <li
                 className={`nav-item ${activeItem === index ? 'active' : ''}`}
