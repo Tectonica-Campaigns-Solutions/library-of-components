@@ -93,7 +93,7 @@ export const DatoCMS = graphql`
       ... on DatoCmsCta {
         id
         title
-        isButton
+        style
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -138,12 +138,20 @@ export const DatoCMS = graphql`
     title
   }
 
+  fragment BlockCtaGrid on DatoCmsCtaGrid {
+    __typename
+    id: originalId
+    internalName
+    test: items {
+      ...BlockCta
+    }
+  }
+
   fragment BlockCta on DatoCmsCta {
     __typename
     id: originalId
     title
-    isButton
-    internalName
+    style
     link {
       ... on DatoCmsGlobalLink {
         id
@@ -184,7 +192,7 @@ export const DatoCMS = graphql`
         cta {
           id
           title
-          isButton
+          style
           link {
             ... on DatoCmsGlobalLink {
               id
@@ -226,7 +234,7 @@ export const DatoCMS = graphql`
           ... on DatoCmsCta {
             id
             title
-            isButton
+            style
             link {
               ... on DatoCmsGlobalLink {
                 id

@@ -74,6 +74,7 @@ export const HomepageQuery = graphql`
         ...BlockCardGrid
         ...BlockTabs
         ...BlockBreadcrumb
+        ...BlockCtaGrid
         ... on DatoCmsHeader {
           __typename
           internalName

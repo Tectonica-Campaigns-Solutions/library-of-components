@@ -21,12 +21,27 @@
     background-color: hsl(240 5.9% 90%);
   }
 
-  &.btn-primary {
+  &.primary {
     color: hsl(0 0% 98%);
     background-color: hsl(240 5.9% 10%);
 
     &:hover {
       background-color: hsl(240, 3%, 25%);
+    }
+  }
+
+  &.outline {
+    border-radius: 0;
+    border: 2px solid;
+  }
+
+  &.icon {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    svg {
+      height: 20px;
     }
   }
 }

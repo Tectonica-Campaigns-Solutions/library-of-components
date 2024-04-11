@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles.scss';
+import Dropdown from './Dropdown';
 
 const FormExample = () => {
+  const [selected, setSelected] = useState(null);
+
   return (
     <div className="form-example">
       <div className="input">
@@ -67,6 +70,17 @@ const FormExample = () => {
             </div>
           </div>
         </fieldset>
+      </div>
+
+      <div className="full">
+        <Dropdown
+          title={'Example of dropdown'}
+          options={[
+            { label: 'Option 1', value: 1 },
+            { label: 'Option 2', value: 2 },
+            { label: 'Option 3', value: 3 },
+          ]}
+        />
       </div>
     </div>
   );
