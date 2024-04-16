@@ -127,6 +127,21 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockHubspotForm on DatoCmsTextHubspotForm {
+    __typename
+    id: originalId
+    internalName
+    title
+    description
+    hubspot {
+      id
+      internalName
+      formId
+      portalId
+      region
+    }
+  }
+
   fragment BlockNotification on DatoCmsNotification {
     __typename
     id: originalId

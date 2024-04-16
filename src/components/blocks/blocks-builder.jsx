@@ -13,6 +13,7 @@ import ListPaginated from './pagination/list-paginated';
 import FormExample from './form-example/FormExample';
 import ButtonList from './button/button-list';
 import Notification from './notification/notification';
+import HubspotForm from './hubspot-form/hubspot-form';
 
 export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
   return (
@@ -132,6 +133,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <Notification block={block} />
+              </div>
+            );
+
+          case 'DatoCmsTextHubspotForm':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <HubspotForm block={block} />
               </div>
             );
 
