@@ -12,6 +12,7 @@ import Footer from '../../layout/footer/footer';
 import ListPaginated from './pagination/list-paginated';
 import FormExample from './form-example/FormExample';
 import ButtonList from './button/button-list';
+import Notification from './notification/notification';
 
 export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
   return (
@@ -124,6 +125,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <ButtonList buttons={block.test} />
+              </div>
+            );
+
+          case 'DatoCmsNotification':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Notification block={block} />
               </div>
             );
 

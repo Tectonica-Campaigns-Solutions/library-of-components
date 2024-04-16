@@ -127,6 +127,13 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockNotification on DatoCmsNotification {
+    __typename
+    id: originalId
+    internalName
+    content
+  }
+
   fragment BlockDivider on DatoCmsDivider {
     __typename
     id: originalId

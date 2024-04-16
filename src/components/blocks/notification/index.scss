@@ -1,0 +1,47 @@
+.notification-block {
+  min-height: 32px;
+  padding: 9px 102px;
+  text-align: center;
+  color: var(--egp-dark);
+  background-color: #f9dd87;
+
+  @media (max-width: 600px) {
+    padding: 5px;
+  }
+
+  .information {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+
+    &-message {
+      padding-left: 4px;
+
+      * {
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    &-link {
+      margin-left: 4px;
+      color: var(--egp-dark-green);
+
+      &:hover {
+        color: var(--egp-darker-green);
+      }
+    }
+  }
+
+  .close-btn {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: -2px;
+  }
+}
