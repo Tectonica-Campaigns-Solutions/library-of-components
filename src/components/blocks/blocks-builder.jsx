@@ -13,8 +13,8 @@ import FormExample from './form-example/FormExample';
 import ButtonList from './button/button-list';
 import Notification from './notification/notification';
 import HubspotForm from './hubspot-form/hubspot-form';
-// import NarrativeBlock from './narrative-block/narrative-block';
-import { NarrativeBlock } from 'gatsby-components-library';
+import NarrativeBlock from './narrative-block/narrative-block';
+// import { NarrativeBlock } from 'gatsby-components-library';
 import HeroBasic from './hero-basic/HeroBasic';
 import HomeHero from './hero-home/HeroHome';
 
