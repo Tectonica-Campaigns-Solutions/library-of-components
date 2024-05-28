@@ -192,6 +192,33 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment HeroBasic on DatoCmsHeroBasic {
+    __typename
+    id: originalId
+    title
+    internalName
+    introduction
+    backgroundColor
+    image {
+      url
+      alt
+      gatsbyImageData
+    }
+  }
+
+  fragment HeroHome on DatoCmsHeroHome {
+    __typename
+    id: originalId
+    title
+    internalName
+    introduction
+    image {
+      url
+      alt
+      gatsbyImageData
+    }
+  }
+
   fragment BlockCardGrid on DatoCmsCardGrid {
     __typename
     id: originalId

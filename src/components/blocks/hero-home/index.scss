@@ -1,0 +1,135 @@
+.wrapper-hero {
+  background-color: #faf9f6;
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: contain;
+
+  .hero-home {
+    background-position: center;
+    height: calc(240px + 20vw);
+    position: relative;
+    z-index: 1;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    .content {
+      max-width: 790px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 10px;
+      padding: 40px 0;
+      position: relative;
+      z-index: 1;
+
+      h1 {
+        font-size: 55px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        margin: 0;
+        margin-bottom: 31px;
+
+        strong {
+          color: var(--pm-green);
+        }
+      }
+
+      .introduction {
+        margin: 0;
+        padding: 0;
+
+        * {
+          font-family: var(--secondary-font);
+          color: var(--pm-black);
+          font-size: 23px;
+          font-style: normal;
+          font-weight: 450;
+          line-height: 170%;
+        }
+      }
+    }
+  }
+}
+
+.alternative-hero {
+  min-height: calc(240px + 20vw);
+  background-color: rgba(250, 202, 179, 0.2);
+
+  .container {
+    display: grid;
+    gap: 136px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .content {
+    display: flex;
+    gap: 31px;
+    flex-direction: column;
+    padding: 100px 0 100px 0;
+
+    h1 {
+      color: var(--pm-orange);
+      font-size: 55px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 120%;
+
+      p {
+        margin: 0;
+      }
+
+      strong {
+        font-weight: 500;
+      }
+    }
+
+    .introduction {
+      font-size: 23px;
+      font-style: normal;
+      font-weight: 450;
+      line-height: 170%;
+      font-family: var(--secondary-font);
+    }
+
+    .custom-btn {
+      color: var(--pm-cream);
+      background-color: var(--pm-orange);
+      border-color: var(--pm-orange);
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .wrapper-hero {
+    .hero-home {
+      height: 300px;
+
+      .content {
+        top: 130px;
+        padding: 20px 24px;
+        padding-bottom: 5rem;
+        background-size: 120px;
+        max-width: 100%;
+
+        h1 {
+          font-size: 37px;
+          line-height: 115%;
+          margin-bottom: 10px;
+        }
+
+        .introduction {
+          margin-bottom: 35px;
+
+          * {
+            color: var(--black);
+            font-size: 19px;
+            line-height: 120%;
+          }
+        }
+      }
+    }
+  }
+}
