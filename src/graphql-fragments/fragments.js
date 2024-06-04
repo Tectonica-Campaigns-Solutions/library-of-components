@@ -305,4 +305,48 @@ export const DatoCMS = graphql`
       }
     }
   }
+
+  fragment BlockSlider on DatoCmsSlider {
+    __typename
+    id: originalId
+    title
+    internalName
+    items {
+      ... on DatoCmsCard {
+        id
+        title
+        introduction
+        backgroundColor
+        image {
+          url
+          alt
+          title
+          width
+          height
+          gatsbyImageData
+        }
+        cta {
+          id
+          title
+          style
+          link {
+            ... on DatoCmsGlobalLink {
+              id
+              label
+              externalUrl
+              content {
+                ... on DatoCmsHomepage {
+                  id
+                  slug
+                  model {
+                    apiKey
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 `;

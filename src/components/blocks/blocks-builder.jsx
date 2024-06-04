@@ -17,6 +17,8 @@ import NarrativeBlock from './narrative-block/narrative-block';
 // import { NarrativeBlock } from 'gatsby-components-library';
 import HeroBasic from './hero-basic/HeroBasic';
 import HomeHero from './hero-home/HeroHome';
+import Carousel from './carousel/Carousel';
+import Card from './card/card';
 
 export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
   return (
@@ -147,6 +149,19 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <HomeHero {...block} />
+              </div>
+            );
+          case 'DatoCmsSlider':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Carousel 
+                  items={block.items} 
+                  renderItem={(item) => (
+                    <div className="col-md-4" key={item.id}>
+                      <Card card={item} />
+                    </div>
+                  )}
+                />
               </div>
             );
           default:
