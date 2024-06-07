@@ -19,6 +19,7 @@ import HeroBasic from './hero-basic/HeroBasic';
 import HomeHero from './hero-home/HeroHome';
 import Carousel from './carousel/Carousel';
 import Card from './card/card';
+import ShareButtons from './share-buttons/share-buttons';
 
 export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
   return (
@@ -161,8 +162,16 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
                       <Card card={item} />
                     </div>
                   )}
+                  showDefaultActions={true}
                 />
               </div>
+            );
+          case 'DatoCmsSocialShare':
+            return (
+                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                  <h2 class="section-title-block">{block.title}</h2>
+                  <ShareButtons />
+                </div>
             );
           default:
             return null;

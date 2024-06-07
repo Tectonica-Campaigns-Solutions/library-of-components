@@ -224,6 +224,7 @@ export const DatoCMS = graphql`
     id: originalId
     title
     internalName
+    withFilters
     items {
       ... on DatoCmsCard {
         id
@@ -348,5 +349,12 @@ export const DatoCMS = graphql`
         }
       }
     }
+  }
+
+  fragment BlockSocialShare on DatoCmsSocialShare {
+    __typename
+    id: originalId
+    internalName
+    title
   }
 `;

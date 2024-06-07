@@ -7,7 +7,7 @@ import './styles.scss';
 
 const CarouselActions = ({ onPrevSlide, onNextSlide }) => {
   return (
-    <div className="carousel-actions">
+    <div className="carousel-actions my-2 justify-content-center">
       <span onClick={onPrevSlide}>
         <ReactSVG src={prevIcon} />
       </span>

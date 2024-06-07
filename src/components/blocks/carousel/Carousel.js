@@ -24,7 +24,7 @@ const Carousel = ({ customRef, items = [], renderItem, showDefaultActions = fals
   }, []);
 
   const responsiveSettings = [
-    { breakpoint: 1250, settings: { slidesToShow: 2 } },
+    { breakpoint: 1250, settings: { slidesToShow: 3 } },
     {
       breakpoint: 1000,
       settings: {
@@ -55,7 +55,7 @@ const Carousel = ({ customRef, items = [], renderItem, showDefaultActions = fals
         ref={customRef || sliderRef}
         arrows={false}
         infinite={false}
-        slidesToShow={2}
+        slidesToShow={3}
         className={'carousel'}
         responsive={responsiveSettings}
         {...rest}
