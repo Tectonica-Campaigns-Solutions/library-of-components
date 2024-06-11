@@ -99,6 +99,7 @@ export const HomepageQuery = graphql`
         }
         ...BlockSlider
         ...BlockSocialShare
+        ...BlockNarrativeBlockAdvanced
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags

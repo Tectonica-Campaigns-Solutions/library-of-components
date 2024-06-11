@@ -2,11 +2,12 @@ import React from 'react';
 import ButtonList from '../button/button-list';
 import CustomLink from '../../utils/custom-link';
 import CustomImage from '../../image/custom-image';
+import Tags from '../tags/tags';
 
 import './styles.scss';
 
 const Card = ({ card }) => {
-  const { title, introduction, image, cta = [], backgroundColor } = card;
+  const { title, introduction, image, cta = [], backgroundColor, tags = [] } = card;
   const hasLink = Array.isArray(cta) && cta.length > 0;
 
   const renderContent = () => {
@@ -25,6 +26,10 @@ const Card = ({ card }) => {
           </div>
 
           {hasLink && <ButtonList buttons={cta} />}
+
+          {tags.length > 0 && 
+            <Tags tags={tags} />
+          }
         </div>
       </>
     );

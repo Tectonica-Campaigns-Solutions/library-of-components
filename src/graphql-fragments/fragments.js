@@ -114,6 +114,75 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockNarrativeBlockAdvanced on DatoCmsNarrativeBlockAdvanced {
+    __typename
+    id: originalId
+    title
+    preTitle
+    backgroundColor
+    content
+    internalName
+    images {
+      url
+      alt
+      title
+    }
+    carrouselSettingsAutoloop
+    carrouselSettingsArrows
+    carrouselSettingsNavigation
+    alignmentImage
+    video {
+      preview {
+        url
+        alt
+        title
+        width
+        height
+        gatsbyImageData
+      }
+      source {
+        title
+        url
+        title
+        provider
+        providerUid
+        thumbnailUrl
+        width
+        height
+      }
+    }
+    ctas {
+      ... on DatoCmsCta {
+        id
+        title
+        style
+        link {
+          ... on DatoCmsGlobalLink {
+            id
+            label
+            externalUrl
+            content {
+              ... on DatoCmsHomepage {
+                id
+                slug
+                model {
+                  apiKey
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    embeddedForm {
+      ... on DatoCmsEmbedIframe {
+        id
+        code
+      }
+    }
+    displayForm
+  }
+
   fragment BlockAccordionBlock on DatoCmsAcordion {
     __typename
     id: originalId
@@ -259,6 +328,10 @@ export const DatoCMS = graphql`
               }
             }
           }
+        }
+        tags { 
+          id
+          name
         }
       }
     }

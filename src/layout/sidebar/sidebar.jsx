@@ -7,7 +7,7 @@ import './index.scss';
 const Sidebar = ({ links = [], extraLinks = [], activeItem, setActiveItem }) => {
   return (
     <nav className="app-sidebar col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div className="position-fixed pt-3 sidebar-fixed">
+      <div className="pt-3 sidebar-fixed">
         <ul className="app-nav">
           <Link to="/" className="logo">
             Library of Component

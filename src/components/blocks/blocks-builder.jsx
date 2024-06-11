@@ -14,6 +14,7 @@ import ButtonList from './button/button-list';
 import Notification from './notification/notification';
 import HubspotForm from './hubspot-form/hubspot-form';
 import NarrativeBlock from './narrative-block/narrative-block';
+import NarrativeBlockAdvanced from './narrative-block-advanced/narrative-block-advanced';
 // import { NarrativeBlock } from 'gatsby-components-library';
 import HeroBasic from './hero-basic/HeroBasic';
 import HomeHero from './hero-home/HeroHome';
@@ -30,6 +31,12 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <NarrativeBlock block={block} />
+              </div>
+            );
+          case 'DatoCmsNarrativeBlockAdvanced':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <NarrativeBlockAdvanced block={block} />
               </div>
             );
           case 'DatoCmsAcordion':
