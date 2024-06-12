@@ -21,7 +21,7 @@ export const NarrativeBlockAdvanced = ({ block }) => {
     alignmentImage = 'right',
     video,
     embeddedForm,
-    displayForm
+    displayForm,
   } = block;
 
   const [isMobile, setIsMobile] = useState(false);
@@ -68,46 +68,47 @@ export const NarrativeBlockAdvanced = ({ block }) => {
   console.log('block', embeddedForm);
 
   return (
-    <div className={`narrative-block-component ${alignmentImage === 'background' ? 'align-background' : ''}`} style={ {backgroundColor: backgroundColor} }>
-      <div className={`row ${alignmentImage === 'left' ? 'flex-row-reverse' : ''}`}>
-        <div className={`${alignmentImage === 'background' ? 'col-lg-12' : 'col-lg-7'}`}>
-          {preTitle && <h3>{preTitle}</h3>}
-          {title && <h2>{title}</h2>}
+    <div className="narrative-block-component-advanced">
+      <div
+        className={`narrative-block-component ${alignmentImage === 'background' ? 'align-background' : ''}`}
+        style={{ backgroundColor: backgroundColor }}
+      >
+        <div className={`row ${alignmentImage === 'left' ? 'flex-row-reverse' : ''}`}>
+          <div className={`${alignmentImage === 'background' ? 'col-lg-12' : 'col-lg-7'}`}>
+            {preTitle && <h3>{preTitle}</h3>}
+            {title && <h2>{title}</h2>}
 
-          {content && <div className="text" dangerouslySetInnerHTML={{ __html: content }} />}
+            {content && <div className="text" dangerouslySetInnerHTML={{ __html: content }} />}
 
-          {isArray(ctas) && <ButtonList buttons={ctas} />}
-        </div>
-
-        {images && (
-            <div className={`${alignmentImage === 'background' ? 'background-image' : 'col-lg-5'}`}>
-                <Slider
-                    arrows={carrouselSettingsArrows}
-                    infinite={true}
-                    autoplay={carrouselSettingsAutoloop}
-                    dots={carrouselSettingsNavigation}
-                    slidesToShow={1}
-                    className={'carousel'}
-                    responsive={responsiveSettings}
-                >
-                    {images.map((image, index) =><img
-                        key={image.id}
-                        src={image.url}
-                        alt={image.alt}
-                        title={image.title}
-                    />)}
-                </Slider>
+            {isArray(ctas) && <ButtonList buttons={ctas} />}
           </div>
-        )}
-        
-      </div>
-      { displayForm && embeddedForm && (
+
+          {images && (
+            <div className={`${alignmentImage === 'background' ? 'background-image' : 'col-lg-5'}`}>
+              <Slider
+                arrows={carrouselSettingsArrows}
+                infinite={true}
+                autoplay={carrouselSettingsAutoloop}
+                dots={carrouselSettingsNavigation}
+                slidesToShow={1}
+                className={'carousel'}
+                responsive={responsiveSettings}
+              >
+                {images.map((image, index) => (
+                  <img key={image.id} src={image.url} alt={image.alt} title={image.title} />
+                ))}
+              </Slider>
+            </div>
+          )}
+        </div>
+        {displayForm && embeddedForm && (
           <div
             key={embeddedForm.id}
             className="embedded-form"
             dangerouslySetInnerHTML={{ __html: embeddedForm.code }}
           />
         )}
+      </div>
     </div>
   );
 };
