@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CustomLink from '../components/utils/custom-link';
+import MegaMenu from './mega-menu/mega-menu';
 
 import './styles.scss';
 
@@ -40,6 +41,24 @@ const DropdownItem = ({ link, label, children }) => {
   );
 };
 
+const MegamenuItem = ({ link, label, location }) => {
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const mouseEnter = () => setDropdownOpen(true);
+  const mouseLeave = () => setDropdownOpen(false);
+
+  return (
+    <li className="nav-item position-relative" onMouseDown={mouseEnter} onMouseLeave={mouseLeave}>
+      <CustomLink to={link} type="button" aria-label="Expand" aria-expanded="false" data-bs-toggle="dropdown">
+        {label}
+      </CustomLink>
+
+      <MegaMenu open={dropdownOpen} link={link} pageSlug={location?.pathname} />
+    </li>
+  );
+};
+
 export default function Nav({ navData, location, hideLinks = false }) {
   const navLinks = navData.nodes;
   const [expanded, setExpanded] = useState(false);
@@ -60,6 +79,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
   );
 
   return (
+    <>
     <nav className={`custom-navbar navbar-expand-lg ${isHome ? 'home-nav' : ''} ${expanded ? 'expanded' : ''}`}>
       <CustomLink className="navbar-brand" to={'/'}>
         Logo
@@ -81,12 +101,22 @@ export default function Nav({ navData, location, hideLinks = false }) {
       {!hideLinks && (
         <div className={`${expanded ? 'show' : ''} collapse navbar-collapse site-nav`} id="navNav">
           <ul className={`navbar-nav mr-auto`}>
-            {groupedLinks?.withoutIcon?.map((link) =>
-              link.treeChildren.length === 0 ? (
-                <LinkItem key={link.id} link={link} label={link?.title} isButton={link?.isButton} />
-              ) : (
-                <DropdownItem key={link.id} link={link} label={link?.title} children={link?.treeChildren} />
-              )
+            {groupedLinks?.withoutIcon?.map((link) => {
+              console.log(link);
+              if (link.megaMenu !== null) {
+                return ( <MegamenuItem key={link.id} link={link} location={location} label={link?.title} isButton={link?.isButton} /> )
+              } else if (link.treeChildren.length > 0) {
+                return ( <DropdownItem key={link.id} link={link} label={link?.title} children={link?.treeChildren} /> )
+              } else {
+                return ( <LinkItem key={link.id} link={link} label={link?.title} isButton={link?.isButton} /> )
+              }
+
+              // link.treeChildren.length === 0 ? (
+              //   <LinkItem key={link.id} link={link} label={link?.title} isButton={link?.isButton} />
+              // ) : (
+              //   <DropdownItem key={link.id} link={link} label={link?.title} children={link?.treeChildren} />
+              // )
+            }
             )}
 
             {/* Final icons */}
@@ -101,5 +131,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
         </div>
       )}
     </nav>
+    
+    </>
   );
 }

@@ -65,8 +65,6 @@ export const NarrativeBlockAdvanced = ({ block }) => {
     },
   ];
 
-  console.log('block', embeddedForm);
-
   return (
     <div className="narrative-block-component-advanced">
       <div

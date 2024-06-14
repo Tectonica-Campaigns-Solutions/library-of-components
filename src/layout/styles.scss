@@ -56,12 +56,16 @@
 
   .site-nav {
     justify-content: flex-end;
+    height: 90px;
 
     ul {
       align-items: center;
+      height: 100%;
 
       li.nav-item {
         margin-right: 2.813rem;
+        align-content: center;
+        height: 100%;
 
         a {
           font-style: normal;
@@ -75,8 +79,8 @@
 
         &:hover {
           border-bottom: 2px solid #e76a16;
-          margin-top: 2px;
-          margin-bottom: 10px;
+          /*margin-top: 2px;
+          margin-bottom: 10px;*/
 
           a {
             color: #e76a16 !important;
@@ -267,6 +271,8 @@
   .navbar-expand-lg .navbar-nav .dropdown-menu {
     border-radius: 0px 4px 4px 4px;
     border: none;
+    top: unset;
+    height: auto;
   }
 }
 
@@ -280,6 +286,56 @@
     border: none;
     text-align: center;
   }
+
+  .custom-navbar {
+
+    .site-nav ul {
+      align-items: start;
+    }
+
+    .dropdown-item {
+      text-align: left;
+    }
+
+    .dropdown-menu.open {
+      box-shadow: none;
+    }
+  }
+
+  .custom-navbar.navbar-expand-lg.expanded {
+
+    .show.collapse.navbar-collapse.site-nav {
+      height: 100vh;
+      overflow: scroll;
+      overflow-x: hidden;
+      padding-bottom: 8rem !important;
+      position: absolute;
+      top: 90px;
+    }
+
+    .mega-menu.open {
+      position: relative;
+      width: 100%;
+      top: unset;
+      box-shadow: none;
+    }
+
+    .site-nav ul li.nav-item {
+      margin-right: 0;
+      width: 100%;
+      height: auto;
+    }
+
+  }
+
+  .mega-menu .main-content {
+
+    .primary-item, .sub-nav-items {
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
+
 }
 
 @media screen and (max-width: 1200px) and (min-width: 992px) {

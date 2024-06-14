@@ -9,6 +9,9 @@ import './styles.scss';
 const Carousel = ({ customRef, items = [], renderItem, showDefaultActions = false, ...rest }) => {
   const sliderRef = useRef();
   const [isMobile, setIsMobile] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slidesToShow = 3;
+  const [page, setPage] = useState(slidesToShow);
 
   useEffect(() => {
     const handleResize = () => {
@@ -55,14 +58,17 @@ const Carousel = ({ customRef, items = [], renderItem, showDefaultActions = fals
         ref={customRef || sliderRef}
         arrows={false}
         infinite={false}
-        slidesToShow={3}
+        slidesToShow={slidesToShow}
         className={'carousel'}
         responsive={responsiveSettings}
+        afterChange={(slide) => { setCurrentSlide(slide); setPage(slide + slidesToShow)} }
         {...rest}
       >
         {items.map((item, index) => renderItem(item, index))}
       </Slider>
-
+      
+      <div className='text-center mt-2'><span>{page}</span> / {items.length}</div>
+      
       {((!customRef && showDefaultActions) || isMobile) && (
         <CarouselActions
           onPrevSlide={() => {

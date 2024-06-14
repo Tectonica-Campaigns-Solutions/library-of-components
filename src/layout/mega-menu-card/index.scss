@@ -1,4 +1,8 @@
 .mega-menu-card {
+  background-color: rgb(248, 249, 250);
+  padding-left: 1rem;
+  padding-right: 1rem;
+
   .meta {
     font-family: 'Public Sans';
     font-style: normal;
@@ -22,7 +26,6 @@
   }
 
   .image-wrapper {
-    height: 180px;
     margin-bottom: 16px;
 
     &>div {

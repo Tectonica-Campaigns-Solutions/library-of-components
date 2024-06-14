@@ -1,7 +1,7 @@
 import React from 'react';
-import ImageWrapper from '../../Image/ImageWrapper';
-import Link from '../../Link/Link';
-import { pathToModel } from '../../../../utils';
+import CustomImage from '../../components/image/custom-image';
+import CustomLink from '../../components/utils/custom-link';
+import { pathToModel } from '../../utils/dato.utils';
 
 import './index.scss';
 
@@ -13,12 +13,16 @@ const MegaMenuCard = ({ meta, title, image, description, slug, model }) => {
       {meta && <span className="meta">{meta}</span>}
 
       {title && (
-        <Link to={linkPath}>
+        <CustomLink to={linkPath}>
           <h2>{title}</h2>
-        </Link>
+        </CustomLink>
       )}
 
-      {image && <ImageWrapper image={image} />}
+      {image && (
+        <div className="image">
+          <CustomImage image={image} />
+        </div>
+      )}
 
       {description && <div className="description" dangerouslySetInnerHTML={{ __html: description }} />}
     </div>

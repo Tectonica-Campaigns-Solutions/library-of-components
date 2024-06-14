@@ -42,6 +42,86 @@ export const DatoCMS = graphql`
         }
       }
     }
+    megaMenu {
+      ... on DatoCmsMegaMenu {
+        tabs {
+          ... on DatoCmsMegaMenuTab {
+            title
+            description
+            groupLinks {
+              title
+              links {
+                ... on DatoCmsGlobalLink {
+                  label
+                  externalUrl
+                  content {
+                    ... on DatoCmsBasicPage {
+                      slug
+                      model {
+                        apiKey
+                      }
+                    }
+                    ... on DatoCmsPost {
+                      slug
+                      model {
+                        apiKey
+                      }
+                    }
+                  }
+                }
+              }
+              mainLink {
+                ... on DatoCmsGlobalLink {
+                  label
+                  externalUrl
+                  content {
+                    ... on DatoCmsBasicPage {
+                      slug
+                      model {
+                        apiKey
+                      }
+                    }
+                    ... on DatoCmsPost {
+                      slug
+                      model {
+                        apiKey
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            labelHighlight
+            highlightedContent {
+              ... on DatoCmsBasicPage {
+                title
+                # summary: description
+                slug
+                model {
+                  apiKey
+                }
+              }
+              ... on DatoCmsPost {
+                title
+                slug
+                introduction
+                mainImage {
+                  url
+                  alt
+                  title
+                  width
+                  height
+                  gatsbyImageData
+                }
+                model {
+                  apiKey
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   fragment BlockNarrativeBlock on DatoCmsNarrativeBlock {
@@ -300,6 +380,8 @@ export const DatoCMS = graphql`
         title
         introduction
         backgroundColor
+        date
+        typeOfCard
         image {
           url
           alt
@@ -329,7 +411,7 @@ export const DatoCMS = graphql`
             }
           }
         }
-        tags { 
+        tags {
           id
           name
         }

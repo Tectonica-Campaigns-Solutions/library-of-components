@@ -17,7 +17,8 @@
   }
 }
 
-.card {
+.card, a.card {
+  color: var(--dark);
   display: block;
   text-decoration: none;
   min-height: 450px;
@@ -45,7 +46,7 @@
   }
 
   .card-content {
-    height: 100%;
+    /*height: 100%;*/
     padding: 30px;
     display: flex;
     flex-direction: column;
@@ -82,6 +83,46 @@
         color: var(--dark);
       }
     }
+  }
+
+  &.dark {
+    background-color: var(--dark);
+    border-color: var(--dark);
+
+    .card-content {
+      h3, .introduction {
+        color: white;
+      }
+
+      .icon {
+        span {
+          color: white;
+        }
+      }
+    }
+
+    .button-block {
+      color: white;
+
+      &:hover {
+        color: var(--dark);
+      }
+    }
+  }
+
+  .post, .event, .category { height: 100%; }
+  
+  .category {
+    .image {
+      width: 80px;
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1rem;
+    }
+  }
+
+  .button-block {
+    width: 100%;
   }
 }
 

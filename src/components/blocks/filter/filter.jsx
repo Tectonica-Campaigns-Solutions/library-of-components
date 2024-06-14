@@ -67,11 +67,16 @@ const Filter = ({ items, gridColumns }) => {
 
       <div className="content-tool">
         <div className="row gy-4">
-          {filteredItems.map((item) => (
+          {filteredItems.length > 0 && filteredItems.map((item) => (
             <div className={`col-lg-${12 / gridColumns}`} key={item.id}>
               <Card card={item} />
             </div>
           ))}
+          {filteredItems.length === 0 && (
+            <div className="col">
+              <p>No results found</p>
+            </div>
+          )}
         </div>
       </div>
     </>

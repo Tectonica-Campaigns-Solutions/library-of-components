@@ -10,13 +10,7 @@ const CardGrid = ({ block }) => {
 
   const numColumns = items.length % 3 === 0 ? 3 : items.length % 2 === 0 ? 2 : 3;
 
-  // for testing filtering purposes
-  const itemsWithYear = items.map((item) => ({
-    ...item,
-    date: '2024/01/01',
-  }));
-
-  const [filteredItems, setFilteredItems] = useState(itemsWithYear);
+  const [filteredItems, setFilteredItems] = useState(items);
 
   return (
     <section className="card-grid-block">
