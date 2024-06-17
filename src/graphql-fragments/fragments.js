@@ -473,6 +473,8 @@ export const DatoCMS = graphql`
         title
         introduction
         backgroundColor
+        typeOfCard
+        date
         image {
           url
           alt

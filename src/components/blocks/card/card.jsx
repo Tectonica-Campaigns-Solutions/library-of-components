@@ -28,7 +28,7 @@ const Card = ({ card }) => {
             <div className="date">{formatDate(date)}</div>
           )}
 
-          <div>
+          <div className='card-data'>
             {title && <h3>{title}</h3>}
             {introduction && (
               <div
@@ -51,13 +51,13 @@ const Card = ({ card }) => {
 
   if (hasLink) {
     return (
-      <CustomLink to={cta.link} className={`card ${backgroundColor ? backgroundColor : ''}`}>
+      <CustomLink to={cta.link} className={`card ${backgroundColor ? backgroundColor : '' } `}>
         {renderContent()}
       </CustomLink>
     );
   }
 
-  return <div className={`card ${backgroundColor ? backgroundColor : ''}`}>{renderContent()}</div>;
+  return <div className={`card ${backgroundColor ? backgroundColor : ''} ${image ? 'has-image' : 'no-image' }`}>{renderContent()}</div>;
 };
 
 export default Card;
