@@ -9,7 +9,7 @@ import Button from '../button/button';
 import './styles.scss';
 
 const Card = ({ card }) => {
-  const { title, introduction, image, cta, backgroundColor, tags = [], date, typeOfCard } = card;
+  const { title, introduction, image, cta, backgroundColor, tags = [], date, typeOfCard, displayCta } = card;
   const hasLink = cta !== null;
 
   const renderContent = () => {
@@ -38,7 +38,7 @@ const Card = ({ card }) => {
             )}
           </div>
 
-          {cta && 
+          {cta && displayCta && 
           <div className='mt-2'>
             <Button block={cta} />
           </div>

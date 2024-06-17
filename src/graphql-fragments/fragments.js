@@ -382,6 +382,7 @@ export const DatoCMS = graphql`
         backgroundColor
         date
         typeOfCard
+        displayCta
         image {
           url
           alt
@@ -402,6 +403,18 @@ export const DatoCMS = graphql`
               content {
                 ... on DatoCmsHomepage {
                   id
+                  slug
+                  model {
+                    apiKey
+                  }
+                }
+                ... on DatoCmsBasicPage {
+                  slug
+                  model {
+                    apiKey
+                  }
+                }
+                ... on DatoCmsPost {
                   slug
                   model {
                     apiKey
@@ -495,6 +508,18 @@ export const DatoCMS = graphql`
               content {
                 ... on DatoCmsHomepage {
                   id
+                  slug
+                  model {
+                    apiKey
+                  }
+                }
+                ... on DatoCmsBasicPage {
+                  slug
+                  model {
+                    apiKey
+                  }
+                }
+                ... on DatoCmsPost {
                   slug
                   model {
                     apiKey

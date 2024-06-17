@@ -103,7 +103,7 @@
     border-color: var(--dark);
 
     .card-content {
-      h3, .introduction {
+      h3, .introduction, .date {
         color: white;
       }
 
@@ -144,6 +144,11 @@
     .card-content {
       height: 100%;
       justify-content: start;
+      .tags {
+        position: relative;
+        top: unset;
+        margin-bottom: 0.5rem;
+      }
       .icon {
         margin-bottom: 0;
       }
