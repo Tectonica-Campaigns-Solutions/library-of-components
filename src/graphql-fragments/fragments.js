@@ -5,6 +5,7 @@ export const DatoCMS = graphql`
     title
     externalUrl
     isButton
+    isSearchButton
     content {
       __typename
       ... on DatoCmsBasicPage {

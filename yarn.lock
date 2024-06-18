@@ -1159,6 +1159,29 @@
   resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-14.1.2.tgz#33162fdbf427891122a96030f806ca9a9cf0e844"
   integrity sha512-XbgZ7op5uyYYszipgQg/bYobF4b+llXyTwS8hISRniQY9xKESz544eP2OGmRc4J3MHx29M7Vmx7TVA/IK65giQ==
 
+"@datocms/cma-client-browser@^3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@datocms/cma-client-browser/-/cma-client-browser-3.3.2.tgz#df3562af1ec6b6b8a8facc2ac11b1e6234ca9cca"
+  integrity sha512-DezUl/8Jvup9XjQdnw3CQcihai/Jt+X/Rm1FlqvH/8VhHgik03PNEd+Z3fpjacCP6vJXie03OFJHbW0274iSNA==
+  dependencies:
+    "@datocms/cma-client" "^3.3.2"
+    "@datocms/rest-client-utils" "^3.3.2"
+
+"@datocms/cma-client@^3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@datocms/cma-client/-/cma-client-3.3.2.tgz#7018fccd102e8f6fe5d4160abdfbd29aa45773af"
+  integrity sha512-4RIaPrbtqfBECkeo8AiuhAI6ZEU80Gtdfbvbj2cynNqPTeNlO67RP1/BPiyi7AverdUQnLTau18d+vp0EGw0Ww==
+  dependencies:
+    "@datocms/rest-client-utils" "^3.3.2"
+    uuid "^9.0.1"
+
+"@datocms/rest-client-utils@^3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@datocms/rest-client-utils/-/rest-client-utils-3.3.2.tgz#f239269262b8227e42b8c3a590e72078c85b9ca3"
+  integrity sha512-bCmGFtdpQaOuHS4WaFeZQMAWJm5L0XGTf+VvDi3uPMyMElnDdC1yHnrxV16AswDo6BmnDAOw1Ru5HCw97ikfKg==
+  dependencies:
+    async-scheduler "^1.4.4"
+
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.4.0.tgz#a23514e8fb9af1269d5f7788aa556798d61c6b59"
@@ -1578,6 +1601,42 @@
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@msgpackr-extract/msgpackr-extract-win32-x64/-/msgpackr-extract-win32-x64-3.0.2.tgz#0f164b726869f71da3c594171df5ebc1c4b0a407"
   integrity sha512-O+6Gs8UeDbyFpbSh2CPEz/UOrrdWPTBYNblZK5CxxLisYt4kGX3Sc+czffFonyjiGSq3jWLwJS/CCJc7tBr4sQ==
+
+"@mux/mux-player-react@*":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@mux/mux-player-react/-/mux-player-react-2.7.0.tgz#93d052a4329d47579ce990c1022594c83f959cdf"
+  integrity sha512-QPPNowWVWXeg4vXwLzrqhCrQxLaUvR8je9ZPTtKpHzDwv705c7fiNLUlC7Dk0jF/eYTCQoGn3dBSjF9Yv1a0zQ==
+  dependencies:
+    "@mux/mux-player" "2.7.0"
+    "@mux/playback-core" "0.24.0"
+    prop-types "^15.7.2"
+
+"@mux/mux-player@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@mux/mux-player/-/mux-player-2.7.0.tgz#c7ea7601aa12d20534235a9304455bdc2e9a06a9"
+  integrity sha512-qml+HZGCcRjQoI+IlesmG8NvL87BQt/Tbcjnbm7xn9/Tas7cV21w8dOecsRCJxggB4YDbROHJzTKIjsvvtDW9g==
+  dependencies:
+    "@mux/mux-video" "0.19.0"
+    "@mux/playback-core" "0.24.0"
+    media-chrome "~3.2.1"
+
+"@mux/mux-video@0.19.0":
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/@mux/mux-video/-/mux-video-0.19.0.tgz#7a73fe546ffd3d83ff81d8296be2daa7df34e570"
+  integrity sha512-PVFOd5ZZ9uWjiKpNveQv9yIzTFLsztVxFcH9ysw6/hsJOSrj0gHGu7J5VFnXxB20yjZ5Dk3EYanYdIMARYFsyw==
+  dependencies:
+    "@mux/playback-core" "0.24.0"
+    castable-video "~1.0.6"
+    custom-media-element "~1.2.3"
+    media-tracks "~0.3.0"
+
+"@mux/playback-core@0.24.0":
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/@mux/playback-core/-/playback-core-0.24.0.tgz#3561ee4a572af92d795a0ae6e26c74af4b6c13b4"
+  integrity sha512-OFBSlBwCvwb8fhOVLXwydbY/HQNMbp/pz9w/gGJxntt7ugup65UNrJlwuYzRs0wILnSmms6Oav4bWkjDKwYHIA==
+  dependencies:
+    hls.js "~1.5.8"
+    mux-embed "~5.2.0"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
@@ -2925,6 +2984,11 @@ astral-regex@^2.0.0:
   resolved "https://registry.yarnpkg.com/astral-regex/-/astral-regex-2.0.0.tgz#483143c567aeed4785759c0865786dc77d7d2e31"
   integrity sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==
 
+async-scheduler@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/async-scheduler/-/async-scheduler-1.4.4.tgz#68004f38483eb78457268d22c8fa02c90cd22202"
+  integrity sha512-KVWlF6WKlUGJA8FOJYVVk7xDm3PxITWXp9hTeDsXMtUPvItQ2x6g2rIeNAa0TtAiiWvHJqhyA3wo+pj0rA7Ldg==
+
 async@1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
@@ -3471,6 +3535,13 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
+
+castable-video@~1.0.6:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/castable-video/-/castable-video-1.0.10.tgz#503cba7927e3bedb2b1c38707cc194aee1ae3e22"
+  integrity sha512-tJgUv+8/zE191y8EKojvB0eKIyKA9obIttd6Wpdm6x2qBmuwZ7wDgzVCSmf5cN2v9jBiuu0s7O5poz8a8cFX/w==
+  dependencies:
+    custom-media-element "~1.3.2"
 
 chalk@^2.4.2:
   version "2.4.2"
@@ -4163,6 +4234,16 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
+custom-media-element@~1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/custom-media-element/-/custom-media-element-1.2.3.tgz#43ea828bea7d6b334530da1d031739250bab900c"
+  integrity sha512-xr9Hbrslkjm1fapJP5hL98pySeZmNepBSefQS/XTxynamqPTfRBK5MnhReMOiAj8xvJApVPrVnlYxIrknay8jg==
+
+custom-media-element@~1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/custom-media-element/-/custom-media-element-1.3.2.tgz#392c8e2910ebaa3c405c49a49ca51586329946bd"
+  integrity sha512-nDyMobZgoAVqz7mA8rsn7i1/6bjH6N9ab2Ge7LyyNxrvxAq7zQJPg8i3u2VH7wEB+Y1T1+C3/h1G774/D+ZLag==
+
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -4264,12 +4345,19 @@ datocms-listen@^0.1.9:
   dependencies:
     "@0no-co/graphql.web" "^1.0.1"
 
-datocms-structured-text-generic-html-renderer@^2.0.1, datocms-structured-text-generic-html-renderer@^2.1.12:
+datocms-structured-text-generic-html-renderer@^2.1.12:
   version "2.1.12"
   resolved "https://registry.yarnpkg.com/datocms-structured-text-generic-html-renderer/-/datocms-structured-text-generic-html-renderer-2.1.12.tgz#4275f3025b9b3215305586780666e0a315c608a0"
   integrity sha512-1Vj/24iaKUcNm3xG9kD09EHz00rIVIQVD6RSGNBvi+BQPPJGdGfFUcPME9xQv3KZrcw/pyNkAkBXO2q4wqEslw==
   dependencies:
     datocms-structured-text-utils "^2.1.12"
+
+datocms-structured-text-generic-html-renderer@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/datocms-structured-text-generic-html-renderer/-/datocms-structured-text-generic-html-renderer-4.0.1.tgz#618fb80e099eb0db4af064b49489eb33cd4a5ee4"
+  integrity sha512-umEWXyBHP3fo1YsOL7AhFxWrmb2LNxiRV26+C8NMkwoBZ/RbF9+dBaGIBv1D/NeasCjq560hBdm7jqChxxIi/A==
+  dependencies:
+    datocms-structured-text-utils "^4.0.1"
 
 datocms-structured-text-to-plain-text@^2.0.1:
   version "2.1.12"
@@ -4286,10 +4374,17 @@ datocms-structured-text-utils@^1.0.13, datocms-structured-text-utils@^1.0.15, da
   dependencies:
     array-flatten "^3.0.0"
 
-datocms-structured-text-utils@^2.0.1, datocms-structured-text-utils@^2.1.12:
+datocms-structured-text-utils@^2.1.12:
   version "2.1.12"
   resolved "https://registry.yarnpkg.com/datocms-structured-text-utils/-/datocms-structured-text-utils-2.1.12.tgz#8950a2fdbebcddf1981b526cf013758a737d88fb"
   integrity sha512-tZtiPN/sEjl+4Z6igojPdap6Miy0Z6VO6Afor3vcyY/8PIwKVGbTsdd5trD+skWPCPRZVNzKpfYoAVziXWTL8Q==
+  dependencies:
+    array-flatten "^3.0.0"
+
+datocms-structured-text-utils@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/datocms-structured-text-utils/-/datocms-structured-text-utils-4.0.1.tgz#616f6c76c133adae256a5793df8148be2d5f3297"
+  integrity sha512-2rK4bZfzKpdKw2AZhnnD043QkGOUaJDOUGPrQHo5w4hvU4jTBGGxoaTg4KIb3Q5Yo+XUFvreb+U0+86xdh7I+Q==
   dependencies:
     array-flatten "^3.0.0"
 
@@ -6533,6 +6628,11 @@ header-case@^2.0.4:
     capital-case "^1.0.4"
     tslib "^2.0.3"
 
+hls.js@~1.5.8:
+  version "1.5.11"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.5.11.tgz#3941347df454983859ae8c75fe19e8818719a826"
+  integrity sha512-q3We1izi2+qkOO+TvZdHv+dx6aFzdtk3xc1/Qesrvto4thLTT/x/1FK85c5h1qZE4MmMBNgKg+MIW8nxQfxwBw==
+
 hosted-git-info@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-3.0.8.tgz#6e35d4cc87af2c5f816e4cb9ce350ba87a3f370d"
@@ -7681,6 +7781,16 @@ meant@^1.0.3:
   resolved "https://registry.yarnpkg.com/meant/-/meant-1.0.3.tgz#67769af9de1d158773e928ae82c456114903554c"
   integrity sha512-88ZRGcNxAq4EH38cQ4D85PM57pikCwS8Z99EWHODxN7KBY+UuPiqzRTtZzS8KTXO/ywSWbdjjJST2Hly/EQxLw==
 
+media-chrome@~3.2.1:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/media-chrome/-/media-chrome-3.2.3.tgz#581d3cc0ea4994838884ac3d769b95cc50954c1e"
+  integrity sha512-DlOlyciT5YgOn5cwGvLWz+OVUVgvyxsRLtfpIQJ11F10+Ix7tDjEqMWsnkL81be9iD3uh/SN35TIk2pRvvEAig==
+
+media-tracks@~0.3.0:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/media-tracks/-/media-tracks-0.3.3.tgz#cca72bd791dcb76cd6427dfa6b2baa25601ea192"
+  integrity sha512-9P2FuUHnZZ3iji+2RQk7Zkh5AmZTnOG5fODACnjhCVveX1McY3jmCRHofIEI+yTBqplz7LXy48c7fQ3Uigp88w==
+
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
@@ -7914,6 +8024,11 @@ mute-stream@0.0.8, mute-stream@~0.0.4:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
+
+mux-embed@~5.2.0:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/mux-embed/-/mux-embed-5.2.1.tgz#b2f1d8e7653d7386ff298beabbdf5d4940707baf"
+  integrity sha512-NukHw91xeEVDBeXVDBpi2BvXNix7gSuvdtyvOph5yR/ROn1hHbTlcYWoKQyCyJX9frsF00UROEul+S8wPzU3aQ==
 
 nanoid@^3.3.7:
   version "3.3.7"
@@ -9094,17 +9209,17 @@ rc@1.2.8, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-datocms@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/react-datocms/-/react-datocms-4.1.3.tgz#666e8330c83d638708c53a78da8c14bf472aa8b2"
-  integrity sha512-60LfzlPbud7M9cDXzTaZy6sgCBHGWM/WEN4pZxlvnRRW74tOAAKjSgcGIJ5WIC/I+iiXvHp//75TQg0Y7+ozZQ==
+react-datocms@^6.0.6:
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/react-datocms/-/react-datocms-6.0.6.tgz#f0c4cff4a8f316a00730095500daa00e5fd4138d"
+  integrity sha512-zTxt48WLnmjTfAKIc4MAi/sd4+r2VB750TS6mfJ7XNb3hWzYrNzEZrriT6XbcntXGOMDdtB7rPJBjj8I1zn2CQ==
   dependencies:
+    "@mux/mux-player-react" "*"
     datocms-listen "^0.1.9"
-    datocms-structured-text-generic-html-renderer "^2.0.1"
-    datocms-structured-text-utils "^2.0.1"
+    datocms-structured-text-generic-html-renderer "^4.0.1"
+    datocms-structured-text-utils "^4.0.1"
     react-intersection-observer "^9.4.3"
     react-string-replace "^1.1.0"
-    universal-base64 "^2.1.0"
     use-deep-compare-effect "^1.6.1"
 
 react-dev-utils@^12.0.1:
@@ -10767,11 +10882,6 @@ unist-util-visit@^2.0.3:
     unist-util-is "^4.0.0"
     unist-util-visit-parents "^3.0.0"
 
-universal-base64@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/universal-base64/-/universal-base64-2.1.0.tgz#511af92b3a07340fc2647036045aadb3bedcc320"
-  integrity sha512-WeOkACVnIXJZr/qlv7++Rl1zuZOHN96v2yS5oleUuv8eJOs5j9M5U3xQEIoWqn1OzIuIcgw0fswxWnUVGDfW6g==
-
 universalify@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.1.tgz#168efc2180964e6386d061e094df61afe239b18d"
@@ -10883,6 +10993,11 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
+uuid@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 v8-compile-cache@^2.0.3:
   version "2.4.0"
