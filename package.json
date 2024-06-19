@@ -16,6 +16,7 @@
   },
   "license": "0BSD",
   "dependencies": {
+    "@datocms/cli": "^2.0.5",
     "@datocms/cma-client-browser": "^3.3.2",
     "@gsap/react": "^2.1.0",
     "axios": "^1.6.7",
