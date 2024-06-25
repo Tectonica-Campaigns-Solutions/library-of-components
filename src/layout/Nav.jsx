@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
 import CustomLink from '../components/utils/custom-link';
+import MegaMenu from './mega-menu/mega-menu';
+import SearchEngine from '../components/blocks/search/search-engine';
+import searchIcon from '../icons/icon-search.svg';
 
 import './styles.scss';
 
-const LinkItem = ({ link, label, isButton }) => {
+const LinkItem = ({ link, label, isButton, isSearchButton, setSearchEngineVisible }) => {
   return (
     <li className="nav-item">
+      { isSearchButton == false && (
       <CustomLink to={link} className={isButton ? 'btn btn-primary' : ''}>
         {label}
       </CustomLink>
+      )}
+
+      { isSearchButton && ( 
+        <CustomLink onClick={() => setSearchEngineVisible(true)} className={'btn btn-search'}>
+          <img src={searchIcon} alt="Search icon" />
+        </CustomLink> 
+      )}
     </li>
   );
 };
@@ -40,9 +51,28 @@ const DropdownItem = ({ link, label, children }) => {
   );
 };
 
+const MegamenuItem = ({ link, label, location }) => {
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const mouseEnter = () => setDropdownOpen(true);
+  const mouseLeave = () => setDropdownOpen(false);
+
+  return (
+    <li className="nav-item position-relative" onMouseDown={mouseEnter} onMouseLeave={mouseLeave}>
+      <CustomLink to={link} type="button" aria-label="Expand" aria-expanded="false" data-bs-toggle="dropdown">
+        {label}
+      </CustomLink>
+
+      <MegaMenu open={dropdownOpen} link={link} pageSlug={location?.pathname} />
+    </li>
+  );
+};
+
 export default function Nav({ navData, location, hideLinks = false }) {
   const navLinks = navData.nodes;
   const [expanded, setExpanded] = useState(false);
+  const [searchEngineVisible, setSearchEngineVisible] = useState(false);
 
   const handleNavClick = () => setExpanded(!expanded);
   const isHome = location ? location?.pathname === '/' : false;
@@ -60,6 +90,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
   );
 
   return (
+    <>
     <nav className={`custom-navbar navbar-expand-lg ${isHome ? 'home-nav' : ''} ${expanded ? 'expanded' : ''}`}>
       <CustomLink className="navbar-brand" to={'/'}>
         Logo
@@ -81,12 +112,16 @@ export default function Nav({ navData, location, hideLinks = false }) {
       {!hideLinks && (
         <div className={`${expanded ? 'show' : ''} collapse navbar-collapse site-nav`} id="navNav">
           <ul className={`navbar-nav mr-auto`}>
-            {groupedLinks?.withoutIcon?.map((link) =>
-              link.treeChildren.length === 0 ? (
-                <LinkItem key={link.id} link={link} label={link?.title} isButton={link?.isButton} />
-              ) : (
-                <DropdownItem key={link.id} link={link} label={link?.title} children={link?.treeChildren} />
-              )
+            {groupedLinks?.withoutIcon?.map((link) => {
+              console.log(link);
+              if (link.megaMenu !== null) {
+                return ( <MegamenuItem key={link.id} link={link} location={location} label={link?.title} isButton={link?.isButton} /> )
+              } else if (link.treeChildren.length > 0) {
+                return ( <DropdownItem key={link.id} link={link} label={link?.title} children={link?.treeChildren} /> )
+              } else {
+                return ( <LinkItem key={link.id} link={link} label={link?.title} isButton={link?.isButton} isSearchButton={link?.isSearchButton} setSearchEngineVisible={setSearchEngineVisible} /> )
+              }
+            }
             )}
 
             {/* Final icons */}
@@ -100,6 +135,10 @@ export default function Nav({ navData, location, hideLinks = false }) {
           </ul>
         </div>
       )}
+
+      <SearchEngine searchEngineVisible={searchEngineVisible} setSearchEngineVisible={setSearchEngineVisible} />
     </nav>
+    
+    </>
   );
 }

@@ -56,12 +56,16 @@
 
   .site-nav {
     justify-content: flex-end;
+    height: 90px;
 
     ul {
       align-items: center;
+      height: 100%;
 
       li.nav-item {
         margin-right: 2.813rem;
+        align-content: center;
+        height: 100%;
 
         a {
           font-style: normal;
@@ -74,12 +78,43 @@
         }
 
         &:hover {
-          border-bottom: 2px solid #e76a16;
-          margin-top: 2px;
-          margin-bottom: 10px;
 
           a {
             color: #e76a16 !important;
+            border-bottom: 2px solid #e76a16;
+          }
+
+          .mega-menu {
+
+            .sub-nav-items {
+              a {
+                border-bottom: none;
+              }
+            }
+          }
+        }
+
+        .dropdown-link {
+          border-bottom: none!important;
+          text-decoration: none;
+        }
+
+        .btn-primary {
+          color: #fff!important;
+
+          &:hover {
+            color: #fff!important;
+            background-color: #000;
+            border-bottom: none
+          }
+        }
+
+        .btn-search {
+          cursor: pointer;
+          padding: 0;
+
+          &:hover {
+            border-bottom: none
           }
         }
 
@@ -267,6 +302,8 @@
   .navbar-expand-lg .navbar-nav .dropdown-menu {
     border-radius: 0px 4px 4px 4px;
     border: none;
+    top: unset;
+    height: auto;
   }
 }
 
@@ -280,6 +317,61 @@
     border: none;
     text-align: center;
   }
+
+  .custom-navbar {
+
+    .site-nav ul {
+      align-items: start;
+    }
+
+    .dropdown-item {
+      text-align: left;
+    }
+
+    .dropdown-menu.open {
+      box-shadow: none;
+    }
+  }
+
+  .custom-navbar.navbar-expand-lg.expanded {
+
+    .show.collapse.navbar-collapse.site-nav {
+      height: 100vh;
+      overflow: scroll;
+      overflow-x: hidden;
+      padding-bottom: 8rem !important;
+      position: absolute;
+      top: 90px;
+    }
+
+    .mega-menu.open {
+      position: relative;
+      width: 100%;
+      top: unset;
+      box-shadow: none;
+    }
+
+    .site-nav ul li.nav-item {
+      margin-right: 0;
+      width: 100%;
+      height: auto;
+    }
+
+  }
+
+  .mega-menu .main-content {
+
+    .primary-item, .sub-nav-items {
+      padding-right: 0;
+      padding-left: 0;
+
+      a {
+        border-bottom: none;
+        text-decoration: none;
+      }
+    }
+  }
+
 }
 
 @media screen and (max-width: 1200px) and (min-width: 992px) {

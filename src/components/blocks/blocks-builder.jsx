@@ -14,9 +14,13 @@ import ButtonList from './button/button-list';
 import Notification from './notification/notification';
 import HubspotForm from './hubspot-form/hubspot-form';
 import NarrativeBlock from './narrative-block/narrative-block';
+import NarrativeBlockAdvanced from './narrative-block-advanced/narrative-block-advanced';
 // import { NarrativeBlock } from 'gatsby-components-library';
 import HeroBasic from './hero-basic/HeroBasic';
 import HomeHero from './hero-home/HeroHome';
+import Carousel from './carousel/Carousel';
+import Card from './card/card';
+import ShareButtons from './share-buttons/share-buttons';
 
 export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
   return (
@@ -27,6 +31,12 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <NarrativeBlock block={block} />
+              </div>
+            );
+          case 'DatoCmsNarrativeBlockAdvanced':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <NarrativeBlockAdvanced block={block} />
               </div>
             );
           case 'DatoCmsAcordion':
@@ -148,6 +158,27 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <HomeHero {...block} />
               </div>
+            );
+          case 'DatoCmsSlider':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <Carousel 
+                  items={block.items} 
+                  renderItem={(item) => (
+                    <div className="col-md-4" key={item.id}>
+                      <Card card={item} />
+                    </div>
+                  )}
+                  showDefaultActions={true}
+                />
+              </div>
+            );
+          case 'DatoCmsSocialShare':
+            return (
+                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                  <h2 class="section-title-block">{block.title}</h2>
+                  <ShareButtons />
+                </div>
             );
           default:
             return null;

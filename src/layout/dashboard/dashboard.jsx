@@ -9,7 +9,7 @@ const Dashboard = ({ pageTitle, sidebarLinks = [], extraLinks = [], activeItem, 
       <div className="row" style={{ minHeight: 'inherit' }}>
         <Sidebar links={sidebarLinks} extraLinks={extraLinks} activeItem={activeItem} setActiveItem={setActiveItem} />
 
-        <main className="col-md-9 ms-sm-auto col-lg-10 p-0 m-0 mt-5">{children}</main>
+        <main className="col-md-9 ms-sm-auto col-lg-10 p-0 m-0 mt-5 position-relative">{children}</main>
       </div>
     </div>
   );

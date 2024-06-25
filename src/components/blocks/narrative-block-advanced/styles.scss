@@ -1,0 +1,99 @@
+.narrative-block-component-advanced {
+
+    .narrative-block-component {
+        position: relative;
+
+        &.align-background {
+            background-color: transparent !important;
+            color: white;
+            text-align: center;
+            /*padding: 2rem 3rem;*/
+
+            .col-lg-12 {
+                z-index: 9;
+            }
+
+            .text {
+                color: white;
+                font-size: 1.25rem;
+                line-height: 1.5;
+            }
+
+            .button-list {
+                justify-content: center
+            }
+
+            .embedded-form {
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    }
+
+    .slick-prev {
+        left: 1rem;
+        z-index: 9;
+    }
+
+    .slick-next {
+        right: 1rem;
+        z-index: 9;
+    }
+
+    .carousel .slick-slide {
+        padding-right: 0 !important;
+    }
+
+    .background-image {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: auto;
+        right: auto;
+        width: 100%;
+        padding: 0;
+
+        .carousel .slick-slide {
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+
+    .embedded-form {
+        width: 100%;
+        min-height: fit-content;
+        margin-top: 2rem;
+        position: relative;
+
+        iframe {
+            width: 100%;
+            min-height: 520px;
+        }
+    }
+}
+
+@media screen and (min-width: 1492px) {
+    .narrative-block-component-advanced .carousel .slick-list {
+        overflow: hidden !important;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .narrative-block-component-advanced {
+        .slick-slider {
+            margin: 1rem 0;
+        }
+
+        .embedded-form {
+            margin-top: 0;
+        }
+    }
+}

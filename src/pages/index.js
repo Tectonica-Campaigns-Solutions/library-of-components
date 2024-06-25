@@ -97,6 +97,9 @@ export const HomepageQuery = graphql`
           __typename
           internalName
         }
+        ...BlockSlider
+        ...BlockSocialShare
+        ...BlockNarrativeBlockAdvanced
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
