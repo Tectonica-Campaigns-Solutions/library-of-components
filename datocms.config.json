@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "default": {
+      "logLevel": "NONE",
+      "migrations": {
+        "directory": "./migrations",
+        "modelApiKey": "schema_migration"
+      }
+    },
+    "blueprint": {
+      "logLevel": "NONE",
+      "migrations": {
+        "directory": "./blueprintMigrations",
+        "modelApiKey": "schema_migration"
+      }
+    }
+  }
+}
