@@ -113,7 +113,6 @@ export default function Nav({ navData, location, hideLinks = false }) {
         <div className={`${expanded ? 'show' : ''} collapse navbar-collapse site-nav`} id="navNav">
           <ul className={`navbar-nav mr-auto`}>
             {groupedLinks?.withoutIcon?.map((link) => {
-              console.log(link);
               if (link.megaMenu !== null) {
                 return ( <MegamenuItem key={link.id} link={link} location={location} label={link?.title} isButton={link?.isButton} /> )
               } else if (link.treeChildren.length > 0) {

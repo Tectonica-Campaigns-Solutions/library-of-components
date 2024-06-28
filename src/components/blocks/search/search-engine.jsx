@@ -6,14 +6,15 @@ import Spinner from '../spinner/spinner';
 
 import './styles.scss';
 
-const client = buildClient({ apiToken: 'c2b76217af13c090bb6eb1e214d2ac' });
+const client = buildClient({ apiToken: process.env.DATO_API_TOKEN });
+console.log('API', process.env.DATO_API_TOKEN);
 
 export default function SearchEngine({ searchEngineVisible, setSearchEngineVisible }) {
   const [query, setQuery] = useState('');
 
   const { state, error, data } = useSiteSearch({
     client,
-    buildTriggerId: '26249',
+    buildTriggerId: '32428',
     resultsPerPage: 10,
   });
 

@@ -18,8 +18,6 @@ const MegaMenu = ({ link, pageSlug, isMobile = false, open = false }) => {
   const megaMenuActiveContent = megaMenu ? megaMenu.tabs[megaMenuActiveTab] : null;
   const hasRelatedCard = megaMenuActiveContent?.highlightedContent ? true : false;
 
-  console.log('highlightedContent', megaMenuActiveContent, hasRelatedCard);
-
   const handleOnClickTabItem = newIndex => {
     if (megaMenuTabs) {
       setMegaMenuActiveTab(newIndex);
