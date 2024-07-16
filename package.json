@@ -2,7 +2,7 @@
   "name": "library-of-components",
   "version": "1.0.0",
   "private": true,
-  "description": "Library of components",
+  "description": "Gatsby library of components",
   "author": "Tectonica",
   "keywords": [
     "gatsby"
@@ -44,6 +44,9 @@
   },
   "devDependencies": {
     "@datocms/cli": "^2.0.5",
-    "prettier": "^3.2.5"
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "prettier": "^3.2.5",
+    "rollup": "^4.18.0"
   }
 }
