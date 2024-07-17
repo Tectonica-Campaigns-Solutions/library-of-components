@@ -10,7 +10,7 @@ import Breadcrumb from './breadcrumbs/breadcrumbs';
 import Footer from '../../layout/footer/footer';
 import ListPaginated from './pagination/list-paginated';
 import FormExample from './form-example/FormExample';
-import ButtonList from './button/button-list';
+import ButtonList from './ButtonList/ButtonList';
 import Notification from './notification/notification';
 import HubspotForm from './hubspot-form/hubspot-form';
 import NarrativeBlock from './narrative-block/narrative-block';

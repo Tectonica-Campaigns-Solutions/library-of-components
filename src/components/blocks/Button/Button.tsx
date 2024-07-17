@@ -1,9 +1,20 @@
-import React from 'react';
-import CustomLink from '../../utils/custom-link';
+import React, { FC } from 'react';
+// import CustomLink from '../../utils/custom-link';
+import CustomLink from "../CustomLink/CustomLink";
 
-import './index.scss';
+import "./button-styles.scss";
 
-const Button = ({ block }) => {
+interface Block {
+  title: string;
+  link: string;
+  style?: string;
+}
+
+interface Props {
+  block: Block;
+}
+
+const Button: FC<Props> = ({ block }) => {
   const { title, link, style } = block;
 
   return (

@@ -1,7 +1,11 @@
-import React from 'react';
-import './styles.scss';
+import React, { FC } from 'react';
+import './tags-styles.scss';
 
-const Tags = ({ tags }) => {
+interface Props {
+  tags: Array<{ id: number; name: string }>;
+}
+
+const Tags: FC<Props> = ({ tags }) => {
   if (tags.length === 0) {
     return null;
   }

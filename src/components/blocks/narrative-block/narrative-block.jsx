@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomImage from '../../image/custom-image';
-import ButtonList from '../button/button-list';
+import ButtonList from '../ButtonList/ButtonList';
 import { isArray } from '../../../utils/array.utils';
 
 import './index.scss';

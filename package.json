@@ -19,6 +19,8 @@
     "@datocms/cli": "^2.0.5",
     "@datocms/cma-client-browser": "^3.3.2",
     "@gsap/react": "^2.1.0",
+    "@types/node": "^20.14.11",
+    "@types/react": "^18.3.3",
     "axios": "^1.6.7",
     "bootstrap": "5.2.3",
     "dotenv": "^16.4.4",
@@ -40,7 +42,8 @@
     "react-slick": "^0.30.2",
     "react-svg": "^16.1.33",
     "sass": "^1.71.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "typescript": "^5.5.3"
   },
   "devDependencies": {
     "@datocms/cli": "^2.0.5",

@@ -1,14 +1,31 @@
-import React from 'react';
-import ButtonList from '../button/button-list';
-import CustomLink from '../../utils/custom-link';
-import { formatDate } from '../../../utils/date.utils';//src/utils/date.utils.js
+import React, {FC} from 'react';
+
+// import CustomLink from '../../utils/custom-link';
+import CustomLink from "../CustomLink/CustomLink";
+import { formatDate } from '../../utils/date.utils';//src/utils/date.utils.js
 import CustomImage from '../../image/custom-image';
-import Tags from '../tags/tags';
-import Button from '../button/button';
+import Tags from '../Tags/Tags';
+import Button from '../Button/Button';
 
-import './styles.scss';
+import './card-styles.scss';
 
-const Card = ({ card }) => {
+interface Card {
+    title: string;
+    introduction: string;
+    image: any;
+    cta: any;
+    backgroundColor: string;
+    tags: string[];
+    date: string;
+    typeOfCard: string;
+    displayCta: boolean;
+}
+
+interface Props {
+  card: Card;
+}
+
+const Card: FC<Props> = ({ card }) => {
   const { title, introduction, image, cta, backgroundColor, tags = [], date, typeOfCard, displayCta } = card;
   const hasLink = cta !== null;
 

@@ -3,7 +3,7 @@ import Card from './card';
 //import Dropdown from '../inputs/dropdown/Dropdown';
 import Filter from '../filter/filter';
 
-import './styles.scss';
+import './card-styles.scss';
 
 const CardGrid = ({ block }) => {
   const { title, items = [], withFilters = false } = block;

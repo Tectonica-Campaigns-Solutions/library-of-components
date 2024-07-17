@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { FC } from 'react';
 import GlobalImage from './global-image';
 
-const CustomImage = ({ image, ...props }) => {
+interface CustomImageProps {
+  image: string | string[];
+}
+
+const CustomImage: React.FC<CustomImageProps> = ({ image, ...props }) => {
   return (
     <div className="image-wrapper">
       <GlobalImage image={Array.isArray(image) ? image[0] : image} {...props} />
 
-      {image?.title && (
+      {Array.isArray(image) && image[0]?.title && (
         <div className="caption">
           {/* <img src={pictureBtn} alt="Caption icon" /> */}
-          <span className="image-caption">{image.title}</span>
+          <span className="image-caption">{image[0].title}</span>
         </div>
       )}
     </div>
