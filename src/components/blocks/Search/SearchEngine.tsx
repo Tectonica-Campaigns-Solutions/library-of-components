@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { buildClient } from '@datocms/cma-client-browser';
-import { useSiteSearch } from 'react-datocms';
-import CustomLink from '../../utils/custom-link';
-import Spinner from '../spinner/spinner';
+import { useSiteSearch, SearchResult } from 'react-datocms';
+import CustomLink from '../CustomLink/CustomLink';
+import Spinner from '../Spinner/Spinner';
 
 import './styles.scss';
 
-const client = buildClient({ apiToken: process.env.DATO_API_TOKEN });
+const client = buildClient({ apiToken: process.env.DATO_API_TOKEN as string });
 console.log('API', process.env.DATO_API_TOKEN);
 
-export default function SearchEngine({ searchEngineVisible, setSearchEngineVisible }) {
+interface SearchEngineProps {
+  searchEngineVisible: boolean;
+  setSearchEngineVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SearchEngine: React.FC<SearchEngineProps> = ({ searchEngineVisible, setSearchEngineVisible }) => {
+
   const [query, setQuery] = useState('');
 
   const { state, error, data } = useSiteSearch({
@@ -30,15 +36,13 @@ export default function SearchEngine({ searchEngineVisible, setSearchEngineVisib
   }, [query]);
 
   return (
-    <div className={`search-engine ${searchEngineVisible ? 'search-engine--visible' : null}`}>
+    <div className={`search-engine ${searchEngineVisible ? 'search-engine--visible' : ''}`}>
       <header>
-
         {/* Close icon */}
         <div className="search-engine__close-icon" onClick={() => setSearchEngineVisible((prev) => !prev)}>
           <span>Close</span>
-
           <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
-            <g clip-path="url(#clip0_378_1056)">
+            <g clipPath="url(#clip0_378_1056)">
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -65,7 +69,7 @@ export default function SearchEngine({ searchEngineVisible, setSearchEngineVisib
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button type="submit" class="btn-submit"></button>
+          <button type="submit" className="btn-submit"></button>
         </form>
 
         <div className="spinner">{!data && !error && <Spinner />}</div>
@@ -75,14 +79,14 @@ export default function SearchEngine({ searchEngineVisible, setSearchEngineVisib
         {data && data.pageResults.length > 0 && (
           <div className="search-engine__results search-engine__results--active">
             <ul className="search-engine__results-list">
-              {data.pageResults.map((result, index) => (
+              {data.pageResults.map((result: SearchResult, index: number) => (
                 <SearchItem key={index} item={result} />
               ))}
             </ul>
           </div>
         )}
 
-        {data && data.pageResults.length == 0 && query.length > 0 && (
+        {data && data.pageResults.length === 0 && query.length > 0 && (
           <p className="search-engine__message">Sorry, no results found. Try a different search</p>
         )}
       </div>
@@ -90,7 +94,11 @@ export default function SearchEngine({ searchEngineVisible, setSearchEngineVisib
   );
 }
 
-const SearchItem = ({ item }) => {
+interface SearchItemProps {
+  item: SearchResult;
+}
+
+const SearchItem: React.FC<SearchItemProps> = ({ item }) => {
   return (
     <li className="search-engine__results-item">
       <CustomLink to={item.url}>
@@ -100,3 +108,5 @@ const SearchItem = ({ item }) => {
     </li>
   );
 };
+
+export default SearchEngine;
