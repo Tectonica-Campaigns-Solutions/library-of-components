@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CustomLink from '../components/utils/custom-link';
 import MegaMenu from './mega-menu/mega-menu';
-import SearchEngine from '../components/blocks/search/search-engine';
+import SearchEngine from '../components/blocks/Search/SearchEngine';
 import searchIcon from '../icons/icon-search.svg';
 
 import './styles.scss';
@@ -9,16 +9,16 @@ import './styles.scss';
 const LinkItem = ({ link, label, isButton, isSearchButton, setSearchEngineVisible }) => {
   return (
     <li className="nav-item">
-      { isSearchButton == false && (
-      <CustomLink to={link} className={isButton ? 'btn btn-primary' : ''}>
-        {label}
-      </CustomLink>
+      {isSearchButton == false && (
+        <CustomLink to={link} className={isButton ? 'btn btn-primary' : ''}>
+          {label}
+        </CustomLink>
       )}
 
-      { isSearchButton && ( 
+      {isSearchButton && (
         <CustomLink onClick={() => setSearchEngineVisible(true)} className={'btn btn-search'}>
           <img src={searchIcon} alt="Search icon" />
-        </CustomLink> 
+        </CustomLink>
       )}
     </li>
   );
@@ -52,7 +52,6 @@ const DropdownItem = ({ link, label, children }) => {
 };
 
 const MegamenuItem = ({ link, label, location }) => {
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const mouseEnter = () => setDropdownOpen(true);
@@ -91,53 +90,68 @@ export default function Nav({ navData, location, hideLinks = false }) {
 
   return (
     <>
-    <nav className={`custom-navbar navbar-expand-lg ${isHome ? 'home-nav' : ''} ${expanded ? 'expanded' : ''}`}>
-      <CustomLink className="navbar-brand" to={'/'}>
-        Logo
-      </CustomLink>
+      <nav className={`custom-navbar navbar-expand-lg ${isHome ? 'home-nav' : ''} ${expanded ? 'expanded' : ''}`}>
+        <CustomLink className="navbar-brand" to={'/'}>
+          Logo
+        </CustomLink>
 
-      <button
-        type="button"
-        data-target="#navNav"
-        aria-expanded="false"
-        aria-controls="navNav"
-        data-toggle="collapse"
-        className="navbar-toggler"
-        aria-label="Toggle navigation"
-        onClick={() => handleNavClick()}
-      >
-        <span className={`${expanded ? 'open-toggle ' : ''} navbar-toggler-icon`} />
-      </button>
+        <button
+          type="button"
+          data-target="#navNav"
+          aria-expanded="false"
+          aria-controls="navNav"
+          data-toggle="collapse"
+          className="navbar-toggler"
+          aria-label="Toggle navigation"
+          onClick={() => handleNavClick()}
+        >
+          <span className={`${expanded ? 'open-toggle ' : ''} navbar-toggler-icon`} />
+        </button>
 
-      {!hideLinks && (
-        <div className={`${expanded ? 'show' : ''} collapse navbar-collapse site-nav`} id="navNav">
-          <ul className={`navbar-nav mr-auto`}>
-            {groupedLinks?.withoutIcon?.map((link) => {
-              if (link.megaMenu !== null) {
-                return ( <MegamenuItem key={link.id} link={link} location={location} label={link?.title} isButton={link?.isButton} /> )
-              } else if (link.treeChildren.length > 0) {
-                return ( <DropdownItem key={link.id} link={link} label={link?.title} children={link?.treeChildren} /> )
-              } else {
-                return ( <LinkItem key={link.id} link={link} label={link?.title} isButton={link?.isButton} isSearchButton={link?.isSearchButton} setSearchEngineVisible={setSearchEngineVisible} /> )
-              }
-            }
-            )}
+        {!hideLinks && (
+          <div className={`${expanded ? 'show' : ''} collapse navbar-collapse site-nav`} id="navNav">
+            <ul className={`navbar-nav mr-auto`}>
+              {groupedLinks?.withoutIcon?.map((link) => {
+                if (link.megaMenu !== null) {
+                  return (
+                    <MegamenuItem
+                      key={link.id}
+                      link={link}
+                      location={location}
+                      label={link?.title}
+                      isButton={link?.isButton}
+                    />
+                  );
+                } else if (link.treeChildren.length > 0) {
+                  return <DropdownItem key={link.id} link={link} label={link?.title} children={link?.treeChildren} />;
+                } else {
+                  return (
+                    <LinkItem
+                      key={link.id}
+                      link={link}
+                      label={link?.title}
+                      isButton={link?.isButton}
+                      isSearchButton={link?.isSearchButton}
+                      setSearchEngineVisible={setSearchEngineVisible}
+                    />
+                  );
+                }
+              })}
 
-            {/* Final icons */}
-            <div className="nav-actions">
-              {groupedLinks?.withIcon?.map((link) => (
-                <CustomLink key={link.id} to={link}>
-                  <img src={link.icon.url} alt="Link icon" />
-                </CustomLink>
-              ))}
-            </div>
-          </ul>
-        </div>
-      )}
+              {/* Final icons */}
+              <div className="nav-actions">
+                {groupedLinks?.withIcon?.map((link) => (
+                  <CustomLink key={link.id} to={link}>
+                    <img src={link.icon.url} alt="Link icon" />
+                  </CustomLink>
+                ))}
+              </div>
+            </ul>
+          </div>
+        )}
 
-      <SearchEngine searchEngineVisible={searchEngineVisible} setSearchEngineVisible={setSearchEngineVisible} />
-    </nav>
-    
+        <SearchEngine searchEngineVisible={searchEngineVisible} setSearchEngineVisible={setSearchEngineVisible} />
+      </nav>
     </>
   );
 }

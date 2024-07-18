@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Dropdown from '../inputs/Dropdown/Dropdown';
-import Card, { CardProps } from '../Card/Card';
+import Card, { CardProps } from '../card/card';
 import './filter-styles.scss';
 
 interface Item {
@@ -60,7 +60,11 @@ const Filter: React.FC<FilterProps> = ({ items, gridColumns }) => {
         <div className="row">
           <div className="col">
             <h3>Find by topics</h3>
-            <Dropdown title="Select an option" options={filters.map((f) => ({ value: f, label: f }))} onSelect={handleOnFilterPosts} />
+            <Dropdown
+              title="Select an option"
+              options={filters.map((f) => ({ value: f, label: f }))}
+              onSelect={handleOnFilterPosts}
+            />
           </div>
           <div className="col">
             <h3>Find by date</h3>

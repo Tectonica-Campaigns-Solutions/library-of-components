@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Card from './Card';
+import Card from '../card/card';
 //import Dropdown from '../inputs/dropdown/Dropdown';
 import Filter from '../Filter/Filter';
 
-import './card-styles.scss';
+import '../card/card-styles.scss';
 
 interface CardGridProps {
   block: {
@@ -28,21 +28,21 @@ const CardGrid: React.FC<CardGridProps> = ({ block }) => {
         </div>
       )}
 
-      {withFilters && (
-        <Filter items={filteredItems} gridColumns={numColumns} />
-      )}
+      {withFilters && <Filter items={filteredItems} gridColumns={numColumns} />}
 
       {/* Items */}
-      
-      {!withFilters && (<div className="content-tool">
-        <div className="row gy-4">
-          {filteredItems.map((item: any) => (
-            <div className={`col-lg-${12 / numColumns}`} key={item.id}>
-              <Card card={item} />
-            </div>
-          ))}
+
+      {!withFilters && (
+        <div className="content-tool">
+          <div className="row gy-4">
+            {filteredItems.map((item: any) => (
+              <div className={`col-lg-${12 / numColumns}`} key={item.id}>
+                <Card card={item} />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>)}
+      )}
     </section>
   );
 };

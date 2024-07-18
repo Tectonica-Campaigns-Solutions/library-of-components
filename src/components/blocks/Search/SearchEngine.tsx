@@ -4,7 +4,7 @@ import { useSiteSearch, SearchResult } from 'react-datocms';
 import CustomLink from '../CustomLink/CustomLink';
 import Spinner from '../Spinner/Spinner';
 
-import './styles.scss';
+import './search-engine-styles.scss';
 
 const client = buildClient({ apiToken: process.env.DATO_API_TOKEN as string });
 console.log('API', process.env.DATO_API_TOKEN);
@@ -15,7 +15,6 @@ interface SearchEngineProps {
 }
 
 const SearchEngine: React.FC<SearchEngineProps> = ({ searchEngineVisible, setSearchEngineVisible }) => {
-
   const [query, setQuery] = useState('');
 
   const { state, error, data } = useSiteSearch({
@@ -92,7 +91,7 @@ const SearchEngine: React.FC<SearchEngineProps> = ({ searchEngineVisible, setSea
       </div>
     </div>
   );
-}
+};
 
 interface SearchItemProps {
   item: SearchResult;

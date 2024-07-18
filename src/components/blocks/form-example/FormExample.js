@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import Dropdown from '../Dropdown/Dropdown';
+
 import './styles.scss';
-import Dropdown from './Dropdown';
 
 const FormExample = () => {
   const [selected, setSelected] = useState(null);

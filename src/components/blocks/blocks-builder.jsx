@@ -1,24 +1,23 @@
 import React from 'react';
-import Divider from './divider/divider';
+import Divider from './Divider/Divider';
 import SectionTitle from './section-title/section-title';
 import Accordion from './Accordion/Accordion';
-import Button from './button/button';
-import CardGrid from './card/card-grid';
+import Button from './Button/Button';
+import CardGrid from './Card/Card-grid';
 import Tabs from './tabs/tabs';
 import Header from '../../layout/Header';
-import Breadcrumb from './breadcrumbs/breadcrumbs';
+import Breadcrumb from './Breadcrumbs/Breadcrumbs';
 import Footer from '../../layout/footer/footer';
-import ListPaginated from './pagination/list-paginated';
+import ListPaginated from './Pagination/ListPaginated';
 import FormExample from './form-example/FormExample';
 import ButtonList from './ButtonList/ButtonList';
-import Notification from './notification/notification';
-import HubspotForm from './hubspot-form/hubspot-form';
-import NarrativeBlock from './narrative-block/narrative-block';
-import NarrativeBlockAdvanced from './narrative-block-advanced/narrative-block-advanced';
-// import { NarrativeBlock } from 'gatsby-components-library';
-import HeroBasic from './hero-basic/HeroBasic';
-import HomeHero from './hero-home/HeroHome';
-import Carousel from './carousel/Carousel';
+import Notification from './Notification/Notification';
+import HubspotForm from './HubspotForm/HubspotForm';
+import NarrativeBlock from './NarrativeBlock/NarrativeBlock';
+import NarrativeBlockAdvanced from './NarrativeBlockAdvanced/NarrativeBlockAdvanced';
+import HeroBasic from './HeroBasic/HeroBasic';
+import HomeHero from './HeroHome/HeroHome';
+import Carousel from './Carousel/Carousel';
 import Card from './card/card';
 import ShareButtons from './share-buttons/share-buttons';
 
@@ -162,8 +161,8 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
           case 'DatoCmsSlider':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <Carousel 
-                  items={block.items} 
+                <Carousel
+                  items={block.items}
                   renderItem={(item) => (
                     <div className="col-md-4" key={item.id}>
                       <Card card={item} />
@@ -175,10 +174,10 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
             );
           case 'DatoCmsSocialShare':
             return (
-                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                  <h2 class="section-title-block">{block.title}</h2>
-                  <ShareButtons />
-                </div>
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <h2 class="section-title-block">{block.title}</h2>
+                <ShareButtons />
+              </div>
             );
           default:
             return null;

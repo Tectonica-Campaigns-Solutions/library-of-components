@@ -3,7 +3,7 @@ import { isArray } from '../../utils/array.utils';
 import MegaMenuCard from '../mega-menu-card/mega-menu-card';
 // import Link from '../../Link/Link';
 import CustomLink from '../../components/utils/custom-link';
-import Button  from '../../components/blocks/button/button';
+import Button from '../../components/blocks/Button/Button';
 import iconDropdown from '../../icons/icon-dropdown.svg';
 
 import './styles.scss';
@@ -12,13 +12,13 @@ const MegaMenu = ({ link, pageSlug, isMobile = false, open = false }) => {
   const { links = [], megaMenu = null } = link;
   const megaMenuTabs = megaMenu?.tabs || [];
 
-  const activeTabIndex = megaMenuTabs.findIndex(t => t.link?.content.slug === pageSlug);
+  const activeTabIndex = megaMenuTabs.findIndex((t) => t.link?.content.slug === pageSlug);
   const [megaMenuActiveTab, setMegaMenuActiveTab] = useState(activeTabIndex === -1 ? 0 : activeTabIndex);
 
   const megaMenuActiveContent = megaMenu ? megaMenu.tabs[megaMenuActiveTab] : null;
   const hasRelatedCard = megaMenuActiveContent?.highlightedContent ? true : false;
 
-  const handleOnClickTabItem = newIndex => {
+  const handleOnClickTabItem = (newIndex) => {
     if (megaMenuTabs) {
       setMegaMenuActiveTab(newIndex);
     }
@@ -35,14 +35,16 @@ const MegaMenu = ({ link, pageSlug, isMobile = false, open = false }) => {
               <h4>{megaMenuActiveContent.title}</h4>
               <div className="description" dangerouslySetInnerHTML={{ __html: megaMenuActiveContent.description }} />
 
-              {megaMenuActiveContent.link && <Button link={megaMenuActiveContent.link} title={megaMenuActiveContent.title} isButton />}
+              {megaMenuActiveContent.link && (
+                <Button link={megaMenuActiveContent.link} title={megaMenuActiveContent.title} isButton />
+              )}
             </div>
 
             {/* Secondary content */}
             <div className={hasRelatedCard ? 'col-lg-5' : 'col-lg-8'}>
               <div className="row gy-5">
                 {/* Sub-nav items */}
-                {megaMenuActiveContent.groupLinks.map(gLink => (
+                {megaMenuActiveContent.groupLinks.map((gLink) => (
                   <div className="col-lg-6 sub-nav-items" key={gLink.id}>
                     <h5>
                       <CustomLink to={gLink.mainLink}>{gLink.title}</CustomLink>
@@ -50,7 +52,7 @@ const MegaMenu = ({ link, pageSlug, isMobile = false, open = false }) => {
 
                     {isArray(gLink.links) && (
                       <div className="links">
-                        {gLink.links.map(link => (
+                        {gLink.links.map((link) => (
                           <CustomLink key={link.id} to={link}>
                             {link.label}
                           </CustomLink>
@@ -80,7 +82,7 @@ const MegaMenu = ({ link, pageSlug, isMobile = false, open = false }) => {
       </div>
     );
 
-  const isLinkActive = link => {
+  const isLinkActive = (link) => {
     return link.content.slug === pageSlug;
   };
 
@@ -107,12 +109,12 @@ const MegaMenu = ({ link, pageSlug, isMobile = false, open = false }) => {
                 </>
               ))
             : isArray(links)
-            ? links.map(link => (
-                <CustomLink key={link.id} to={link} className={`${isLinkActive(link) ? 'active' : ''}`}>
-                  {link.label}
-                </CustomLink>
-              ))
-            : null}
+              ? links.map((link) => (
+                  <CustomLink key={link.id} to={link} className={`${isLinkActive(link) ? 'active' : ''}`}>
+                    {link.label}
+                  </CustomLink>
+                ))
+              : null}
         </div>
       </div>
 
