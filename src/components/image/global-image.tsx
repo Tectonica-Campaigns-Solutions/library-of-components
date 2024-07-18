@@ -1,22 +1,20 @@
-import React, { FC } from 'react';
-import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image';
+import React, {FC} from 'react'
+import { GatsbyImage } from 'gatsby-plugin-image';
+import { Image } from '../types';
 
-interface GlobalImageProps {
-  image: IGatsbyImageData | string;
-  alt?: string;
-  [key: string]: any;
+interface Props {
+  image: Image
+  props?: any
 }
 
-const GlobalImage: FC<GlobalImageProps> = ({ image, ...props }) => {
-  const altImage = image?.alt ? image.alt : props.alt ? props.alt : 'image';
+const GlobalImage:FC<Props> = ({ image, props }) =>{
+  const altImage = image?.alt ? image.alt : props?.alt ? props.alt : 'image';
 
-  if (image?.gatsbyImageData) {
-    return <GatsbyImage image={image.gatsbyImageData} alt={altImage} {...props} />;
-  } else if (typeof image === 'string') {
-    return <img src={image} alt={altImage} loading="lazy" height={'100%'} width={'100%'} />;
+  if (image?.gatbyImageData) {
+    return <GatsbyImage image={image.gatbyImageData} alt={altImage} {...props} />;
   } else {
-    return null; // Handle the case when image is neither IGatsbyImageData nor string
+    return <img src={image.url} alt={altImage} loading="lazy" height={'100%'} width={'100%'} />;
   }
-};
+}
 
-export default GlobalImage;
+export default GlobalImage

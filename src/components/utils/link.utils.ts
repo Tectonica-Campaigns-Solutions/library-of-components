@@ -5,13 +5,14 @@ export const getUrl = (to: string | ILink | IExternalLink) => {
 
   if (typeof to === "string") {
     url = to;
-  } else if ("externalUrl" in to) {
+  } else if (to && "externalUrl" in to) {
     url = to.externalUrl;
-  } else if ("link" in to && typeof to.link === "string") {
+  } else if (to && "link" in to && typeof to.link === "string") {
     url = to.link;
-  } else if (to.slug) {
+  } else if (to && to.slug) {
     url = `/${to.slug}`;
   }
 
   return url;
 };
+//Cannot use 'in' operator to search for 'externalUrl' in null

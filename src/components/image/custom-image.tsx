@@ -1,11 +1,14 @@
 import React, { FC } from 'react';
 import GlobalImage from './global-image';
+import { Image } from '../types';
 
-interface CustomImageProps {
-  image: string | string[];
+interface Props {
+  image: Image
+  props?: any,
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
 }
 
-const CustomImage: React.FC<CustomImageProps> = ({ image, ...props }) => {
+const CustomImage: React.FC<Props> = ({ image, objectFit, ...props }) => {
   return (
     <div className="image-wrapper">
       <GlobalImage image={Array.isArray(image) ? image[0] : image} {...props} />

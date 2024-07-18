@@ -3,10 +3,11 @@ import Button from '../Button';
 
 import './button-list-styles.css';
 
-interface ButtonProps {
+export interface ButtonProps {
   title: string;
   link: string;
   style?: string;
+  label?: string;
 }
 
 interface Props {

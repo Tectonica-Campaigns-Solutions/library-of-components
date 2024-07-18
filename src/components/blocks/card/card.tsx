@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 
-// import CustomLink from '../../utils/custom-link';
 import CustomLink from "../CustomLink/CustomLink";
 import { formatDate } from '../../utils/date.utils';//src/utils/date.utils.js
 import CustomImage from '../../image/custom-image';
@@ -15,17 +14,17 @@ interface Card {
     image: any;
     cta: any;
     backgroundColor: string;
-    tags: string[];
+    tags: Array<{ id: number; name: string }>;
     date: string;
     typeOfCard: string;
     displayCta: boolean;
 }
 
-interface Props {
+export interface CardProps {
   card: Card;
 }
 
-const Card: FC<Props> = ({ card }) => {
+const Card: FC<CardProps> = ({ card }) => {
   const { title, introduction, image, cta, backgroundColor, tags = [], date, typeOfCard, displayCta } = card;
   const hasLink = cta !== null;
 
