@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Card from '../card/card';
+import Card from '../Card/Card';
 //import Dropdown from '../inputs/dropdown/Dropdown';
 import Filter from '../Filter/Filter';
 

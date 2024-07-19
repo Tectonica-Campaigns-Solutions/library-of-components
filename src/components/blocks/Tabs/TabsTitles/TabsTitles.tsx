@@ -1,7 +1,14 @@
 import React from 'react';
-import './styles.scss';
+import './tabs-titles-styles.scss';
 
-export default function TabTitles({ items, activeTab, handleTab, classes }) {
+interface TabTitlesProps {
+  items: Array<{ titleTab?: string; name?: string; title?: string }>;
+  activeTab: number;
+  handleTab: (index: number) => void;
+  classes: string;
+}
+
+export default function TabTitles({ items, activeTab, handleTab, classes }: TabTitlesProps) {
   return (
     <div className="row tab-titles">
       {items.map((item, index) => (

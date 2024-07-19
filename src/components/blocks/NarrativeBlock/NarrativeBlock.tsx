@@ -12,7 +12,10 @@ interface NarrativeBlockProps {
     preTitle?: string;
     backgroundColor?: string;
     content?: string;
-    ctas?: string[];
+    ctas?: Array<{ title: string;
+      link: string;
+      style?: string;
+      label?: string; }> | undefined ;
     image?: Image;
     imageMobile?: string;
     alignmentImage?: 'left' | 'right';
@@ -33,7 +36,7 @@ const NarrativeBlock: React.FC<NarrativeBlockProps> = ({ block }) => {
     video,
   } = block;
 
-  const buttonPropsArray: ButtonProps[] = ctas.map((cta) => ({ label: cta, title: '', link: '' })); // Convert ctas array to ButtonProps array
+  const buttonPropsArray: ButtonProps[] = ctas.map((cta) => ({ label: cta.label, title: cta.title, link: cta.link, style: cta.style })); 
 
   return (
     <div className={`narrative-block-component ${backgroundColor ? backgroundColor : ''}`}>

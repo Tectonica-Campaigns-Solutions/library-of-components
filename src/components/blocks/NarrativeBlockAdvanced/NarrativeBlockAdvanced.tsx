@@ -25,7 +25,10 @@ interface NarrativeBlockProps {
     preTitle?: string;
     backgroundColor?: string;
     content?: string;
-    ctas?: string[];
+    ctas?: Array<{ title: string;
+      link: string;
+      style?: string;
+      label?: string; }> | undefined ;
     images?: Image[];
     carrouselSettingsAutoloop?: boolean;
     carrouselSettingsArrows?: boolean;

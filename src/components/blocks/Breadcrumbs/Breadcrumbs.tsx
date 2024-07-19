@@ -14,14 +14,14 @@ const Breadcrumb = ({ breadcrumb = null, currentPage }: { breadcrumb?: Breadcrum
     if (index === 0) return null;
 
     return (
-      <span>
+      <span className='breadcrumb-separator'>
         <StaticImage
-            src="../../icons/breadcrumb-separator.svg"
+            src="../../../icons/breadcrumb-separator.svg"
             alt="Separator icon"
             placeholder="blurred"
             layout="fixed"
-            width={30}
-            height={31}
+            width={16}
+            height={16}
         />
       </span>
     );

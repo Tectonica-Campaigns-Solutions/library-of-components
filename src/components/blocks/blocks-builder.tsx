@@ -1,10 +1,10 @@
 import React from 'react';
 import Divider from './Divider/Divider';
-import SectionTitle from './section-title/section-title';
+import SectionTitle from './SectionTitle/SectionTitle';
 import Accordion from './Accordion/Accordion';
 import Button from './Button/Button';
 import CardGrid from './Card/Card-grid';
-import Tabs from './tabs/tabs';
+import Tabs from './Tabs/Tabs';
 import Header from '../../layout/Header';
 import Breadcrumb from './Breadcrumbs/Breadcrumbs';
 import Footer from '../../layout/footer/footer';
@@ -18,10 +18,32 @@ import NarrativeBlockAdvanced from './NarrativeBlockAdvanced/NarrativeBlockAdvan
 import HeroBasic from './HeroBasic/HeroBasic';
 import HomeHero from './HeroHome/HeroHome';
 import Carousel from './Carousel/Carousel';
-import Card from './card/card';
-import ShareButtons from './share-buttons/share-buttons';
+import Card from './Card/Card';
+import ShareButtons from './ShareButtons/ShareButtons';
 
-export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
+interface Block {
+  __typename: string;
+  id: string;
+  title: string;
+  link: string;
+  items: { title: string | '', text: string }[];
+  test?: any; // Replace 'any' with the actual type of 'test'
+  content?: string | undefined; // Update the 'content' property to be optional
+  hubspot: {
+    id: string;
+    formId: string;
+    region: string;
+    portalId: string;
+  };
+}
+
+interface BlocksBuilderProps {
+  blocks: Block[];
+  footer: any; // Replace 'any' with the actual type of 'footer'
+  activeItem?: number;
+}
+
+export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: BlocksBuilderProps) {
   return (
     <>
       {blocks.map((block, index) => {
@@ -149,13 +171,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
           case 'DatoCmsHeroBasic':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <HeroBasic {...block} />
+                <HeroBasic {...block} introduction="" />
               </div>
             );
           case 'DatoCmsHeroHome':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <HomeHero {...block} />
+                <HomeHero {...block} image={{ gatsbyImageData: { images: { fallback: { src: "" } } } }} />
               </div>
             );
           case 'DatoCmsSlider':
@@ -175,7 +197,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }) {
           case 'DatoCmsSocialShare':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <h2 class="section-title-block">{block.title}</h2>
+                <h2 className="section-title-block">{block.title}</h2>
                 <ShareButtons />
               </div>
             );
