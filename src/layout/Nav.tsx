@@ -6,6 +6,7 @@ import searchIcon from '../icons/icon-search.svg';
 
 import './styles.scss';
 
+// @ts-ignore
 const LinkItem = ({ link, label, isButton, isSearchButton, setSearchEngineVisible }) => {
   return (
     <li className="nav-item">
@@ -24,6 +25,7 @@ const LinkItem = ({ link, label, isButton, isSearchButton, setSearchEngineVisibl
   );
 };
 
+// @ts-ignore
 const DropdownItem = ({ link, label, children }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -51,6 +53,7 @@ const DropdownItem = ({ link, label, children }) => {
   );
 };
 
+// @ts-ignore
 const MegamenuItem = ({ link, label, location }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -68,6 +71,7 @@ const MegamenuItem = ({ link, label, location }) => {
   );
 };
 
+// @ts-ignore
 export default function Nav({ navData, location, hideLinks = false }) {
   const navLinks = navData.nodes;
   const [expanded, setExpanded] = useState(false);
@@ -77,7 +81,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
   const isHome = location ? location?.pathname === '/' : false;
 
   const groupedLinks = navLinks.reduce(
-    (result, item) => {
+    (result: any, item: any) => {
       if (item.icon && item.icon.url) {
         result.withIcon.push(item);
       } else {
@@ -111,7 +115,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
         {!hideLinks && (
           <div className={`${expanded ? 'show' : ''} collapse navbar-collapse site-nav`} id="navNav">
             <ul className={`navbar-nav mr-auto`}>
-              {groupedLinks?.withoutIcon?.map((link) => {
+              {groupedLinks?.withoutIcon?.map((link: any) => {
                 if (link.megaMenu !== null) {
                   return (
                     <MegamenuItem
@@ -119,7 +123,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
                       link={link}
                       location={location}
                       label={link?.title}
-                      isButton={link?.isButton}
+                      // isButton={link?.isButton}
                     />
                   );
                 } else if (link.treeChildren.length > 0) {
@@ -140,7 +144,7 @@ export default function Nav({ navData, location, hideLinks = false }) {
 
               {/* Final icons */}
               <div className="nav-actions">
-                {groupedLinks?.withIcon?.map((link) => (
+                {groupedLinks?.withIcon?.map((link: any) => (
                   <CustomLink key={link.id} to={link}>
                     <img src={link.icon.url} alt="Link icon" />
                   </CustomLink>

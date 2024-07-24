@@ -34,16 +34,21 @@
     "gatsby-source-filesystem": "^5.13.1",
     "gatsby-transformer-sharp": "^5.13.1",
     "gsap": "^3.12.5",
+    "mapbox-gl": "^3.5.2",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-datocms": "^6.0.6",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
+    "react-map-gl": "^7.1.7",
     "react-slick": "^0.30.2",
     "react-svg": "^16.1.33",
     "sass": "^1.71.0",
     "slick-carousel": "^1.8.1",
-    "typescript": "^5.5.3"
+    "supercluster": "^8.0.1",
+    "tectonica-ui": "^1.0.2",
+    "typescript": "^5.5.3",
+    "use-supercluster": "^1.2.0"
   },
   "devDependencies": {
     "@datocms/cli": "^2.0.5",

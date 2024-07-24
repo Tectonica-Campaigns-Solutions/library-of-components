@@ -1,40 +1,44 @@
 import React from 'react';
 import Divider from './Divider/Divider';
 import SectionTitle from './SectionTitle/SectionTitle';
-import Accordion from './Accordion/Accordion';
-import Button from './Button/Button';
-import CardGrid from './Card/Card-grid';
-import Tabs from './Tabs/Tabs';
-import Header from '../../layout/Header';
-import Breadcrumb from './Breadcrumbs/Breadcrumbs';
-import Footer from '../../layout/footer/footer';
-import ListPaginated from './Pagination/ListPaginated';
+import {
+  Accordion,
+  Breadcrumbs,
+  Button,
+  ButtonList,
+  Card,
+  CardGrid,
+  Carousel,
+  Footer,
+  Header,
+  HeroBasic,
+  HeroHome,
+  HubspotForm,
+  ListPaginated,
+  NarrativeBlock,
+  NarrativeBlockAdvanced,
+  Notification,
+  ShareButtons,
+  Tabs,
+} from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
-import ButtonList from './ButtonList/ButtonList';
-import Notification from './Notification/Notification';
-import HubspotForm from './HubspotForm/HubspotForm';
-import NarrativeBlock from './NarrativeBlock/NarrativeBlock';
-import NarrativeBlockAdvanced from './NarrativeBlockAdvanced/NarrativeBlockAdvanced';
-import HeroBasic from './HeroBasic/HeroBasic';
-import HomeHero from './HeroHome/HeroHome';
-import Carousel from './Carousel/Carousel';
-import Card from './Card/Card';
-import ShareButtons from './ShareButtons/ShareButtons';
 
 interface Block {
   __typename: string;
   id: string;
   title: string;
   link: string;
-  items: { title: string | '', text: string }[];
+  items: { title: string | ''; text: string }[];
   test?: any; // Replace 'any' with the actual type of 'test'
-  content?: string | undefined; // Update the 'content' property to be optional
+  content: string; // Update the 'content' property to be optional
   hubspot: {
     id: string;
     formId: string;
     region: string;
     portalId: string;
   };
+  ctas: any[];
+  image: any;
 }
 
 interface BlocksBuilderProps {
@@ -93,31 +97,32 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsTab':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
                 <Tabs block={block} />
               </div>
             );
           case 'DatoCmsNavbar':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <Header />
+                {/* <Header /> */}
               </div>
             );
           case 'DatoCmsBreadcrumb':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <Breadcrumb currentPage={block.title} />
+                <Breadcrumbs currentPage={block.title} />
               </div>
             );
           case 'DatoCmsHeader':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <Header />
+                {/* <Header /> */}
               </div>
             );
           case 'DatoCmsFooter':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <Footer data={footer} />
+                {/* <Footer data={footer} /> */}
               </div>
             );
           case 'DatoCmsListPaginated':
@@ -177,7 +182,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsHeroHome':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <HomeHero {...block} image={{ gatsbyImageData: { images: { fallback: { src: "" } } } }} />
+                <HeroHome {...block} image={{ gatsbyImageData: { images: { fallback: { src: '' } } } }} />
               </div>
             );
           case 'DatoCmsSlider':
