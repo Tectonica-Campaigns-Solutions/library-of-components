@@ -10,7 +10,6 @@ import {
   CardGrid,
   Carousel,
   Footer,
-  Header,
   HeroBasic,
   HeroHome,
   HubspotForm,
@@ -22,6 +21,7 @@ import {
   Tabs,
 } from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
+import Header from '../../layout/Header';
 
 interface Block {
   __typename: string;
@@ -104,7 +104,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsNavbar':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                {/* <Header /> */}
+                <Header />
               </div>
             );
           case 'DatoCmsBreadcrumb':
@@ -116,13 +116,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsHeader':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                {/* <Header /> */}
+                <Header />
               </div>
             );
           case 'DatoCmsFooter':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                {/* <Footer data={footer} /> */}
+                <Footer data={footer} />
               </div>
             );
           case 'DatoCmsListPaginated':

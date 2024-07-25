@@ -11766,10 +11766,10 @@ tar-stream@^3.1.5:
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
 
-tectonica-ui@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.2.tgz#34d1230e29f89176c31088d614f9b9d343f61f23"
-  integrity sha512-GidkFoTU92UQPkeelu3CI/XLl9ynyHYDYvnEMsRT7tJwkeFrXm6PeJiLMGxRWNTiQLSZYw/dS2cgCSyvFUjM8Q==
+tectonica-ui@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.4.tgz#b93f2fcc671ebdb12109e1e34213ffc1272617a6"
+  integrity sha512-ILkDumJ3WDZKszxf7Ija44Np9IzaJvvVcWyfQeEJARczOSWUaw2PSjTjjJq82c1wwQqXCLrNqR1F6uFJKSFijA==
 
 terser-webpack-plugin@^5.3.10, terser-webpack-plugin@^5.3.9:
   version "5.3.10"

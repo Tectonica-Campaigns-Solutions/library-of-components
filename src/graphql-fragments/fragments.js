@@ -53,9 +53,9 @@ export const DatoCMS = graphql`
               title
               links {
                 ... on DatoCmsGlobalLink {
-                  label
+                  title
                   externalUrl
-                  content {
+                  path {
                     ... on DatoCmsBasicPage {
                       slug
                       model {
@@ -73,9 +73,9 @@ export const DatoCMS = graphql`
               }
               mainLink {
                 ... on DatoCmsGlobalLink {
-                  label
+                  title
                   externalUrl
-                  content {
+                  path {
                     ... on DatoCmsBasicPage {
                       slug
                       model {
@@ -178,9 +178,9 @@ export const DatoCMS = graphql`
         link {
           ... on DatoCmsGlobalLink {
             id
-            label
+            title
             externalUrl
-            content {
+            path {
               ... on DatoCmsHomepage {
                 id
                 slug
@@ -240,9 +240,9 @@ export const DatoCMS = graphql`
         link {
           ... on DatoCmsGlobalLink {
             id
-            label
+            title
             externalUrl
-            content {
+            path {
               ... on DatoCmsHomepage {
                 id
                 slug
@@ -327,9 +327,9 @@ export const DatoCMS = graphql`
     link {
       ... on DatoCmsGlobalLink {
         id
-        label
+        title
         externalUrl
-        content {
+        path {
           ... on DatoCmsHomepage {
             id
             slug
@@ -399,9 +399,9 @@ export const DatoCMS = graphql`
           link {
             ... on DatoCmsGlobalLink {
               id
-              label
+              title
               externalUrl
-              content {
+              path {
                 ... on DatoCmsHomepage {
                   id
                   slug
@@ -457,9 +457,9 @@ export const DatoCMS = graphql`
             link {
               ... on DatoCmsGlobalLink {
                 id
-                label
+                title
                 externalUrl
-                content {
+                path {
                   ... on DatoCmsHomepage {
                     id
                     slug
@@ -504,9 +504,9 @@ export const DatoCMS = graphql`
           link {
             ... on DatoCmsGlobalLink {
               id
-              label
+              title
               externalUrl
-              content {
+              path {
                 ... on DatoCmsHomepage {
                   id
                   slug

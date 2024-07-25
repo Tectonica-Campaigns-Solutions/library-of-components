@@ -131,9 +131,9 @@ export const HomepageQuery = graphql`
       legalLinksAndExtras {
         ... on DatoCmsGlobalLink {
           id
-          label
+          title
           externalUrl
-          content {
+          path {
             ... on DatoCmsHomepage {
               id
               slug

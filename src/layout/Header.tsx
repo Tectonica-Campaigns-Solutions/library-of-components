@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStaticQuery } from 'gatsby';
 import { graphql } from 'gatsby';
-import Nav from './Nav';
+import { Header as HeaderUI } from 'tectonica-ui';
 
 const Header = () => {
   const menus = useStaticQuery(graphql`
@@ -14,11 +14,12 @@ const Header = () => {
     }
   `);
 
-  return (
-    <header data-datocms-noindex>
-      <Nav navData={menus.mainMenu} />
-    </header>
-  );
+  const logo = {
+    id: '1',
+    url: '',
+  };
+
+  return <HeaderUI logo={logo} location={{}} menu={menus.mainMenu} />;
 };
 
 export default Header;
