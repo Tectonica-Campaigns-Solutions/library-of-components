@@ -80,6 +80,7 @@ export const HomepageQuery = graphql`
         ...BlockNotification
         ...BlockHubspotForm
         ...BlockImageGallery
+        ...BlockPeopleModal
         ... on DatoCmsHeader {
           __typename
           internalName

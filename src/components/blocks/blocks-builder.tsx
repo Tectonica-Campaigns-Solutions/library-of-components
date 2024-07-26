@@ -18,11 +18,13 @@ import {
   NarrativeBlock,
   NarrativeBlockAdvanced,
   Notification,
+  PeopleDetail,
   ShareButtons,
   Tabs,
 } from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
+import { StructuredText } from 'react-datocms/structured-text';
 
 interface Block {
   __typename: string;
@@ -213,6 +215,17 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 {/* @ts-ignore */}
                 <ImageGallery {...block} />
+              </div>
+            );
+
+          case 'DatoCmsPeopleModal':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
+                <PeopleDetail {...block} eMail={block.email}>
+                  {/* @ts-ignore */}
+                  <StructuredText data={block.text} />
+                </PeopleDetail>
               </div>
             );
 

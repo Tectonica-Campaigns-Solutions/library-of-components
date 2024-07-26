@@ -544,6 +544,7 @@ export const DatoCMS = graphql`
   fragment BlockImageGallery on DatoCmsImageGallery {
     __typename
     id: originalId
+    internalName
     headline
     images {
       url
@@ -551,6 +552,27 @@ export const DatoCMS = graphql`
       height
       alt
       title
+    }
+  }
+
+  fragment BlockPeopleModal on DatoCmsPeopleModal {
+    __typename
+    id: originalId
+    internalName
+    fullname
+    twitterXUrl
+    linkedinUrl
+    email
+    gender
+    role
+    image {
+      url
+      alt
+      width
+      height
+    }
+    text: content {
+      value
     }
   }
 `;
