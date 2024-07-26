@@ -9,8 +9,6 @@ const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
   const { title, seo, blocks = [] } = homepage;
   const sidebarLinks = getSidebarLinksFromBlocks(blocks);
 
-  console.log({ sidebarLinks });
-
   const [activeItem, setActiveItem] = React.useState(0);
 
   return (
@@ -44,7 +42,7 @@ export const HomepageQuery = graphql`
     navbar: allDatoCmsMenuItem(filter: { root: { eq: true } }, sort: { position: ASC }) {
       nodes {
         title
-        content {
+        path {
           ... on DatoCmsBasicPage {
             id
             slug

@@ -31,7 +31,7 @@ export const PageQuery = graphql`
     navbar: allDatoCmsMenuItem(filter: { root: { eq: true } }, sort: { position: ASC }) {
       nodes {
         title
-        content {
+        path {
           ... on DatoCmsBasicPage {
             id
             slug

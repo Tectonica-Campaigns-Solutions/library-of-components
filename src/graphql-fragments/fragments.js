@@ -6,7 +6,7 @@ export const DatoCMS = graphql`
     externalUrl
     isButton
     isSearchButton
-    content {
+    path {
       __typename
       ... on DatoCmsBasicPage {
         slug
@@ -26,7 +26,7 @@ export const DatoCMS = graphql`
         title
         externalUrl
         isButton
-        content {
+        path {
           __typename
           ... on DatoCmsBasicPage {
             slug

@@ -7,7 +7,6 @@ import Spinner from '../Spinner/Spinner';
 import './search-engine-styles.scss';
 
 const client = buildClient({ apiToken: process.env.DATO_API_TOKEN as string });
-console.log('API', process.env.DATO_API_TOKEN);
 
 interface SearchEngineProps {
   searchEngineVisible: boolean;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStaticQuery } from 'gatsby';
 import { graphql } from 'gatsby';
-import { Header as HeaderUI } from 'tectonica-ui';
+import { Nav } from 'tectonica-ui';
 
 const Header = () => {
   const menus = useStaticQuery(graphql`
@@ -19,7 +19,7 @@ const Header = () => {
     url: '',
   };
 
-  return <HeaderUI logo={logo} location={{}} menu={menus.mainMenu} />;
+  return <Nav logo={logo} location={{}} navData={menus.mainMenu} />;
 };
 
 export default Header;
