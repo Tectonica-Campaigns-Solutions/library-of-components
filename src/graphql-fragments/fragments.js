@@ -575,4 +575,38 @@ export const DatoCMS = graphql`
       value
     }
   }
+
+  fragment BlockVideoModal on DatoCmsVideoModal {
+    __typename
+    id: originalId
+    internalName
+    video {
+      url
+      filename
+      basename
+      alt
+      title
+      video {
+        muxPlaybackId
+        streamingUrl
+        thumbnailUrl
+        mp4Url
+      }
+    }
+    externalVideo {
+      url
+      title
+      provider
+      providerUid
+      thumbnailUrl
+      width
+      height
+    }
+    thumbnailImage {
+      url
+      alt
+      width
+      height
+    }
+  }
 `;

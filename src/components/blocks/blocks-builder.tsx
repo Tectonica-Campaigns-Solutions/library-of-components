@@ -21,6 +21,7 @@ import {
   PeopleDetail,
   ShareButtons,
   Tabs,
+  VideoModal,
 } from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
@@ -226,6 +227,22 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                   {/* @ts-ignore */}
                   <StructuredText data={block.text} />
                 </PeopleDetail>
+              </div>
+            );
+
+          case 'DatoCmsVideoModal':
+            console.log({ block });
+
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <VideoModal
+                  // @ts-ignore
+                  video={block.video}
+                  // @ts-ignore
+                  externalVideo={block.externalVideo}
+                  // @ts-ignore
+                  thumbnailImage={block.thumbnailImage}
+                />
               </div>
             );
 

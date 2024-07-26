@@ -19,6 +19,8 @@
     "@datocms/cli": "^2.0.5",
     "@datocms/cma-client-browser": "^3.3.2",
     "@gsap/react": "^2.1.0",
+    "@mux/mux-player": "^2.8.0",
+    "@mux/mux-player-react": "^2.8.0",
     "@types/node": "^20.14.11",
     "@types/react": "^18.3.3",
     "axios": "^1.6.7",
@@ -46,7 +48,7 @@
     "sass": "^1.71.0",
     "slick-carousel": "^1.8.1",
     "supercluster": "^8.0.1",
-    "tectonica-ui": "^1.0.10",
+    "tectonica-ui": "1.0.17",
     "typescript": "^5.5.3",
     "use-supercluster": "^1.2.0"
   },
