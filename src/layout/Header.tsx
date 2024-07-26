@@ -16,7 +16,7 @@ const Header = () => {
 
   const logo = {
     id: '1',
-    url: '',
+    url: 'https://www.datocms-assets.com/120090/1711043456-logo.png?auto=format',
   };
 
   return <Nav logo={logo} location={{}} navData={menus.mainMenu} />;
