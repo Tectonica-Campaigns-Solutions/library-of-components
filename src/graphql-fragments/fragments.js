@@ -540,4 +540,17 @@ export const DatoCMS = graphql`
     internalName
     title
   }
+
+  fragment BlockImageGallery on DatoCmsImageGallery {
+    __typename
+    id: originalId
+    headline
+    images {
+      url
+      width
+      height
+      alt
+      title
+    }
+  }
 `;

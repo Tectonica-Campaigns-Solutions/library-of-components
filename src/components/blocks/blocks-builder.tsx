@@ -13,6 +13,7 @@ import {
   HeroBasic,
   HeroHome,
   HubspotForm,
+  ImageGallery,
   ListPaginated,
   NarrativeBlock,
   NarrativeBlockAdvanced,
@@ -206,6 +207,15 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <ShareButtons />
               </div>
             );
+
+          case 'DatoCmsImageGallery':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
+                <ImageGallery {...block} />
+              </div>
+            );
+
           default:
             return null;
         }

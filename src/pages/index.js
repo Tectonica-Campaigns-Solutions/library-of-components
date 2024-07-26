@@ -79,6 +79,7 @@ export const HomepageQuery = graphql`
         ...BlockCtaGrid
         ...BlockNotification
         ...BlockHubspotForm
+        ...BlockImageGallery
         ... on DatoCmsHeader {
           __typename
           internalName
