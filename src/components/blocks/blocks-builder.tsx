@@ -15,6 +15,7 @@ import {
   HubspotForm,
   ImageGallery,
   ListPaginated,
+  MapboxWrapper,
   NarrativeBlock,
   NarrativeBlockAdvanced,
   Notification,
@@ -231,8 +232,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             );
 
           case 'DatoCmsVideoModal':
-            console.log({ block });
-
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <VideoModal
@@ -242,6 +241,50 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                   externalVideo={block.externalVideo}
                   // @ts-ignore
                   thumbnailImage={block.thumbnailImage}
+                />
+              </div>
+            );
+
+          case 'DatoCmsMapbox':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                <MapboxWrapper
+                  initialViewport={{
+                    latitude: 53.349805,
+                    longitude: -6.26031,
+                    zoom: 10,
+                  }}
+                  mapStyle=""
+                  mapboxAccessToken="pk.eyJ1IjoibWFydGluYWx2IiwiYSI6ImNscHR1YjdvZDBlY2sybHBnNTRwM2l4ZTEifQ.nn8C3qy8ULBkq6gdO3vlCg"
+                  pins={[
+                    {
+                      type: 'Feature',
+                      geometry: {
+                        type: 'Point',
+                        coordinates: [-6.26031, 53.349805],
+                      },
+                      properties: {
+                        title: 'Title',
+                        description: 'Description',
+                      },
+                    },
+                    {
+                      type: 'Feature',
+                      geometry: {
+                        type: 'Point',
+                        coordinates: [-6.36031, 53.349805],
+                      },
+                      properties: {
+                        title: 'Title',
+                        description: 'Description',
+                      },
+                    },
+                  ]}
+                  renderMarker={() => <div style={{ backgroundColor: '#FFF', padding: '10px' }}>MARKER</div>}
+                  renderPopup={(item) => {
+                    return <div>ITEM</div>;
+                  }}
+                  className="app-map"
                 />
               </div>
             );

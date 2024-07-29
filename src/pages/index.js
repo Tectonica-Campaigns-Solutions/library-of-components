@@ -82,6 +82,7 @@ export const HomepageQuery = graphql`
         ...BlockImageGallery
         ...BlockPeopleModal
         ...BlockVideoModal
+        ...BlockMapboxWrapper
         ... on DatoCmsHeader {
           __typename
           internalName

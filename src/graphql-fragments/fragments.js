@@ -576,6 +576,12 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockMapboxWrapper on DatoCmsMapbox {
+    __typename
+    id: originalId
+    internalName
+  }
+
   fragment BlockVideoModal on DatoCmsVideoModal {
     __typename
     id: originalId
