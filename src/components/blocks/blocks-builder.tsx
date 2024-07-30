@@ -284,9 +284,9 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                   renderPopup={(item) => {
                     return <div>ITEM</div>;
                   }}
-                  // withGeocoder
+                  withGeocoder
                   navigationControlPosition="top-right"
-                  // renderNavigationControl={false}
+                  renderNavigationControl={false}
                   className="app-map"
                 />
               </div>
