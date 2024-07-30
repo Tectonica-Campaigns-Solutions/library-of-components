@@ -3,7 +3,7 @@ import Sidebar from '../sidebar/sidebar';
 
 import './index.scss';
 
-const Dashboard = ({ pageTitle, sidebarLinks = [], extraLinks = [], activeItem, setActiveItem, children }) => {
+const Dashboard = ({ sidebarLinks = [], extraLinks = [], activeItem, setActiveItem, children }) => {
   return (
     <div className="app-dashboard container-fluid" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
       <div className="row" style={{ minHeight: 'inherit' }}>

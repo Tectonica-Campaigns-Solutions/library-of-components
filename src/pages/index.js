@@ -4,25 +4,26 @@ import Dashboard from '../layout/dashboard/dashboard';
 import BlocksBuilder from '../components/blocks/blocks-builder';
 import CustomSeoDatoCMS from '../components/custom-seo-dato-cms';
 import { getSidebarLinksFromBlocks } from '../utils/dato.utils';
+import Logs from '../components/blocks/Logs/Logs';
 
 const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
   const { title, seo, blocks = [] } = homepage;
   const sidebarLinks = getSidebarLinksFromBlocks(blocks);
 
-  const [activeItem, setActiveItem] = React.useState(0);
+  const [activeItem, setActiveItem] = React.useState(-1);
 
   return (
     <>
       <CustomSeoDatoCMS seo={seo} favicon={favicon} />
 
       <Dashboard
-        pageTitle={title}
         sidebarLinks={sidebarLinks}
         extraLinks={navbar.nodes}
         activeItem={activeItem}
         setActiveItem={setActiveItem}
       >
         <div className="px-4">
+          {activeItem === -1 ? <Logs /> : null}
           <BlocksBuilder blocks={blocks} footer={footer} activeItem={activeItem} />
         </div>
       </Dashboard>
