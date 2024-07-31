@@ -21,12 +21,14 @@ import {
   Notification,
   PeopleDetail,
   ShareButtons,
+  // SidebarWrapper,
   Tabs,
   VideoModal,
 } from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
 import { StructuredText } from 'react-datocms/structured-text';
+import SidebarWrapper from './SidebarWrapper/SidebarWrapper';
 
 interface Block {
   __typename: string;
@@ -291,6 +293,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 />
               </div>
             );
+
+            case 'DatoCmsSidebarWrapper':
+              return (
+                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                  <SidebarWrapper block={block} />
+                </div>
+              );
 
           default:
             return null;

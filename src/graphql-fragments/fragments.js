@@ -615,4 +615,58 @@ export const DatoCMS = graphql`
       height
     }
   }
+
+  fragment SidebarWrapper on DatoCmsSidebarWrapper {
+    __typename
+    id: originalId
+    internalName
+    title
+    bgColor: backgroundColor{
+      hex
+    }
+    sections {
+      # title
+      ... on DatoCmsSidebarSection {
+        title
+        model {
+          apiKey
+        }
+        items {
+          ... on DatoCmsSidebarItem {
+            label
+            link {
+              externalUrl
+              model {
+                apiKey
+              }
+              path {
+                ... on DatoCmsBasicPage {
+                  slug
+                  model {
+                    name
+                  }
+                }
+                ... on DatoCmsPost {
+                  id
+                  slug
+                  model {
+                    name
+                  }
+                }
+                ... on DatoCmsHomepage {
+                  slug
+                  model {
+                    name
+                  }
+                }
+              }
+            }
+            model {
+              apiKey
+            }
+          }
+        }
+      }
+    }
+  }
 `;
