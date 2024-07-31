@@ -7,6 +7,13 @@ const Logs = () => {
       <h3>Latest changes</h3>
       <ul>
         <li>
+          <span className="date">July 31 2024</span>
+          <p>
+            A component for displaying a sidebar menu structure was created. The component is fully responsive and has a mobile version.
+            Next step is to add support for adding buttons.
+          </p>
+        </li>
+        <li>
           <span className="date">July 30 2024</span>
           <p>
             A component was created to display the latest releases that were added. Progress in the Mapbox component to
