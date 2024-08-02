@@ -9,6 +9,16 @@ const Logs = () => {
         <li>
           <span className="date">July 31 2024</span>
           <p>
+            Updates to sidebar menu component: <br />
+            - support for collapsable sections <br />
+            - support for subitems <br />
+            - support for buttons <br />
+            - feature to collapse sidebar <br />
+          </p>
+        </li>
+        <li>
+          <span className="date">July 31 2024</span>
+          <p>
             A component for displaying a sidebar menu structure was created. The component is fully responsive and has a mobile version.
             Next step is to add support for adding buttons.
           </p>

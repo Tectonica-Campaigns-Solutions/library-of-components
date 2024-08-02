@@ -337,6 +337,18 @@ export const DatoCMS = graphql`
               apiKey
             }
           }
+          ... on DatoCmsPost {
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsBasicPage {
+            slug
+            model {
+              apiKey
+            }
+          }
         }
       }
     }
@@ -616,14 +628,57 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment SidebarSection on DatoCmsSidebarSection {
+    __typename
+    id: originalId
+    title
+    items {
+      ... on DatoCmsSidebarItem {
+        label
+        link {
+          externalUrl
+          model {
+            apiKey
+          }
+          path {
+            ... on DatoCmsBasicPage {
+              slug
+              model {
+                name
+              }
+            }
+            ... on DatoCmsPost {
+              id
+              slug
+              model {
+                name
+              }
+            }
+            ... on DatoCmsHomepage {
+              slug
+              model {
+                name
+              }
+            }
+          }
+        }
+        model {
+          apiKey
+        }
+      }
+      ...BlockCta
+    }
+  }
+
   fragment SidebarWrapper on DatoCmsSidebarWrapper {
     __typename
     id: originalId
     internalName
     title
-    bgColor: backgroundColor{
+    bgColor: backgroundColor {
       hex
     }
+    collapsable
     sections {
       # title
       ... on DatoCmsSidebarSection {
@@ -661,10 +716,38 @@ export const DatoCMS = graphql`
                 }
               }
             }
+            subitems {
+              ... on DatoCmsGlobalLink {
+                title
+                externalUrl
+                path {
+                  ... on DatoCmsBasicPage {
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsPost {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsHomepage {
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                }
+              }
+            }
             model {
               apiKey
             }
           }
+          ...BlockCta
         }
       }
     }

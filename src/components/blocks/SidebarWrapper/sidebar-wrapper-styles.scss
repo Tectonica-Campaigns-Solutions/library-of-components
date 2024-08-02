@@ -18,19 +18,33 @@
         top: 90px;
     }
 
+    .sidebar-header {
+        margin: 1rem;
+    }
+
     .sidebar-section {
         padding-bottom: 1rem;
         margin: 1rem;
         border-bottom: 1px solid #000;
         h4 {
+            cursor: pointer;
             opacity: 0.8;
-            font-weight: 700;
-            text-transform: uppercase;
+            &:hover {
+                opacity: 0.5;
+            }
         }
         ul {
             padding: 0;
             margin: 0;
             list-style: none;
+
+            &.subitems {
+                padding-left: 1rem;
+                li {
+                    list-style: square;
+                    margin-left: 1rem;
+                }
+            }
         }
         a {
             text-decoration: none;
