@@ -15,6 +15,7 @@ import {
   HubspotForm,
   ImageGallery,
   ListPaginated,
+  MapboxPopup,
   MapboxWrapper,
   NarrativeBlock,
   NarrativeBlockAdvanced,
@@ -267,7 +268,12 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                       },
                       properties: {
                         title: 'Title',
-                        description: 'Description',
+                        address: 'Address 1',
+                        date: '2020/10/25',
+                        image: {
+                          id: '1',
+                          url: 'https://via.placeholder.com/150',
+                        },
                       },
                     },
                     {
@@ -278,13 +284,44 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                       },
                       properties: {
                         title: 'Title',
-                        description: 'Description',
+                        address: 'Address 2',
+                        date: '2022/10/25',
+                        image: {
+                          id: '2',
+                          url: 'https://via.placeholder.com/150',
+                        },
+                        tags: [
+                          {
+                            id: 1,
+                            name: 'tag1',
+                          },
+                          {
+                            id: 2,
+                            name: 'tag2',
+                          },
+                        ],
                       },
                     },
                   ]}
                   renderMarker={() => <div style={{ backgroundColor: '#FFF', padding: '10px' }}>MARKER</div>}
                   renderPopup={(item) => {
-                    return <div>ITEM</div>;
+                    return (
+                      <MapboxPopup
+                        to={{
+                          id: '1',
+                          externalUrl: 'https://www.google.com',
+                        }}
+                        card={{
+                          properties: {
+                            title: item.title,
+                            address: item.address,
+                            date: item.date,
+                            image: item.image,
+                            tags: item.tags,
+                          },
+                        }}
+                      />
+                    );
                   }}
                   withGeocoder
                   navigationControlPosition="top-right"
@@ -294,12 +331,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
               </div>
             );
 
-            case 'DatoCmsSidebarWrapper':
-              return (
-                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                  <SidebarWrapper block={block} />
-                </div>
-              );
+          case 'DatoCmsSidebarWrapper':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
+                <SidebarWrapper block={block} />
+              </div>
+            );
 
           default:
             return null;
