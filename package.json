@@ -50,7 +50,7 @@
     "sass": "^1.71.0",
     "slick-carousel": "^1.8.1",
     "supercluster": "^8.0.1",
-    "tectonica-ui": "1.0.30",
+    "tectonica-ui": "1.0.31",
     "typescript": "^5.5.3",
     "use-supercluster": "^1.2.0"
   },

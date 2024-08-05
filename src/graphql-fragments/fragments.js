@@ -670,6 +670,19 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment AudioPlayer on DatoCmsAudioPlayer {
+    __typename
+    id: originalId
+    internalName
+    file {
+      url
+      title
+      basename
+      filename
+      alt
+    }
+  }
+
   fragment SidebarWrapper on DatoCmsSidebarWrapper {
     __typename
     id: originalId

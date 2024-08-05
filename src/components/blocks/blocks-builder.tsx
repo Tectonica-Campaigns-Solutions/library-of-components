@@ -3,6 +3,7 @@ import Divider from './Divider/Divider';
 import SectionTitle from './SectionTitle/SectionTitle';
 import {
   Accordion,
+  AudioPlayer,
   Breadcrumbs,
   Button,
   ButtonList,
@@ -339,6 +340,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
               </div>
             );
 
+          case 'DatoCmsAudioPlayer':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
+                <AudioPlayer {...block} />
+              </div>
+            );
           default:
             return null;
         }
