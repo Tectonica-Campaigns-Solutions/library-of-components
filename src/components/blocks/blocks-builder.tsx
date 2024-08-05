@@ -348,12 +348,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <AudioPlayer {...block} />
               </div>
             );
-            case 'DatoCmsParallaxContentSection':
-              return (
-                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                  <ParallaxContentSection block={block} />
-                </div>
-              );
+          case 'DatoCmsParallaxContentSection':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
+                <ParallaxContentSection block={block} />
+              </div>
+            );
 
           default:
             return null;
