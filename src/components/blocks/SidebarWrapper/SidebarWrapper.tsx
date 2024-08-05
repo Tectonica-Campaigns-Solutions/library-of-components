@@ -129,7 +129,6 @@ const SidebarWrapper: FC<SidebarWrapperProps> = ({ block }) => {
                 }
                   <ul style={{ display: collapsedSections.includes(index) ? "none" : "block" }}>
                   {section.items.map((item, index) => (
-                     console.log(item),
                     <>
                       {item.__typename === "DatoCmsCta" && (
                         <li key={index} className="my-2">
@@ -145,14 +144,10 @@ const SidebarWrapper: FC<SidebarWrapperProps> = ({ block }) => {
                               {item.label}
                             </a>
                           )}
-
                           {item.subitems && (
                             <ul className='subitems'>
                               {item.subitems.map((subitem, index) => (
-                                
                                 <li key={index}>
-                                  
-                                  {/* <Link to={subitem.path?.slug}>{subitem.title}</Link> */}
                                   {subitem.path ? (
                                     <Link to={subitem.path.slug}>{subitem.title}</Link>
                                   ) : (
@@ -160,14 +155,10 @@ const SidebarWrapper: FC<SidebarWrapperProps> = ({ block }) => {
                                       {subitem.title}
                                     </a>
                                   )}
-
                                 </li>
-
-
                               ))}
                             </ul>
                           )}
-
                         </li>
                       )}
                     </>

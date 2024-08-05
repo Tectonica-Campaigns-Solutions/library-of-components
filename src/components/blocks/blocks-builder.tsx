@@ -31,6 +31,7 @@ import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
 import { StructuredText } from 'react-datocms/structured-text';
 import SidebarWrapper from './SidebarWrapper/SidebarWrapper';
+import ParallaxContentSection from './ParallaxContentSection';
 
 interface Block {
   __typename: string;
@@ -347,6 +348,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <AudioPlayer {...block} />
               </div>
             );
+            case 'DatoCmsParallaxContentSection':
+              return (
+                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                  <ParallaxContentSection block={block} />
+                </div>
+              );
+
           default:
             return null;
         }

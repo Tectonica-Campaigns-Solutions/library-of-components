@@ -765,4 +765,11 @@ export const DatoCMS = graphql`
       }
     }
   }
+
+  fragment ParallaxContentSection on DatoCmsParallaxContentSection {
+    __typename
+    id: originalId
+    internalName
+    title
+  }
 `;

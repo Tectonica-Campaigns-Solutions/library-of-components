@@ -1,0 +1,58 @@
+.transition-slide-wrapper {
+
+    section {
+      position: relative;
+      height: 200vh;
+    }
+  
+    .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  
+    .box {
+      padding: 36px;
+      background-color: rgba(0, 0, 0, 0.4);
+      max-width: 650px;
+  
+      position: sticky;
+      top: 100px;
+      left: 200px;
+      margin-bottom: 100px;
+  
+      h2 {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 31px;
+        line-height: 120%;
+        color: #FFF1E5;
+        margin: 0;
+        margin-bottom: 21px;
+      }
+  
+      p {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 135%;
+        color: #FFF1E5;
+      }
+  
+      &.two {
+        top: 500px;
+        left: 60%;
+      }
+  
+      &.three {
+        top: 900px;
+        left: 35%;
+      }
+    }
+  }

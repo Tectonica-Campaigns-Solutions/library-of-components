@@ -10,7 +10,7 @@ const Sidebar = ({ links = [], extraLinks = [], activeItem, setActiveItem }) => 
       <div className="pt-3 sidebar-fixed">
         <ul className="app-nav">
           <Link to="/" className="logo">
-            Library of Component
+            Library of Components
           </Link>
 
           {links.map((link, index) => {
