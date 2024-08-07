@@ -1,58 +1,116 @@
-.transition-slide-wrapper {
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-    section {
-      position: relative;
-      height: 200vh;
+.fixed-slides-wrapper {
+  * {
+    box-sizing: border-box;
+  }
+
+  .section {
+    position: relative;
+    height: 300vh;
+    overflow: hidden;
+
+    &.extra {
+      height: 600vh;
+
+      .box {
+        bottom: 70%;
+      }
+
+      .box.extra-element {
+        bottom: 30%;
+      }
     }
-  
-    .bg {
+
+    .background {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
-  
+
     .box {
-      padding: 36px;
-      background-color: rgba(0, 0, 0, 0.4);
-      max-width: 650px;
-  
-      position: sticky;
-      top: 100px;
-      left: 200px;
-      margin-bottom: 100px;
-  
-      h2 {
-        font-style: normal;
-        font-weight: 400;
+      position: absolute;
+      bottom: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(38, 42, 51, 0.8);
+      padding: 34px;
+      width: 100%;
+      max-width: 600px;
+
+      h3 {
+        color: var(--FT-Yellow, #FFF1E5);
+        font-family: "Roboto", sans-serif;
         font-size: 31px;
+        font-style: normal;
+        font-weight: 800;
         line-height: 120%;
-        color: #FFF1E5;
         margin: 0;
         margin-bottom: 21px;
       }
-  
+
       p {
+        color: var(--FT-Yellow, #FFF1E5);
+        font-family: "Roboto", sans-serif;
+        font-size: 20px;
         font-style: normal;
         font-weight: 400;
-        font-size: 20px;
         line-height: 135%;
-        color: #FFF1E5;
       }
-  
-      &.two {
-        top: 500px;
-        left: 60%;
+
+      &.left {
+        left: 20%;
       }
-  
-      &.three {
-        top: 900px;
-        left: 35%;
+
+      &.center {
+        left: 50%;
+      }
+
+      &.right {
+        left: 80%;
       }
     }
   }
+}
+
+@media screen and (max-width: 992px) {
+  .fixed-slides-wrapper {
+
+    .section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .box {
+        padding: 23px;
+        transform: none !important;
+        left: unset !important;
+        right: unset !important;
+        max-width: 100%;
+        width: 90%;
+
+
+        h3 {
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 120%;
+          margin-bottom: 15px;
+        }
+
+        p {
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 135%;
+        }
+      }
+    }
+
+
+  }
+}
