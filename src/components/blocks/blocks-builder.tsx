@@ -32,7 +32,6 @@ import Header from '../../layout/Header';
 import { StructuredText } from 'react-datocms/structured-text';
 import SidebarWrapper from './SidebarWrapper/SidebarWrapper';
 import ParallaxContentSection from './ParallaxContentSection';
-// import MapboxWrapperTEST from './Mapboxtest';
 
 interface Block {
   __typename: string;
@@ -327,47 +326,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                       />
                     );
                   }}
-                  // withCluster
-                  // clusterOptions={{
-                  //   id: 'clusters',
-                  //   radius: 50,
-                  //   maxZoom: 15,
-                  //   layers: [
-                  //     {
-                  //       id: 'clusters',
-                  //       type: 'circle',
-                  //       source: 'pins',
-                  //       filter: ['has', 'point_count'],
-                  //       paint: {
-                  //         'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
-                  //         'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
-                  //       },
-                  //     },
-                  //     {
-                  //       id: 'cluster-count',
-                  //       type: 'symbol',
-                  //       source: 'pins',
-                  //       filter: ['has', 'point_count'],
-                  //       layout: {
-                  //         'text-field': '{point_count_abbreviated}',
-                  //         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                  //         'text-size': 12,
-                  //       },
-                  //     },
-                  //     {
-                  //       id: 'unclustered-point',
-                  //       type: 'circle',
-                  //       source: 'pins',
-                  //       filter: ['!', ['has', 'point_count']],
-                  //       paint: {
-                  //         'circle-color': '#11b4da',
-                  //         'circle-radius': 4,
-                  //         'circle-stroke-width': 1,
-                  //         'circle-stroke-color': '#fff',
-                  //       },
-                  //     },
-                  //   ],
-                  // }}
                   withGeocoder
                   navigationControlPosition="top-right"
                   renderNavigationControl={false}
