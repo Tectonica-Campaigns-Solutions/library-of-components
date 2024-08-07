@@ -771,5 +771,31 @@ export const DatoCMS = graphql`
     id: originalId
     internalName
     title
+    sections {
+      ... on DatoCmsParallaxSection {
+        title
+        imageDesktop {
+          url
+          alt
+          title
+          width
+          height
+          gatsbyImageData
+        }
+        imageMobile {
+          url
+          alt
+          title
+          width
+          height
+          gatsbyImageData
+        }
+        alignment
+        content
+        model {
+          apiKey
+        }
+      }
+    }
   }
 `;

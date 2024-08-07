@@ -4,20 +4,23 @@ import { useGSAP } from '@gsap/react';
 import './parallax-content-section.scss';
 
 interface SectionProps {
-  imageUrl: string;
-  responsiveImageUrl: string;
+  title: string;
+  imageUrl: string | undefined;
+  responsiveImageUrl: string | undefined;
   content: JSX.Element;
   extraContent?: JSX.Element;
   alignment: string;
+  imageDesktop?: { url: string };
+  imageMobile?: { url: string };
 }
 
 interface ParallaxSection {
   block: {
-    props: SectionProps;
+    sections: SectionProps[];
   };
 }
 
-const ParallaxSection: React.FC<SectionProps> = ({ imageUrl, responsiveImageUrl, content, extraContent, alignment }) => {
+const ParallaxSection: React.FC<SectionProps> = ({ title, imageUrl, responsiveImageUrl, content, extraContent, alignment }) => {
 
   const rawId = useId();
   const id = rawId.replaceAll(':', '');
@@ -43,12 +46,10 @@ const ParallaxSection: React.FC<SectionProps> = ({ imageUrl, responsiveImageUrl,
   return (
     <section id={id} ref={sectionRef} className={`section ${extraContent ? 'extra' : ''}`}>
       <div className="background" style={{ backgroundImage: `url(${imageUrl})` }} />
-      <div ref={boxRef} className={`box ${alignment ? alignment : 'left'}`}>
-        {content}
-      </div>
+      <div ref={boxRef} className={`box ${alignment ? alignment : 'left'}`} dangerouslySetInnerHTML={{ __html: `<h3>${title}</h3>` + content }} />
 
       {extraContent && (
-        <div className={`box extra-element ${alignment ? alignment : 'left'}`}>{extraContent}</div>
+        <div className={`box extra-element ${alignment ? alignment : 'left'}`} dangerouslySetInnerHTML={{ __html: extraContent }} />
       )}
 
       {/* Responsive background image */}
@@ -67,65 +68,25 @@ const ParallaxSection: React.FC<SectionProps> = ({ imageUrl, responsiveImageUrl,
 
 const ParallaxContentSection:React.FC<ParallaxSection> = ({ block }) => {
     
-    const { props } = block;
+    const { sections } = block;
     const slideRef = useRef();
+
+    console.log(block);
 
     return (
         <div ref={slideRef} className="fixed-slides-wrapper">
             <div>
+              { sections.map((section: SectionProps, index: number) => (
                 <ParallaxSection 
-                    alignment="left"
-                    imageUrl="/slide-1.png"
-                    responsiveImageUrl="/responsive-img-1.png"
-                    content={
-                        <>
-                        <h3>Gender Based Violence and Harassment</h3>
-                        <p>
-                            While gender-based violence and harassment occurs in a large variety of workplaces, it can occur
-                            particularly frequently in hotels where, in most countries, a large proportion of workers are women.
-                        </p>
-                        </>
-                    }
+                    key={index}
+                    title={section.title}
+                    alignment={section.alignment}
+                    imageUrl={section.imageDesktop?.url}
+                    responsiveImageUrl={section.imageMobile?.url}
+                    content={section.content}
+                    extraContent={section.extraContent}
                 />
-
-                <ParallaxSection
-                    alignment="center"
-                    imageUrl="/slide-2.png"
-                    responsiveImageUrl="/responsive-img-2.png"
-                    content={
-                        <>
-                        <h3>Gender Based Violence and Harassment</h3>
-                        <p>
-                            While gender-based violence and harassment occurs in a large variety of workplaces, it can occur
-                            particularly frequently in hotels where, in most countries, a large proportion of workers are women.
-                        </p>
-                        </>
-                    }
-                />
-
-                <ParallaxSection
-                    alignment="right"
-                    imageUrl="/slide-3.png"
-                    responsiveImageUrl="/responsive-img-3.png"
-                    content={
-                        <>
-                        <h3>Gender Based Violence and Harassment</h3>
-                        <p>
-                            While gender-based violence and harassment occurs in a large variety of workplaces, it can occur
-                            particularly frequently in hotels where, in most countries, a large proportion of workers are women.
-                        </p>
-                        </>
-                    }
-                    extraContent={
-                        <>
-                        <h3>Extra card</h3>
-                        <p>
-                            While gender-based violence and harassment occurs in a large variety of workplaces, it can occur
-                            particularly frequently in hotels where, in most countries, a large proportion of workers are women.
-                        </p>
-                        </>
-                    }
-                />
+              ))}
             </div>
         </div>
     );
