@@ -12393,10 +12393,10 @@ tar-stream@^3.1.5:
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
 
-tectonica-ui@1.0.33:
-  version "1.0.33"
-  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.33.tgz#73cc32a0ba7b6d67927e99490d302780cc8e4f90"
-  integrity sha512-wMDw2e31QuZxAS+KEQq37swHunvFWCac4dxAs7O/DycHAsv2F4zean63uU2sMndLKHDG9iSsDMFA2ESwrOR9qA==
+tectonica-ui@1.0.38:
+  version "1.0.38"
+  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.38.tgz#0694f791021c3a1a9af0a44358fba236808c8b66"
+  integrity sha512-QtZkoo+fmup9FyrhH2SaYLCBoPcu+l/CbeBsIaXXJyJ+T8S9VFwzQ4Fa80ypMXwjEOLkg2dZwSKh8I1Y46Xp3A==
   dependencies:
     "@mapbox/mapbox-gl-geocoder" "4.7.4"
     "@mux/mux-player" "2.8.0"

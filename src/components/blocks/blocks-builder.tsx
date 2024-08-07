@@ -32,6 +32,7 @@ import Header from '../../layout/Header';
 import { StructuredText } from 'react-datocms/structured-text';
 import SidebarWrapper from './SidebarWrapper/SidebarWrapper';
 import ParallaxContentSection from './ParallaxContentSection';
+// import MapboxWrapperTEST from './Mapboxtest';
 
 interface Block {
   __typename: string;
@@ -254,11 +255,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <MapboxWrapper
-                  initialViewport={{
-                    latitude: 53.349805,
-                    longitude: -6.26031,
-                    zoom: 10,
-                  }}
+                  initialViewport={{ latitude: 53.349805, longitude: -6.26031, zoom: 10 }}
                   mapStyle=""
                   mapboxAccessToken="pk.eyJ1IjoibWFydGluYWx2IiwiYSI6ImNscHR1YjdvZDBlY2sybHBnNTRwM2l4ZTEifQ.nn8C3qy8ULBkq6gdO3vlCg"
                   pins={[
@@ -305,14 +302,19 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                       },
                     },
                   ]}
-                  renderMarker={() => <div style={{ backgroundColor: '#FFF', padding: '10px' }}>MARKER</div>}
+                  renderMarker={() => (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="54" viewBox="0 0 42 54" fill="none">
+                      <path
+                        d="M23.8546 52.0439L23.8555 52.0427C26.5327 48.7745 30.9302 43.1726 34.661 37.2691C36.5262 34.3175 38.2311 31.2807 39.4711 28.4153C40.7074 25.5586 41.5 22.8311 41.5 20.5099C41.5 9.44694 32.306 0.5 21 0.5C9.68979 0.5 0.5 9.447 0.5 20.5099C0.5 22.8304 1.28632 25.5574 2.5153 28.4143C3.74792 31.2797 5.44396 34.3166 7.30351 37.2685C11.0224 43.1718 15.4197 48.7736 18.1462 52.0449C19.6277 53.8412 22.3736 53.8409 23.8546 52.0439Z"
+                        fill="#000"
+                        stroke="black"
+                      />
+                    </svg>
+                  )}
                   renderPopup={(item) => {
                     return (
                       <MapboxPopup
-                        to={{
-                          id: '1',
-                          externalUrl: 'https://www.google.com',
-                        }}
+                        to={{ id: '1', externalUrl: 'https://www.google.com' }}
                         card={{
                           properties: {
                             title: item.title,
@@ -325,10 +327,52 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                       />
                     );
                   }}
+                  // withCluster
+                  // clusterOptions={{
+                  //   id: 'clusters',
+                  //   radius: 50,
+                  //   maxZoom: 15,
+                  //   layers: [
+                  //     {
+                  //       id: 'clusters',
+                  //       type: 'circle',
+                  //       source: 'pins',
+                  //       filter: ['has', 'point_count'],
+                  //       paint: {
+                  //         'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
+                  //         'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+                  //       },
+                  //     },
+                  //     {
+                  //       id: 'cluster-count',
+                  //       type: 'symbol',
+                  //       source: 'pins',
+                  //       filter: ['has', 'point_count'],
+                  //       layout: {
+                  //         'text-field': '{point_count_abbreviated}',
+                  //         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                  //         'text-size': 12,
+                  //       },
+                  //     },
+                  //     {
+                  //       id: 'unclustered-point',
+                  //       type: 'circle',
+                  //       source: 'pins',
+                  //       filter: ['!', ['has', 'point_count']],
+                  //       paint: {
+                  //         'circle-color': '#11b4da',
+                  //         'circle-radius': 4,
+                  //         'circle-stroke-width': 1,
+                  //         'circle-stroke-color': '#fff',
+                  //       },
+                  //     },
+                  //   ],
+                  // }}
                   withGeocoder
                   navigationControlPosition="top-right"
                   renderNavigationControl={false}
                   className="app-map"
+                  key={activeItem === index ? new Date().getTime() : null}
                 />
               </div>
             );
@@ -348,6 +392,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <AudioPlayer {...block} />
               </div>
             );
+
           case 'DatoCmsParallaxContentSection':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
