@@ -7,6 +7,13 @@ const Logs = () => {
       <h3>Latest changes</h3>
       <ul>
         <li>
+          <span className="date">August 6 2024</span>
+          <p>
+            Updates to mapbox component <br />
+            - support for geoserch <br />
+          </p>
+        </li>
+        <li>
           <span className="date">July 31 2024</span>
           <p>
             Updates to sidebar menu component: <br />
@@ -19,8 +26,8 @@ const Logs = () => {
         <li>
           <span className="date">July 31 2024</span>
           <p>
-            A component for displaying a sidebar menu structure was created. The component is fully responsive and has a mobile version.
-            Next step is to add support for adding buttons.
+            A component for displaying a sidebar menu structure was created. The component is fully responsive and has a
+            mobile version. Next step is to add support for adding buttons.
           </p>
         </li>
         <li>
