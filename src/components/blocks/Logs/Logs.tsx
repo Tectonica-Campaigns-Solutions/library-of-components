@@ -7,9 +7,14 @@ const Logs = () => {
       <h3>Latest changes</h3>
       <ul>
         <li>
+          <span className="date">August 19 2024</span>
+          <p>Dashboard UI Updates</p>
+        </li>
+        <li>
           <span className="date">August 7 2024</span>
           <p>
-            A component for displaying a parallax scrolling content. The component has a mobile version and all the content is customizable.
+            A component for displaying a parallax scrolling content. The component has a mobile version and all the
+            content is customizable.
           </p>
         </li>
         <li>

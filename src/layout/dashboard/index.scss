@@ -1,1 +1,12 @@
-.app-dashboard {}
+.app-dashboard {
+  display: grid;
+  grid-template-columns: 2fr 10fr;
+  height: 100vh;
+  overflow: hidden;
+
+  main {
+    position: relative;
+    overflow-y: auto;
+    padding-top: 4rem;
+  }
+}

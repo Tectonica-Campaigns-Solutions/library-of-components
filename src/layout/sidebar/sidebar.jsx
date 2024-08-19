@@ -1,17 +1,16 @@
 import React from 'react';
-import { Link } from 'gatsby';
 import { ReactSVG } from 'react-svg';
 
 import './index.scss';
 
-const Sidebar = ({ links = [], extraLinks = [], activeItem, setActiveItem }) => {
+const Sidebar = ({ links = [], activeItem, setActiveItem }) => {
   return (
-    <nav className="app-sidebar col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <nav className="app-sidebar d-md-block bg-light sidebar collapse">
       <div className="pt-3 sidebar-fixed">
         <ul className="app-nav">
-          <Link to="/" className="logo">
+          <span className="logo" onClick={() => setActiveItem(-1)}>
             Library of Components
-          </Link>
+          </span>
 
           {links.map((link, index) => {
             if (link.wrapper) {

@@ -1,7 +1,8 @@
 .app-sidebar {
 
   z-index: 9;
-  
+  overflow-y: auto;
+
   .logo {
     padding-left: .75rem;
     padding-right: .75rem;
@@ -14,6 +15,7 @@
     color: rgb(9, 9, 11);
     padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(9, 9, 11, .1);
+    cursor: pointer;
   }
 
   .app-nav {
