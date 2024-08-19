@@ -7,7 +7,7 @@ import { getSidebarLinksFromBlocks } from '../utils/dato.utils';
 import Logs from '../components/blocks/Logs/Logs';
 
 const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
-  const { title, seo, blocks = [] } = homepage;
+  const { seo, blocks = [] } = homepage;
   const sidebarLinks = getSidebarLinksFromBlocks(blocks);
 
   const [activeItem, setActiveItem] = React.useState(-1);

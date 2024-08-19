@@ -5,7 +5,7 @@ import BlocksBuilder from '../components/blocks/blocks-builder';
 import Dashboard from '../layout/dashboard/dashboard';
 
 const Page = ({ pageContext, data: { page, navbar, favicon } }) => {
-  const { seo, title, blocks = [] } = page;
+  const { seo, blocks = [] } = page;
 
   return (
     <main>
