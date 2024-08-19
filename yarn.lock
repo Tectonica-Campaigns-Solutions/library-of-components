@@ -1495,6 +1495,14 @@
     gsap "^3.12.4"
     react ">=16"
 
+"@gsap/react@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@gsap/react/-/react-2.1.1.tgz#219a81c84f93a2631c8aa324c0f5cce03cdf2ed9"
+  integrity sha512-apGPRrmpqxvl1T6Io1KgT8tFU+IuACI6z4zmT7t8+PASserJeLVRFJdSNUFA2Xb/eVkZI1noE8LIrY/w/oJECw==
+  dependencies:
+    gsap "^3.12.5"
+    react ">=16"
+
 "@hapi/hoek@^9.0.0", "@hapi/hoek@^9.3.0":
   version "9.3.0"
   resolved "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.3.0.tgz"
@@ -12393,11 +12401,12 @@ tar-stream@^3.1.5:
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
 
-tectonica-ui@1.0.39:
-  version "1.0.39"
-  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.39.tgz#d153e7573c9431d840e9d02113c0c256d0693c01"
-  integrity sha512-1yvVU1nwHPY/uhbvMvIXn6Sc1b9e2lNd/CPUarGNQnk/rhsUaul50lvYmkMsjxpauCNtouBVH8m/QY6wVBkhDQ==
+tectonica-ui@1.0.43:
+  version "1.0.43"
+  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.43.tgz#7a43b77b518b3f5a9d3cef5e02c2536d27879968"
+  integrity sha512-QhO5bZltGSqR7ZF9KAwuGucw8bdAqvBoxmUXdPWu68P18CD0iNEa2HMvnNin5zr6xKmWRV0InrIPwh6pSHg6fg==
   dependencies:
+    "@gsap/react" "^2.1.1"
     "@mapbox/mapbox-gl-geocoder" "4.7.4"
     "@mux/mux-player" "2.8.0"
     "@mux/mux-player-react" "2.8.0"

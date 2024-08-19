@@ -8,7 +8,10 @@ const Logs = () => {
       <ul>
         <li>
           <span className="date">August 19 2024</span>
-          <p>Dashboard UI Updates</p>
+          <p>
+            - Dashboard UI Updates <br />
+            - Codebase cleanup, removing duplicate components, leaving them only in the npm package. <br />
+          </p>
         </li>
         <li>
           <span className="date">August 7 2024</span>

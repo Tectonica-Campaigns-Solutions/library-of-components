@@ -21,17 +21,17 @@ import {
   NarrativeBlock,
   NarrativeBlockAdvanced,
   Notification,
+  ParallaxContentSection,
   PeopleDetail,
   ShareButtons,
-  // SidebarWrapper,
+  SidebarWrapper,
   Tabs,
   VideoModal,
 } from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
 import { StructuredText } from 'react-datocms/structured-text';
-import SidebarWrapper from './SidebarWrapper/SidebarWrapper';
-import ParallaxContentSection from './ParallaxContentSection';
+// import ParallaxContentSection from './ParallaxContentSection';
 
 interface Block {
   __typename: string;
