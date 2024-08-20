@@ -174,7 +174,8 @@ export const DatoCMS = graphql`
       ... on DatoCmsCta {
         id
         title
-        style
+        variant
+        size
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -236,7 +237,8 @@ export const DatoCMS = graphql`
       ... on DatoCmsCta {
         id
         title
-        style
+        variant
+        size
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -323,7 +325,8 @@ export const DatoCMS = graphql`
     __typename
     id: originalId
     title
-    style
+    variant
+    size
     link {
       ... on DatoCmsGlobalLink {
         id
@@ -407,7 +410,8 @@ export const DatoCMS = graphql`
         cta {
           id
           title
-          style
+          variant
+          size
           link {
             ... on DatoCmsGlobalLink {
               id
@@ -465,7 +469,8 @@ export const DatoCMS = graphql`
           ... on DatoCmsCta {
             id
             title
-            style
+            variant
+            size
             link {
               ... on DatoCmsGlobalLink {
                 id
@@ -512,7 +517,8 @@ export const DatoCMS = graphql`
         cta {
           id
           title
-          style
+          variant
+          size
           link {
             ... on DatoCmsGlobalLink {
               id

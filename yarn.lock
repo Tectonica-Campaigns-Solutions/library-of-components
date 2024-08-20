@@ -12401,10 +12401,10 @@ tar-stream@^3.1.5:
     fast-fifo "^1.2.0"
     streamx "^2.15.0"
 
-tectonica-ui@1.0.43:
-  version "1.0.43"
-  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.43.tgz#7a43b77b518b3f5a9d3cef5e02c2536d27879968"
-  integrity sha512-QhO5bZltGSqR7ZF9KAwuGucw8bdAqvBoxmUXdPWu68P18CD0iNEa2HMvnNin5zr6xKmWRV0InrIPwh6pSHg6fg==
+tectonica-ui@1.0.48:
+  version "1.0.48"
+  resolved "https://registry.yarnpkg.com/tectonica-ui/-/tectonica-ui-1.0.48.tgz#626c964ec906f3967792d6da6f05b58bde804829"
+  integrity sha512-wKjQkFn6fYWYDTjj0hSiE7PEcvaVroXBafr2vmutRlIfIEucPvqeI2Q7qYb0WK5ZK9oya/BrCQo3XyXlWTBCeg==
   dependencies:
     "@gsap/react" "^2.1.1"
     "@mapbox/mapbox-gl-geocoder" "4.7.4"
