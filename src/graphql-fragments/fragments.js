@@ -176,6 +176,12 @@ export const DatoCMS = graphql`
         title
         variant
         size
+        icon {
+          url
+          width
+          height
+          alt
+        }
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -239,6 +245,12 @@ export const DatoCMS = graphql`
         title
         variant
         size
+        icon {
+          url
+          width
+          height
+          alt
+        }
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -327,6 +339,12 @@ export const DatoCMS = graphql`
     title
     variant
     size
+    icon {
+      url
+      width
+      height
+      alt
+    }
     link {
       ... on DatoCmsGlobalLink {
         id
@@ -412,6 +430,12 @@ export const DatoCMS = graphql`
           title
           variant
           size
+          icon {
+            url
+            width
+            height
+            alt
+          }
           link {
             ... on DatoCmsGlobalLink {
               id
@@ -471,6 +495,12 @@ export const DatoCMS = graphql`
             title
             variant
             size
+            icon {
+              url
+              width
+              height
+              alt
+            }
             link {
               ... on DatoCmsGlobalLink {
                 id
@@ -519,6 +549,12 @@ export const DatoCMS = graphql`
           title
           variant
           size
+          icon {
+            url
+            width
+            height
+            alt
+          }
           link {
             ... on DatoCmsGlobalLink {
               id

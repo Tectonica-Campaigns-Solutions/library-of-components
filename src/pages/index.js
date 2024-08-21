@@ -132,6 +132,22 @@ export const HomepageQuery = graphql`
           id
           label
           content
+          links {
+            ... on DatoCmsGlobalLink {
+              id
+              title
+              externalUrl
+              path {
+                ... on DatoCmsBasicPage {
+                  id
+                  slug
+                  model {
+                    apiKey
+                  }
+                }
+              }
+            }
+          }
         }
       }
       legalLinksAndExtras {

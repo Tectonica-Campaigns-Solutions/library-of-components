@@ -77,6 +77,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsAcordion':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
                 <Accordion block={block} />
               </div>
             );
@@ -174,6 +175,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsNotification':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
                 <Notification block={block} />
               </div>
             );
