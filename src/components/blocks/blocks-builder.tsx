@@ -133,7 +133,30 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsFooter':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <Footer data={footer} />
+                <Footer
+                  data={{
+                    ...footer,
+                    socialLinks: [
+                      {
+                        type: 'facebook',
+                        url: 'https://www.facebook.com',
+                      },
+                      {
+                        type: 'twitter',
+                        url: 'https://www.twitter.com',
+                      },
+                      {
+                        type: 'youtube',
+                        url: 'https://www.youtube.com',
+                      },
+                      {
+                        type: 'instagram',
+                        url: 'https://www.instagram.com',
+                      },
+                    ],
+                    // form: <div>Form here</div>,
+                  }}
+                />
               </div>
             );
           case 'DatoCmsListPaginated':
