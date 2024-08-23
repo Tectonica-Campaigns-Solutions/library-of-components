@@ -1,50 +1,11 @@
 .form-example {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-
-  .input {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    label {
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      font-weight: 500;
-    }
-
-    input {
-      padding: 5px 10px;
-      border: none;
-      border: 1px solid rgba(24, 24, 27, 0.9);
-      border-radius: calc(.5rem - 2px);
-    }
-  }
+  // gap: 100px;
+  column-gap: 100px;
+  row-gap: 50px;
 
   .full {
     grid-column: span 2;
-
-    label,
-    legend {
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      font-weight: 500;
-    }
-
-    .input {
-      flex-direction: row;
-    }
-
-    .items {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-
-      input {
-        accent-color: rgba(24, 24, 27, 0.9);
-      }
-    }
   }
 }
-

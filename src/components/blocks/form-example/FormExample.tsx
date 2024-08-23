@@ -1,86 +1,66 @@
 import React, { useState } from 'react';
-import { Dropdown } from 'tectonica-ui';
+import { Checkbox, DropdownInputs, Input, Radio } from 'tectonica-ui';
 
 import './styles.scss';
 
 const FormExample = () => {
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <div className="form-example">
-      <div className="input">
-        <label>
-          <span>Firstname</span>
-        </label>
-        <input name="firstname" type="text" />
-      </div>
+      <Input
+        label="Example of input"
+        placeholder="Type something"
+        onChange={(e) => console.log(e.target.value)}
+        assistiveText="This is an assistive text"
+      />
+      <Input
+        label="Example of input with error"
+        placeholder="Type something"
+        onChange={(e) => console.log(e.target.value)}
+        assistiveText="This is an assistive text"
+        errors="This is an error message"
+      />
 
-      <div className="input">
-        <label>
-          <span>Lastname name</span>
-        </label>
-        <input name="firstname" type="text" />
-      </div>
-
-      <div className="input">
-        <label>
-          <span>Postal code</span>
-        </label>
-        <input name="firstname" type="text" />
-      </div>
-
-      <div className="input">
-        <label>
-          <span>Email</span>
-        </label>
-        <input name="firstname" type="text" />
+      <div className="full">
+        <Checkbox
+          label="Checkbox example"
+          options={[
+            { label: 'Option 1', value: '1' },
+            { label: 'Option 2', value: '2' },
+            { label: 'Option 3', value: '3' },
+          ]}
+          selectedValues={['1']}
+          // @ts-ignore
+          onChange={(e) => console.log(e.target?.value)}
+        />
       </div>
 
       <div className="full">
-        <label>Checkbox example</label>
-        <div className="items">
-          <div className="input">
-            <input type="checkbox" name="1" />
-            <label htmlFor="1">Value 1</label>
-          </div>
-          <div className="input">
-            <input type="checkbox" name="2" />
-            <label htmlFor="2">Value 2</label>
-          </div>
-        </div>
+        <Radio
+          label="Radio example"
+          options={[
+            { label: 'Option 1', value: '1' },
+            { label: 'Option 2', value: '2' },
+            { label: 'Option 3', value: '3' },
+          ]}
+          selectedValue="1"
+          name="radio"
+          // @ts-ignore
+          onChange={(e) => console.log(e.target?.value)}
+        />
       </div>
 
       <div className="full">
-        <fieldset>
-          <legend>Radio button example</legend>
-
-          <div className="items">
-            <div className="input">
-              <input type="radio" name="drone" value="o1" />
-              <label htmlFor="o1">Option 1</label>
-            </div>
-
-            <div className="input">
-              <input type="radio" name="drone" value="o2" />
-              <label htmlFor="o2">Option 2</label>
-            </div>
-
-            <div className="input">
-              <input type="radio" name="drone" value="o3" />
-              <label htmlFor="o3">Option 3</label>
-            </div>
-          </div>
-        </fieldset>
-      </div>
-
-      <div className="full">
-        <Dropdown
+        <DropdownInputs
+          label="Dropdown example"
           title={'Example of dropdown'}
           options={[
             { label: 'Option 1', value: '1' },
             { label: 'Option 2', value: '2' },
             { label: 'Option 3', value: '3' },
           ]}
+          onSelect={(option) => setSelected(option)}
         />
       </div>
     </div>
