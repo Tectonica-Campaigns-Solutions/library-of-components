@@ -11,8 +11,7 @@ import {
   CardGrid,
   Carousel,
   Footer,
-  HeroBasic,
-  HeroHome,
+  Hero,
   HubspotForm,
   ImageGallery,
   ListPaginated,
@@ -211,13 +210,15 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsHeroBasic':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <HeroBasic {...block} introduction="" />
+                {/* @ts-ignore */}
+                <Hero {...block} />
               </div>
             );
           case 'DatoCmsHeroHome':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <HeroHome {...block} image={{ gatsbyImageData: { images: { fallback: { src: '' } } } }} />
+                {/* @ts-ignore */}
+                <Hero {...block} />
               </div>
             );
           case 'DatoCmsSlider':
@@ -230,6 +231,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                       <Card card={item} />
                     </div>
                   )}
+                  showItemsCount
                   showDefaultActions={true}
                 />
               </div>
@@ -249,7 +251,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <ImageGallery {...block} />
               </div>
             );
-
           case 'DatoCmsPeopleModal':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
@@ -260,7 +261,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 </PeopleDetail>
               </div>
             );
-
           case 'DatoCmsVideoModal':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>

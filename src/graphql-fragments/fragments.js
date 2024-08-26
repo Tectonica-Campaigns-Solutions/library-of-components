@@ -394,11 +394,64 @@ export const DatoCMS = graphql`
     id: originalId
     title
     internalName
+    subtitle
     introduction
     image {
       url
       alt
+      width
+      height
       gatsbyImageData
+    }
+    ctas {
+      id
+      title
+      variant
+      size
+      icon {
+        url
+        width
+        height
+        alt
+      }
+      link {
+        ... on DatoCmsGlobalLink {
+          id
+          title
+          externalUrl
+          path {
+            ... on DatoCmsHomepage {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsPost {
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsBasicPage {
+              slug
+              model {
+                apiKey
+              }
+            }
+          }
+        }
+      }
+    }
+    form {
+      id
+      formId
+      portalId
+      region
+    }
+    alignment
+    video {
+      ...BlockVideoModal
     }
   }
 
