@@ -220,24 +220,7 @@ export const DatoCMS = graphql`
     carrouselSettingsNavigation
     alignmentImage
     video {
-      preview {
-        url
-        alt
-        title
-        width
-        height
-        gatsbyImageData
-      }
-      source {
-        title
-        url
-        title
-        provider
-        providerUid
-        thumbnailUrl
-        width
-        height
-      }
+      ...BlockVideoModal
     }
     ctas {
       ... on DatoCmsCta {
