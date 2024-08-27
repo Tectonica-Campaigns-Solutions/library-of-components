@@ -80,8 +80,12 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
           case 'DatoCmsAcordion':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                {/* @ts-ignore */}
-                <Accordion block={block} />
+                <Accordion block={block} variant="default" />
+
+                <div style={{ margin: '5rem 0' }}>
+                  <h3>Minimal variant:</h3>
+                  <Accordion block={block} variant="minimal" />
+                </div>
               </div>
             );
           case 'DatoCmsDivider':
@@ -292,7 +296,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 </div>
               </div>
             );
-
           case 'DatoCmsImageGallery':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
