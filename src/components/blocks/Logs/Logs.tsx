@@ -7,6 +7,10 @@ const Logs = () => {
       <h3>Latest changes</h3>
       <ul>
         <li>
+          <span className="date">August 27 2024</span>
+          <p>- UI Style: Button fixes. Floating Share Page, Floating Button, Loading Button, Handler Button added.</p>
+        </li>
+        <li>
           <span className="date">August 26 2024</span>
           <p>- UI Style sprint: Advances in the basic styles of all components</p>
         </li>

@@ -10,11 +10,15 @@ import {
   Card,
   CardGrid,
   Carousel,
+  FloatingButton,
+  FloatingShareButtons,
   Footer,
+  HandlerButton,
   Hero,
   HubspotForm,
   ImageGallery,
   ListPaginated,
+  LoadingButton,
   MapboxPopup,
   MapboxWrapper,
   NarrativeBlock,
@@ -192,6 +196,47 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <ButtonList buttons={block.test} />
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <LoadingButton variant="primary" />
+                  <LoadingButton variant="secondary" />
+                  <LoadingButton variant="outline" label="Downloading" />
+                  <HandlerButton
+                    icon={
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                        <path
+                          d="M5.625 5.625V12.375M5.625 5.625H12.375M5.625 5.625L13.5 13.5M5.625 30.375V23.625M5.625 30.375H12.375M5.625 30.375L13.5 22.5M30.375 5.625H23.625M30.375 5.625V12.375M30.375 5.625L22.5 13.5M30.375 30.375H23.625M30.375 30.375V23.625M30.375 30.375L22.5 22.5"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    }
+                    onClick={() => alert('Button clicked')}
+                  />{' '}
+                  <HandlerButton
+                    icon={
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+                        <path
+                          d="M5.625 5.625V12.375M5.625 5.625H12.375M5.625 5.625L13.5 13.5M5.625 30.375V23.625M5.625 30.375H12.375M5.625 30.375L13.5 22.5M30.375 5.625H23.625M30.375 5.625V12.375M30.375 5.625L22.5 13.5M30.375 30.375H23.625M30.375 30.375V23.625M30.375 30.375L22.5 22.5"
+                          stroke="white"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    }
+                    variant="large"
+                    onClick={() => alert('Button clicked')}
+                  />
+                </div>
+                <FloatingButton
+                  block={{
+                    title: 'Button',
+                    link: 'https://www.google.com',
+                  }}
+                  position="bottom-center"
+                />
               </div>
             );
           case 'DatoCmsNotification':
@@ -241,6 +286,10 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <h2 className="section-title-block">{block.title}</h2>
                 <ShareButtons />
+
+                <div style={{ marginLeft: '150px' }}>
+                  <FloatingShareButtons />
+                </div>
               </div>
             );
 
