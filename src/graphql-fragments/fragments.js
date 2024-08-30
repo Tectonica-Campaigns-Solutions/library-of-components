@@ -49,6 +49,32 @@ export const DatoCMS = graphql`
           ... on DatoCmsMegaMenuTab {
             title
             description
+            link {
+              ... on DatoCmsGlobalLink {
+                title
+                externalUrl
+                path {
+                  ... on DatoCmsBasicPage {
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsPost {
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsHomepage {
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                }
+              }
+            }
             groupLinks {
               title
               links {
@@ -63,6 +89,12 @@ export const DatoCMS = graphql`
                       }
                     }
                     ... on DatoCmsPost {
+                      slug
+                      model {
+                        apiKey
+                      }
+                    }
+                    ... on DatoCmsHomepage {
                       slug
                       model {
                         apiKey
