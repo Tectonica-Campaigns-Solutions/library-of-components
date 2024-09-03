@@ -10,3 +10,9 @@
     padding-top: 4rem;
   }
 }
+
+@media screen and (max-width: 767px) {
+  .app-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
