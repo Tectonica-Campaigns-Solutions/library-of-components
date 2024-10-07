@@ -908,4 +908,53 @@ export const DatoCMS = graphql`
       }
     }
   }
+
+  fragment SplashPage on DatoCmsSplashPage {
+    __typename
+    id: originalId
+    internalName
+    visible
+    headline
+    background {
+      alt
+      filename
+      format
+      gatsbyImageData
+      isImage
+      url
+      title
+      width
+      height
+      mimeType
+    }
+    blockContent: content {  
+      ... BlockNarrativeBlock  
+      ... BlockImageGallery
+      ... on DatoCmsEmbedIframe {
+        id: originalId
+        code
+        model {
+          apiKey
+        }
+      }
+      ... BlockHubspotForm
+      ... BlockCta
+      ... BlockCtaGrid
+      ... BlockSectionTitle
+      ... on DatoCmsImage {
+        image {
+          url
+          alt
+          title
+          width
+          height
+          gatsbyImageData
+        }
+        model {
+          apiKey
+        }
+      }
+    }
+  }
+
 `;

@@ -106,6 +106,7 @@ export const HomepageQuery = graphql`
         ...BlockNarrativeBlockAdvanced
         ...SidebarWrapper
         ...ParallaxContentSection
+        ...SplashPage
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags

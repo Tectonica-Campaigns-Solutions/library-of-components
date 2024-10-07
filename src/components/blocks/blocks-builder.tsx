@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Divider from './Divider/Divider';
 import SectionTitle from './SectionTitle/SectionTitle';
 import {
@@ -30,11 +30,11 @@ import {
   SidebarWrapper,
   Tabs,
   VideoModal,
+  SplashPage
 } from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
 import { StructuredText } from 'react-datocms/structured-text';
-// import ParallaxContentSection from './ParallaxContentSection';
 
 interface Block {
   __typename: string;
@@ -435,6 +435,14 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <ParallaxContentSection block={block} />
               </div>
             );
+
+            case 'DatoCmsSplashPage':
+              return (
+                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                  {/* @ts-ignore */}
+                    <SplashPage block={block} visible={true} />
+                </div>
+              );
 
           default:
             return null;
