@@ -931,6 +931,7 @@ export const DatoCMS = graphql`
       ... BlockNarrativeBlock  
       ... BlockImageGallery
       ... on DatoCmsEmbedIframe {
+        __typename
         id: originalId
         code
         model {
@@ -942,6 +943,7 @@ export const DatoCMS = graphql`
       ... BlockCtaGrid
       ... BlockSectionTitle
       ... on DatoCmsImage {
+        __typename
         image {
           url
           alt
