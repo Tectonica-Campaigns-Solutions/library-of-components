@@ -30,7 +30,7 @@ import {
   SidebarWrapper,
   Tabs,
   VideoModal,
-  SplashPage
+  SplashPage,
 } from 'tectonica-ui';
 import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
@@ -291,8 +291,18 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <h2 className="section-title-block">{block.title}</h2>
                 <ShareButtons />
 
-                <div style={{ marginLeft: '150px' }}>
-                  <FloatingShareButtons />
+                <div style={{ marginLeft: '150px', display: 'flex', alignItems: 'flex-start', gap: '30px' }}>
+                  <div>
+                    <FloatingShareButtons />
+                  </div>
+
+                  <div>
+                    <FloatingShareButtons variant="bottom-two" />
+                  </div>
+
+                  <div>
+                    <FloatingShareButtons variant="bottom-single" />
+                  </div>
                 </div>
               </div>
             );
@@ -436,13 +446,13 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
               </div>
             );
 
-            case 'DatoCmsSplashPage':
-              return (
-                <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                  {/* @ts-ignore */}
-                    <SplashPage block={block} visible={true} />
-                </div>
-              );
+          case 'DatoCmsSplashPage':
+            return (
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+                {/* @ts-ignore */}
+                <SplashPage block={block} visible={true} />
+              </div>
+            );
 
           default:
             return null;
