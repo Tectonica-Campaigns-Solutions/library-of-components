@@ -9,3 +9,11 @@
     grid-column: span 2;
   }
 }
+
+@media screen and (max-width: 992px) {
+  .form-example {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+}

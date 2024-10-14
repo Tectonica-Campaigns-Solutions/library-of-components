@@ -64,20 +64,20 @@
 }
 
 @media screen and (max-width: 767px) {
-
   .app-sidebar {
     height: 60px;
     position: relative;
 
     .logo {
-        position: fixed;
-        width: 100%;
-        background-color: white;
-        top: 0px;
-        padding-top: 15px;
+      position: fixed;
+      width: 100%;
+      background-color: white;
+      top: 0px;
+      padding-top: 15px;
     }
 
     .app-nav {
+      padding: 0;
       margin-top: 3rem;
     }
   }
@@ -88,12 +88,13 @@
     position: relative;
 
     &::after {
-      content: '▼'; /* Unicode character for down arrow */
+      content: '▼';
+      /* Unicode character for down arrow */
       position: fixed;
       right: 20px;
       top: 20px;
       font-size: 12px;
-      color: black; 
+      color: black;
     }
   }
 
@@ -101,12 +102,17 @@
     height: 100vh;
 
     &::after {
-      content: '▲'; /* Unicode character for up arrow */
+      content: '▲';
+      /* Unicode character for up arrow */
       position: fixed;
       right: 20px;
       top: 20px;
       font-size: 12px;
-      color: black; 
+      color: black;
+    }
+
+    .app-nav {
+      padding-left: .5rem;
     }
   }
 }

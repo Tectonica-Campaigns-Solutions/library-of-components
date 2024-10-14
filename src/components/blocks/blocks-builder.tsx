@@ -168,7 +168,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             );
           case 'DatoCmsListPaginated':
             return (
-              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+              <div key={block.id} className={`list-paginated ${activeItem === index ? 'show' : 'hide'}`}>
                 <ListPaginated
                   list={[1, 2, 3, 4, 5, 6]}
                   customPageSize={3}
@@ -198,9 +198,9 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             );
           case 'DatoCmsCtaGrid':
             return (
-              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+              <div key={block.id} className={`cta-grid ${activeItem === index ? 'show' : 'hide'}`}>
                 <ButtonList buttons={block.test} />
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <div className="extra-buttons">
                   <LoadingButton variant="primary" />
                   <LoadingButton variant="secondary" />
                   <LoadingButton variant="outline" label="Downloading" />
@@ -217,7 +217,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                       </svg>
                     }
                     onClick={() => alert('Button clicked')}
-                  />{' '}
+                  />
                   <HandlerButton
                     icon={
                       <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none">

@@ -22,7 +22,7 @@ h6 {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 .map-wrapper.app-map {
@@ -37,7 +37,44 @@ h6 {
   }
 }
 
-// .button-list {
-//   background: #bfbfbf;
-//   padding: 20px;
-// }
+.extra-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+@media screen and (max-width: 992px) {
+  .cta-grid {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5rem;
+
+    .button-list {
+      flex-direction: column;
+
+      a {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    .extra-buttons {
+      flex-direction: column;
+
+      div {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .list-paginated {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    div {
+      width: 100% !important;
+    }
+  }
+}

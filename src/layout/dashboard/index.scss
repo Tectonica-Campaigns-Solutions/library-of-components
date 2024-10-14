@@ -13,6 +13,12 @@
 
 @media screen and (max-width: 767px) {
   .app-dashboard {
-    grid-template-columns: 1fr;
+    display: block;
+    overflow: auto;
+
+    main {
+      padding: 2rem 0;
+      overflow-y: auto;
+    }
   }
 }
