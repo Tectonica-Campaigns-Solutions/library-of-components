@@ -252,8 +252,8 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             );
           case 'DatoCmsTextHubspotForm':
             return (
-              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
-                <HubspotForm block={block} />
+              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`} style={{ backgroundColor: 'rgba(0,0,0,1)' }}>
+                {/* <HubspotForm block={block} /> */}
               </div>
             );
           case 'DatoCmsHeroBasic':
@@ -448,7 +448,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
 
           case 'DatoCmsSplashPage':
             return (
-              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
+              <div key={block.id} className={`splash-page__wrap ${activeItem === index ? 'show' : 'hide'}`}>
                 {/* @ts-ignore */}
                 <SplashPage block={block} visible={true} />
               </div>

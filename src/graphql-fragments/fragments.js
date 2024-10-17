@@ -927,7 +927,7 @@ export const DatoCMS = graphql`
       height
       mimeType
     }
-    blockContent: content {  
+    blockContent: content {
       ... BlockNarrativeBlock  
       ... BlockImageGallery
       ... on DatoCmsEmbedIframe {
@@ -957,6 +957,14 @@ export const DatoCMS = graphql`
         }
       }
     }
+    pageBackgroundColor{
+      hex
+    }
+    contentBackgroundColor {
+      hex
+    }
+    aligment
+    formType
   }
 
 `;
