@@ -252,8 +252,12 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             );
           case 'DatoCmsTextHubspotForm':
             return (
-              <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`} style={{ backgroundColor: 'rgba(0,0,0,1)' }}>
-                {/* <HubspotForm block={block} /> */}
+              <div
+                key={block.id}
+                className={`${activeItem === index ? 'show' : 'hide'}`}
+                style={{ backgroundColor: 'rgba(0,0,0,1)' }}
+              >
+                <HubspotForm block={block} />
               </div>
             );
           case 'DatoCmsHeroBasic':
@@ -336,7 +340,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 />
               </div>
             );
-
           case 'DatoCmsMapbox':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
@@ -421,7 +424,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 />
               </div>
             );
-
           case 'DatoCmsSidebarWrapper':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
@@ -429,7 +431,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <SidebarWrapper block={block} />
               </div>
             );
-
           case 'DatoCmsAudioPlayer':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
@@ -437,7 +438,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <AudioPlayer {...block} />
               </div>
             );
-
           case 'DatoCmsParallaxContentSection':
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
@@ -445,7 +445,6 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
                 <ParallaxContentSection block={block} />
               </div>
             );
-
           case 'DatoCmsSplashPage':
             return (
               <div key={block.id} className={`splash-page__wrap ${activeItem === index ? 'show' : 'hide'}`}>
