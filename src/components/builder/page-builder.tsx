@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody, CardTitle, CardText, Button as ReactstrapButton } from "reactstrap";
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { X } from 'lucide-react'; // Import X icon for delete button
+
 import './page-builder.scss';
 
 // Import custom components from 'tectonica-ui'
@@ -70,6 +72,7 @@ interface DroppedComponentProps {
   index: number;
   children: React.ReactNode;
   moveComponent: (dragIndex: number, hoverIndex: number) => void;
+  onDelete: (id: string) => void; // Add delete handler prop
 }
 
 interface Block {
@@ -156,7 +159,8 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({
   id, 
   index, 
   children, 
-  moveComponent 
+  moveComponent,
+  onDelete 
 }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.DROPPED_COMPONENT,
@@ -176,7 +180,6 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({
       const dragIndex = item.index;
       const hoverIndex = index;
 
-      // Don't replace items with themselves
       if (dragIndex === hoverIndex) {
         return;
       }
@@ -195,9 +198,32 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({
         padding: '0.5rem',
         marginBottom: '0.5rem',
         backgroundColor: '#f8f9fa',
-        border: '1px dashed #dee2e6'
+        border: '1px dashed #dee2e6',
+        position: 'relative' // Added for absolute positioning of delete button
       }}
     >
+      <button
+        onClick={() => onDelete(id)}
+        style={{
+          position: 'absolute',
+          top: '0.5rem',
+          right: '0.5rem',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10,
+          borderRadius: '50%',
+          backgroundColor: '#ffffff',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+        }}
+        title="Delete component"
+      >
+        <X size={16} color="#666666" />
+      </button>
       {children}
     </div>
   );
@@ -376,6 +402,13 @@ function PageBuilder({ blocks }: BlocksBuilderProps) {
     });
   };
 
+  // Add delete handler
+  const handleDelete = (id: string) => {
+    setDroppedComponents(prevComponents => 
+      prevComponents.filter(comp => comp.uniqueId !== id)
+    );
+  };  
+
   return (
     <div className="page-builder">
       <DndProvider backend={HTML5Backend}>
@@ -402,6 +435,7 @@ function PageBuilder({ blocks }: BlocksBuilderProps) {
                       id={comp.uniqueId}
                       index={index}
                       moveComponent={moveComponent}
+                      onDelete={handleDelete}
                     >
                       {renderDroppedComponent(comp)}
                     </DroppedComponentWrapper>
