@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody, CardTitle, CardText, Button as ReactstrapButton } from "reactstrap";
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import './page-builder.scss';
+import './page-builder.scss'; // Importing the styles
 
 // Import custom components from 'tectonica-ui'
 import {
@@ -40,61 +40,52 @@ import {
 // Define item types for drag and drop
 const ItemTypes = {
   CARD: "card",
-  DROPPED_COMPONENT: "dropped_component"
 };
 
 // Define the type for a draggable component
 interface DraggableCardProps {
-  id: number;
-  text: string;
-  componentType: string;
-}
+    id: number;
+    text: string;
+    componentType: string;
+  }
+  
+  // Define the type for a dropped component
+  interface DroppedComponent {
+    uniqueId: string; // Unique ID for each dropped instance
+    id: number;
+    text: string;
+    componentType: string;
+  }
+  
+  // Define the type for a dropped area component
+  interface DroppableAreaProps {
+    onDrop: (id: number) => void;
+    children: React.ReactNode;
+  }
 
-// Define the type for a dropped component
-interface DroppedComponent {
-  uniqueId: string;
-  id: number;
-  text: string;
-  componentType: string;
-}
-
-// Define the type for a dropped area component
-interface DroppableAreaProps {
-  onDrop: (id: number) => void;
-  children: React.ReactNode;
-}
-
-// Add interface for draggable dropped component
-interface DroppedComponentProps {
-  id: string;
-  index: number;
-  children: React.ReactNode;
-  moveComponent: (dragIndex: number, hoverIndex: number) => void;
-}
-
-interface Block {
-  __typename: string;
-  id: string;
-  title: string;
-  link: string;
-  items: { title: string | ''; text: string }[];
-  test?: any;
-  content: string;
-  hubspot: {
+  interface Block {
+    __typename: string;
     id: string;
-    formId: string;
-    region: string;
-    portalId: string;
-  };
-  ctas: any[];
-  image: any;
-}
-
-interface BlocksBuilderProps {
-  blocks: Block[];
-  footer: any;
-  activeItem?: number;
-}
+    title: string;
+    link: string;
+    items: { title: string | ''; text: string }[];
+    test?: any; // Replace 'any' with the actual type of 'test'
+    content: string; // Update the 'content' property to be optional
+    hubspot: {
+      id: string;
+      formId: string;
+      region: string;
+      portalId: string;
+    };
+    ctas: any[];
+    image: any;
+  }
+  
+  interface BlocksBuilderProps {
+    blocks: Block[];
+    footer: any; // Replace 'any' with the actual type of 'footer'
+    activeItem?: number;
+  }
 
 // Mapping component names to actual components
 const componentMap: { [key: string]: React.ElementType } = {
@@ -129,11 +120,11 @@ const componentMap: { [key: string]: React.ElementType } = {
   SplashPage,
 };
 
-// Draggable component for sidebar
+// Draggable component
 const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.CARD,
-    item: { id, type: ItemTypes.CARD },
+    item: { id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -151,79 +142,17 @@ const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }
   );
 };
 
-// Draggable dropped component
-const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ 
-  id, 
-  index, 
-  children, 
-  moveComponent 
-}) => {
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.DROPPED_COMPONENT,
-    item: { type: ItemTypes.DROPPED_COMPONENT, id, index },
-    collect: (monitor: DragSourceMonitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  const [, drop] = useDrop({
-    accept: ItemTypes.DROPPED_COMPONENT,
-    hover(item: any) {
-      if (!item) {
-        return;
-      }
-
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      moveComponent(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-  });
-
-  return (
-    <div 
-      ref={(node) => drag(drop(node))} 
-      style={{ 
-        opacity: isDragging ? 0.5 : 1,
-        cursor: 'move',
-        padding: '0.5rem',
-        marginBottom: '0.5rem',
-        backgroundColor: '#f8f9fa',
-        border: '1px dashed #dee2e6'
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
 // Droppable area for receiving dropped components
 const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
   const [, drop] = useDrop({
-    accept: [ItemTypes.CARD, ItemTypes.DROPPED_COMPONENT],
-    drop: (item: { id: number; type: string }) => {
-      if (item.type === ItemTypes.CARD) {
-        onDrop(item.id);
-      }
-    },
+    accept: ItemTypes.CARD,
+    drop: (item: { id: number }) => onDrop(item.id),
   });
 
   return (
     <div
       ref={drop}
       className="droppable-area"
-      style={{
-        minHeight: '200px',
-        padding: '1rem',
-        backgroundColor: '#ffffff',
-        border: '2px dashed #ced4da'
-      }}
     >
       {children}
     </div>
@@ -260,13 +189,23 @@ const renderDroppedComponent = (comp: DroppedComponent) => {
       const buttonBlock = {
         title: "Click Me",
         link: "https://example.com",
-        variant: "primary",
-        size: "lg",
-        icon: "🔔",
+        variant: "primary", // e.g., "primary", "secondary"
+        size: "lg", // e.g., "sm", "lg"
+        icon: "🔔", // optional icon
       };
       return (
         <Button key={comp.uniqueId} block={buttonBlock} />
       );
+    // case ButtonList:
+    //   const buttonListBlock = {
+    //     items: [
+    //       { title: "Button 1", link: "https://example.com" },
+    //       { title: "Button 2", link: "https://example.com" },
+    //     ],
+    //   };
+    //   return (
+    //     <ButtonList key={comp.uniqueId} block={buttonListBlock} buttons={buttonListBlock} />
+    //   );
     case Card:
       const cardBlock = {
         title: "Card title",
@@ -291,8 +230,21 @@ const renderDroppedComponent = (comp: DroppedComponent) => {
       console.log('Card component is not implemented yet. Please implement it first.');
       return (
         <>
+        {/* <TectonicaCard key={comp.uniqueId} card={cardBlock}  /> */}
+        {/* <Card key={comp.uniqueId} block={cardBlock} /> */}
         </>
       );
+    // case CardGrid:
+    //   const cardGridBlock = {
+    //     title: "Our Products",
+    //     items: [
+    //       { title: "Product 1", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+    //       { title: "Product 2", text: "Nullam nec purus ac libero" },
+    //     ],
+    //   };
+    //   return (
+    //     <CardGrid key={comp.uniqueId} block={cardGridBlock} />
+    //   );
     case Hero:
       const heroBlock = {
         title: "This is a Welcome message",
@@ -302,6 +254,7 @@ const renderDroppedComponent = (comp: DroppedComponent) => {
           title: "Learn More",
           link: "https://example.com",
         }],
+        // image: "https://via.placeholder.com/800x400",
       };
       return (
         <Hero key={comp.uniqueId} {...heroBlock} />
@@ -311,7 +264,12 @@ const renderDroppedComponent = (comp: DroppedComponent) => {
   return ComponentToRender ? <ComponentToRender key={comp.uniqueId} /> : null;
 };
 
-function PageBuilder({ blocks }: BlocksBuilderProps) {
+// Main dashboard component
+// const PageBuilder: React.FC = ({ blocks }: BlocksBuilderProps) => {
+function PageBuilder ({ blocks }: BlocksBuilderProps) {
+
+  //console.log('Blocks:', blocks);
+
   // Initial available components
   const [components] = useState<{ id: number; text: string; componentType: string }[]>([
     { id: 1, text: "Accordion", componentType: "Accordion" },
@@ -353,27 +311,16 @@ function PageBuilder({ blocks }: BlocksBuilderProps) {
     return `${Date.now()}-${Math.random()}`;
   };  
 
-  // Handle the initial drop action
+  // Handle the drop action
   const handleDrop = (id: number) => {
     const component = components.find((comp) => comp.id === id);
     if (component) {
       const newDroppedComponent = {
         ...component,
-        uniqueId: generateUniqueId(),
+        uniqueId: generateUniqueId(),  // Assign a unique ID to each dropped component
       };
       setDroppedComponents([...droppedComponents, newDroppedComponent]);
     }
-  };
-
-  // Handle reordering of components
-  const moveComponent = (dragIndex: number, hoverIndex: number) => {
-    const dragComponent = droppedComponents[dragIndex];
-    setDroppedComponents((prevComponents) => {
-      const newComponents = [...prevComponents];
-      newComponents.splice(dragIndex, 1);
-      newComponents.splice(hoverIndex, 0, dragComponent);
-      return newComponents;
-    });
   };
 
   return (
@@ -394,19 +341,14 @@ function PageBuilder({ blocks }: BlocksBuilderProps) {
             </Col>
             <Col md={10}>
               <Container>
-                <h4>Build Area</h4>
-                <DroppableArea onDrop={handleDrop}>
+                  <h4>Build Area</h4>
+                  <DroppableArea onDrop={handleDrop}>
                   {droppedComponents.map((comp, index) => (
-                    <DroppedComponentWrapper
-                      key={comp.uniqueId}
-                      id={comp.uniqueId}
-                      index={index}
-                      moveComponent={moveComponent}
-                    >
-                      {renderDroppedComponent(comp)}
-                    </DroppedComponentWrapper>
+                      <div key={comp.uniqueId} className="mb-3">
+                          {renderDroppedComponent(comp)}
+                      </div>
                   ))}
-                </DroppableArea>
+                  </DroppableArea>
               </Container>
             </Col>
           </Row>
@@ -414,6 +356,6 @@ function PageBuilder({ blocks }: BlocksBuilderProps) {
       </DndProvider>
     </div>
   );
-}
+};
 
 export default PageBuilder;

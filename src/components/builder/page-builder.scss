@@ -6,6 +6,7 @@ body {
   }
   
   /* Main container styles */
+.page-builder {
   .container {
     padding: 20px;
   }
@@ -58,34 +59,22 @@ body {
   .droppable-area .card {
     margin-bottom: 15px;
   }
-  
-  /* Styling for buttons */
-  .button {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
+   
+}
   /* Additional styling for responsive behavior */
   @media (max-width: 768px) {
-    .container {
-      padding: 10px;
-    }
+    .page-builder {
+      .container {
+        padding: 10px;
+      }
+      
+      h4 {
+        font-size: 18px;
+      }
     
-    h4 {
-      font-size: 18px;
-    }
-  
-    .droppable-area {
-      min-height: 200px;
+      .droppable-area {
+        min-height: 200px;
+      }
     }
   }
   
