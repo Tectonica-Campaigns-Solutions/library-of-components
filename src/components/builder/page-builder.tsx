@@ -17,10 +17,23 @@ import {
   ModalFooter,
   Input,
   Label,
+  Spinner
 } from "reactstrap";
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { X, Save, Upload, Download } from 'lucide-react';
+import { X, Save, Upload, Download, Cloud, CloudOff } from 'lucide-react';
+import { db } from '../../../firebase';
+import { 
+  collection, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  getDocs, 
+  doc, 
+  query, 
+  orderBy, 
+  Timestamp 
+} from 'firebase/firestore';
 
 import heroImage from '../../images/hero-library-of-components.png';
 import narrativeImage from '../../images/narrative-library-of-components.png';
@@ -73,6 +86,10 @@ interface SavedLayout {
   lastModified: number;
 }
 
+interface FirebaseLayout extends SavedLayout {
+  firestoreId?: string;
+  synced: boolean;
+}
 
 // Simple component renderer
 const renderPlaceholderComponent = (text: string) => {
@@ -271,19 +288,153 @@ function PageBuilder() {
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [newLayoutName, setNewLayoutName] = useState('');
   const [saveMessage, setSaveMessage] = useState<{type: string; text: string} | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // Load saved layouts from localStorage on mount
   useEffect(() => {
-    const savedLayouts = localStorage.getItem('pageBuilderLayouts');
-    if (savedLayouts) {
-      setLayouts(JSON.parse(savedLayouts));
-    }
+    loadLayouts();
   }, []);
 
+  const loadLayouts = async () => {
+    setIsLoading(true);
+    try {
+      // Load from localStorage
+      const localLayouts = JSON.parse(localStorage.getItem('pageBuilderLayouts') || '[]');
+      
+      // Load from Firestore
+      const layoutsCollection = collection(db, 'layouts');
+      const layoutsQuery = query(layoutsCollection, orderBy('lastModified', 'desc'));
+      const querySnapshot = await getDocs(layoutsQuery);
+      
+      const firestoreLayouts = querySnapshot.docs.map(doc => ({
+        ...doc.data(),
+        firestoreId: doc.id,
+        synced: true
+      })) as FirebaseLayout[];
+
+      // Merge layouts, preferring Firestore versions
+      const mergedLayouts = mergeLayouts(localLayouts, firestoreLayouts);
+      setLayouts(mergedLayouts);
+      
+      // Update localStorage with merged layouts
+      localStorage.setItem('pageBuilderLayouts', JSON.stringify(mergedLayouts));
+    } catch (error) {
+      console.error('Error loading layouts:', error);
+      setSyncError('Failed to load layouts from cloud');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const mergeLayouts = (local: FirebaseLayout[], remote: FirebaseLayout[]): FirebaseLayout[] => {
+    const merged = [...local];
+    remote.forEach(remoteLayout => {
+      const localIndex = merged.findIndex(l => l.id === remoteLayout.id);
+      if (localIndex >= 0) {
+        // Update existing layout if remote is newer
+        if (remoteLayout.lastModified > merged[localIndex].lastModified) {
+          merged[localIndex] = remoteLayout;
+        }
+      } else {
+        // Add new remote layout
+        merged.push(remoteLayout);
+      }
+    });
+    return merged;
+  };
+
+  // Save layout to both localStorage and Firestore
+  const saveLayout = async (name: string) => {
+    setIsSyncing(true);
+    setSyncError(null);
+    
+    try {
+      const newLayout: FirebaseLayout = {
+        id: currentLayoutId || `layout-${Date.now()}`,
+        name,
+        components: droppedComponents,
+        lastModified: Date.now(),
+        synced: false
+      };
+
+      // Save to Firestore
+      const layoutsCollection = collection(db, 'layouts');
+      const docRef = await addDoc(layoutsCollection, {
+        ...newLayout,
+        lastModified: Timestamp.fromDate(new Date())
+      });
+
+      newLayout.firestoreId = docRef.id;
+      newLayout.synced = true;
+
+      // Update layouts state
+      setLayouts(prevLayouts => {
+        const layoutIndex = prevLayouts.findIndex(l => l.id === newLayout.id);
+        if (layoutIndex >= 0) {
+          const updatedLayouts = [...prevLayouts];
+          updatedLayouts[layoutIndex] = newLayout;
+          return updatedLayouts;
+        } else {
+          return [...prevLayouts, newLayout];
+        }
+      });
+
+      setCurrentLayoutId(newLayout.id);
+      setSaveMessage({ type: 'success', text: 'Layout saved to cloud!' });
+      
+      // Update localStorage
+      localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
+    } catch (error) {
+      console.error('Error saving layout:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to save to cloud. Layout saved locally.' });
+      setSyncError('Failed to sync with cloud');
+    } finally {
+      setIsSyncing(false);
+      setIsSaveModalOpen(false);
+      setTimeout(() => setSaveMessage(null), 3000);
+    }
+  };
+
+  // Load layout with Firestore sync
+  const loadLayout = async (layoutId: string) => {
+    const layout = layouts.find(l => l.id === layoutId);
+    if (layout) {
+      setDroppedComponents(layout.components);
+      setCurrentLayoutId(layout.id);
+      setIsLoadModalOpen(false);
+
+      // If layout hasn't been synced to Firestore, sync it
+      if (!layout.synced && layout.firestoreId) {
+        try {
+          setIsSyncing(true);
+          const layoutRef = doc(db, 'layouts', layout.firestoreId);
+          await updateDoc(layoutRef, {
+            components: layout.components,
+            lastModified: Timestamp.fromDate(new Date())
+          });
+          
+          // Update sync status
+          setLayouts(prevLayouts => 
+            prevLayouts.map(l => 
+              l.id === layoutId ? { ...l, synced: true } : l
+            )
+          );
+        } catch (error) {
+          console.error('Error syncing layout:', error);
+          setSyncError('Failed to sync with cloud');
+        } finally {
+          setIsSyncing(false);
+        }
+      }
+    }
+  };
+
   // Save layouts to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
-  }, [layouts]);
+  // useEffect(() => {
+  //   localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
+  // }, [layouts]);
 
   const generateUniqueId = () => {
     return `${Date.now()}-${Math.random()}`;
@@ -340,43 +491,6 @@ function PageBuilder() {
     }
   }, [lastDeletedComponent]);
 
-  // Save current layout
-  const saveLayout = (name: string) => {
-    const newLayout: SavedLayout = {
-      id: currentLayoutId || `layout-${Date.now()}`,
-      name,
-      components: droppedComponents,
-      lastModified: Date.now(),
-    };
-
-    setLayouts(prevLayouts => {
-      const layoutIndex = prevLayouts.findIndex(l => l.id === newLayout.id);
-      if (layoutIndex >= 0) {
-        // Update existing layout
-        const updatedLayouts = [...prevLayouts];
-        updatedLayouts[layoutIndex] = newLayout;
-        return updatedLayouts;
-      } else {
-        // Add new layout
-        return [...prevLayouts, newLayout];
-      }
-    });
-
-    setCurrentLayoutId(newLayout.id);
-    setSaveMessage({ type: 'success', text: 'Layout saved successfully!' });
-    setTimeout(() => setSaveMessage(null), 3000);
-    setIsSaveModalOpen(false);
-  };
-
-  // Load layout
-  const loadLayout = (layoutId: string) => {
-    const layout = layouts.find(l => l.id === layoutId);
-    if (layout) {
-      setDroppedComponents(layout.components);
-      setCurrentLayoutId(layout.id);
-      setIsLoadModalOpen(false);
-    }
-  };
 
   // Export layout
   const exportLayout = () => {
@@ -424,6 +538,39 @@ function PageBuilder() {
           <Row className="mb-4">
             <Col>
               <ButtonGroup>
+              <ReactstrapButton
+                  color="primary"
+                  onClick={() => setIsSaveModalOpen(true)}
+                  className="d-flex align-items-center gap-2"
+                  disabled={isSyncing}
+                >
+                  <Save size={16} />
+                  Save Layout
+                  {isSyncing && <Spinner size="sm" className="ms-2" />}
+                </ReactstrapButton>
+                
+                <ReactstrapButton
+                  color="secondary"
+                  onClick={() => setIsLoadModalOpen(true)}
+                  className="d-flex align-items-center gap-2"
+                  disabled={isLoading}
+                >
+                  <Upload size={16} />
+                  Load Layout
+                  {isLoading && <Spinner size="sm" className="ms-2" />}
+                </ReactstrapButton>
+
+                <ReactstrapButton
+                  color="info"
+                  onClick={loadLayouts}
+                  className="d-flex align-items-center gap-2"
+                  disabled={isSyncing}
+                >
+                  <Cloud size={16} />
+                  Sync
+                  {isSyncing && <Spinner size="sm" className="ms-2" />}
+                </ReactstrapButton>
+
                 <ReactstrapButton
                   color="primary"
                   onClick={() => setIsSaveModalOpen(true)}

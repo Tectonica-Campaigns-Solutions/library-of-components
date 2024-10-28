@@ -1,15 +1,14 @@
-// firebase.ts
-// import { initializeApp } from 'firebase/app';
-// import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 
-// const firebaseConfig = {
-//   apiKey: "your-api-key",
-//   authDomain: "your-auth-domain",
-//   projectId: "your-project-id",
-//   storageBucket: "your-storage-bucket",
-//   messagingSenderId: "your-messaging-sender-id",
-//   appId: "your-app-id"
-// };
+const firebaseConfig = {
+  apiKey: "AIzaSyCeMjHjxJvdO9vho7z8cmS7mdpVsiy8IXs",
+  authDomain: "teconica-ui-page-builder.firebaseapp.com",
+  projectId: "teconica-ui-page-builder",
+  storageBucket: "teconica-ui-page-builder.appspot.com",
+  messagingSenderId: "661578713215",
+  appId: "1:661578713215:web:2db0c69dd7e96bea41174a"
+};
 
-// const app = initializeApp(firebaseConfig);
-// export const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
