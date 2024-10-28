@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { 
   Container, 
   Row, 
@@ -6,14 +6,22 @@ import {
   Card, 
   CardBody, 
   CardTitle, 
-  CardText,
-  CardImg, 
+  CardText, 
+  CardImg,
   Button as ReactstrapButton,
   Alert,
+  ButtonGroup,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Input,
+  Label,
 } from "reactstrap";
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { CarIcon, X } from 'lucide-react';
+import { X, Save, Upload, Download } from 'lucide-react';
+
 import heroImage from '../../images/hero-library-of-components.png';
 import narrativeImage from '../../images/narrative-library-of-components.png';
 import buttonImage from '../../images/btn-library-of-components.png';
@@ -57,6 +65,14 @@ interface DroppedComponentProps {
 interface DeletedComponent extends DroppedComponent {
   timestamp: number;
 }
+
+interface SavedLayout {
+  id: string;
+  name: string;
+  components: DroppedComponent[];
+  lastModified: number;
+}
+
 
 // Simple component renderer
 const renderPlaceholderComponent = (text: string) => {
@@ -249,6 +265,25 @@ function PageBuilder() {
   const [deletedComponents, setDeletedComponents] = useState<DeletedComponent[]>([]);
   const [showUndoAlert, setShowUndoAlert] = useState(false);
   const [lastDeletedComponent, setLastDeletedComponent] = useState<DeletedComponent | null>(null);
+  const [layouts, setLayouts] = useState<SavedLayout[]>([]);
+  const [currentLayoutId, setCurrentLayoutId] = useState<string | null>(null);
+  const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [newLayoutName, setNewLayoutName] = useState('');
+  const [saveMessage, setSaveMessage] = useState<{type: string; text: string} | null>(null);
+
+  // Load saved layouts from localStorage on mount
+  useEffect(() => {
+    const savedLayouts = localStorage.getItem('pageBuilderLayouts');
+    if (savedLayouts) {
+      setLayouts(JSON.parse(savedLayouts));
+    }
+  }, []);
+
+  // Save layouts to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
+  }, [layouts]);
 
   const generateUniqueId = () => {
     return `${Date.now()}-${Math.random()}`;
@@ -305,10 +340,208 @@ function PageBuilder() {
     }
   }, [lastDeletedComponent]);
 
+  // Save current layout
+  const saveLayout = (name: string) => {
+    const newLayout: SavedLayout = {
+      id: currentLayoutId || `layout-${Date.now()}`,
+      name,
+      components: droppedComponents,
+      lastModified: Date.now(),
+    };
+
+    setLayouts(prevLayouts => {
+      const layoutIndex = prevLayouts.findIndex(l => l.id === newLayout.id);
+      if (layoutIndex >= 0) {
+        // Update existing layout
+        const updatedLayouts = [...prevLayouts];
+        updatedLayouts[layoutIndex] = newLayout;
+        return updatedLayouts;
+      } else {
+        // Add new layout
+        return [...prevLayouts, newLayout];
+      }
+    });
+
+    setCurrentLayoutId(newLayout.id);
+    setSaveMessage({ type: 'success', text: 'Layout saved successfully!' });
+    setTimeout(() => setSaveMessage(null), 3000);
+    setIsSaveModalOpen(false);
+  };
+
+  // Load layout
+  const loadLayout = (layoutId: string) => {
+    const layout = layouts.find(l => l.id === layoutId);
+    if (layout) {
+      setDroppedComponents(layout.components);
+      setCurrentLayoutId(layout.id);
+      setIsLoadModalOpen(false);
+    }
+  };
+
+  // Export layout
+  const exportLayout = () => {
+    const layout = {
+      components: droppedComponents,
+      exportedAt: new Date().toISOString(),
+    };
+    
+    const blob = new Blob([JSON.stringify(layout, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `layout-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // Import layout
+  const importLayout = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedLayout = JSON.parse(e.target?.result as string);
+          setDroppedComponents(importedLayout.components);
+          setSaveMessage({ type: 'success', text: 'Layout imported successfully!' });
+          setTimeout(() => setSaveMessage(null), 3000);
+        } catch (error) {
+          setSaveMessage({ type: 'danger', text: 'Error importing layout. Please check the file format.' });
+          setTimeout(() => setSaveMessage(null), 3000);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };  
+
   return (
     <div className="page-builder">
       <DndProvider backend={HTML5Backend}>
         <Container fluid={true}>
+          {/* Save/Load Controls */}
+          <Row className="mb-4">
+            <Col>
+              <ButtonGroup>
+                <ReactstrapButton
+                  color="primary"
+                  onClick={() => setIsSaveModalOpen(true)}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <Save size={16} />
+                  Save Layout
+                </ReactstrapButton>
+                <ReactstrapButton
+                  color="secondary"
+                  onClick={() => setIsLoadModalOpen(true)}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <Upload size={16} />
+                  Load Layout
+                </ReactstrapButton>
+                <ReactstrapButton
+                  color="info"
+                  onClick={exportLayout}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <Download size={16} />
+                  Export
+                </ReactstrapButton>
+                <ReactstrapButton
+                  color="info"
+                  className="d-flex align-items-center gap-2"
+                >
+                  <label style={{ cursor: 'pointer', marginBottom: 0 }}>
+                    <Upload size={16} />
+                    Import
+                    <Input
+                      type="file"
+                      accept=".json"
+                      style={{ display: 'none' }}
+                      onChange={importLayout}
+                      onClick={(e) => { (e.target as HTMLInputElement).value = '' }}
+                    />
+                  </label>
+                </ReactstrapButton>
+              </ButtonGroup>
+            </Col>
+          </Row>
+
+          {/* Save/Load Message */}
+          {saveMessage && (
+            <Row className="mb-3">
+              <Col>
+                <Alert color={saveMessage.type}>
+                  {saveMessage.text}
+                </Alert>
+              </Col>
+            </Row>
+          )}
+
+          {/* Save Modal */}
+          <Modal isOpen={isSaveModalOpen} toggle={() => setIsSaveModalOpen(false)}>
+            <ModalHeader toggle={() => setIsSaveModalOpen(false)}>Save Layout</ModalHeader>
+            <ModalBody>
+              <Label for="layoutName">Layout Name</Label>
+              <Input
+                id="layoutName"
+                value={newLayoutName}
+                onChange={(e) => setNewLayoutName(e.target.value)}
+                placeholder="Enter a name for your layout"
+              />
+            </ModalBody>
+            <ModalFooter>
+              <ReactstrapButton color="secondary" onClick={() => setIsSaveModalOpen(false)}>
+                Cancel
+              </ReactstrapButton>
+              <ReactstrapButton
+                color="primary"
+                onClick={() => saveLayout(newLayoutName)}
+                disabled={!newLayoutName.trim()}
+              >
+                Save
+              </ReactstrapButton>
+            </ModalFooter>
+          </Modal>
+
+          {/* Load Modal */}
+          <Modal isOpen={isLoadModalOpen} toggle={() => setIsLoadModalOpen(false)}>
+            <ModalHeader toggle={() => setIsLoadModalOpen(false)}>Load Layout</ModalHeader>
+            <ModalBody>
+              {layouts.length === 0 ? (
+                <p>No saved layouts found.</p>
+              ) : (
+                layouts.map(layout => (
+                  <Card key={layout.id} className="mb-2">
+                    <CardBody>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6>{layout.name}</h6>
+                          <small className="text-muted">
+                            Last modified: {new Date(layout.lastModified).toLocaleDateString()}
+                          </small>
+                        </div>
+                        <ReactstrapButton
+                          color="primary"
+                          size="sm"
+                          onClick={() => loadLayout(layout.id)}
+                        >
+                          Load
+                        </ReactstrapButton>
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <ReactstrapButton color="secondary" onClick={() => setIsLoadModalOpen(false)}>
+                Close
+              </ReactstrapButton>
+            </ModalFooter>
+          </Modal>
+
           {showUndoAlert && lastDeletedComponent && (
             <div style={{ 
               position: 'fixed', 
