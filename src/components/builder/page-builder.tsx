@@ -6,13 +6,19 @@ import {
   Card, 
   CardBody, 
   CardTitle, 
-  CardText, 
+  CardText,
+  CardImg, 
   Button as ReactstrapButton,
-  Alert
+  Alert,
 } from "reactstrap";
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { X } from 'lucide-react';
+import { CarIcon, X } from 'lucide-react';
+import heroImage from '../../images/hero-library-of-components.png';
+import narrativeImage from '../../images/narrative-library-of-components.png';
+import buttonImage from '../../images/btn-library-of-components.png';
+import imageImage from '../../images/image-library-of-components.png';
+import formImage from '../../images/form-library-of-components.png';
 import './page-builder.scss';
 
 // Define item types for drag and drop
@@ -54,13 +60,26 @@ interface DeletedComponent extends DroppedComponent {
 
 // Simple component renderer
 const renderPlaceholderComponent = (text: string) => {
+  const img = () => {
+    switch (text) {
+      case "Header":
+        return heroImage;
+      case "Narrative":
+        return narrativeImage;
+      case "Image":
+        return imageImage
+      case "Button":
+        return buttonImage
+      case "Form":
+        return formImage
+      default:
+    }
+  }
   return (
     <Card className="mb-2">
       <CardBody>
         <CardTitle tag="h5">{text}</CardTitle>
-        <CardText>
-          This is a placeholder for the {text} component.
-        </CardText>
+        <CardImg top width="100%" src={img()} alt="Card image cap" />
       </CardBody>
     </Card>
   );
@@ -81,7 +100,9 @@ const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }
       <Card className="mb-2">
         <CardBody>
           <CardTitle tag="h6" className="mb-2">{text}</CardTitle>
-          <CardText className="text-muted small">{componentType}</CardText>
+          <CardText className="text-muted small">
+            {componentType}
+          </CardText>
         </CardBody>
       </Card>
     </div>
@@ -218,7 +239,7 @@ function PageBuilder() {
   // Simplified components list
   const [components] = useState<{ id: number; text: string; componentType: string }[]>([
     { id: 1, text: "Header", componentType: "Header" },
-    { id: 2, text: "Text Block", componentType: "TextBlock" },
+    { id: 2, text: "Narrative", componentType: "Narrative Block" },
     { id: 3, text: "Image", componentType: "Image" },
     { id: 4, text: "Button", componentType: "Button" },
     { id: 5, text: "Form", componentType: "Form" }
