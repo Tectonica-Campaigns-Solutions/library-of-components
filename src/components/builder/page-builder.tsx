@@ -317,7 +317,7 @@ function PageBuilder() {
       // Merge layouts, preferring Firestore versions
       const mergedLayouts = mergeLayouts(localLayouts, firestoreLayouts);
       setLayouts(mergedLayouts);
-      
+
       // Update localStorage with merged layouts
       localStorage.setItem('pageBuilderLayouts', JSON.stringify(mergedLayouts));
     } catch (error) {
