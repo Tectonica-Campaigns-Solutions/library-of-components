@@ -8,7 +8,6 @@ const Builder = ({data: { homepage, favicon } }) => {
     return (
       <>
         <CustomSeoDatoCMS seo={seo} favicon={favicon} />
-        <h1>Page Builder</h1>
         <PageBuilder blocks={blocks} />
       </>
     );

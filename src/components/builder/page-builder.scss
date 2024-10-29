@@ -7,9 +7,6 @@ body {
   
   /* Main container styles */
 .page-builder {
-  .container {
-    padding: 20px;
-  }
   
   /* Header styling */
   h4 {
@@ -21,13 +18,17 @@ body {
   /* Draggable component card styling */
   .card {
     background-color: #ffffff;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    cursor: move;
+ 
+    // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    // padding: 1rem 0;
     transition: transform 0.2s ease-in-out;
   }
   
   .card:hover {
     transform: translateY(-5px);
+    opacity: 0.8;
   }
   
   .card-title {
@@ -46,9 +47,27 @@ body {
     min-height: 300px;
     background-color: #e9ecef;
     border: 2px dashed #6c757d;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 12px 10px;
     transition: background-color 0.3s ease;
+
+    .card-body {
+      padding: 0;
+    }
+    
+    .card {
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .card-title {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      color: black;
+      opacity: 0;
+    }
+
   }
   
   .droppable-area:hover {

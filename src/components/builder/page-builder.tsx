@@ -35,11 +35,29 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 
-import heroImage from '../../images/hero-library-of-components.png';
-import narrativeImage from '../../images/narrative-library-of-components.png';
-import buttonImage from '../../images/btn-library-of-components.png';
-import imageImage from '../../images/image-library-of-components.png';
-import formImage from '../../images/form-library-of-components.png';
+import accordionsImage from '../../images/Accordions1x.png';
+import advancedNarrativeBlockPlusFormImage from '../../images/Advanced Narrative Block + Form1x.png';
+import advancedNarrativeBlockImagesSlideImage from '../../images/Advanced Narrative Block + Images slide1x.png';
+import breadcrumbsImage from '../../images/Breadcrumbs1x.png';
+import buttonImage from '../../images/Button1x.png';
+import twoCardsRowImage from '../../images/Cards 2 Row1x.png';
+import twoCardsRowIconImage from '../../images/Cards 2 Row1x-1.png';
+import threeCardsRowImage from '../../images/Cards 3 Row1x.png';
+import fourCardsRowImage from '../../images/Cards 4 Row1x.png';
+import formImage from '../../images/Form1x.png';
+import narrativeImageLeftImage from '../../images/Narrative1x.png';
+import narrativeImageRightImage from '../../images/Narrative1x-1.png';
+import filterRow1xImage from '../../images/Filter 1 Row1x.png';
+import filterRow2xImage from '../../images/Filter 2 Row1x.png';
+import footerImage from '../../images/Footer1x.png';
+import headerImage from '../../images/Header1x.png';
+import heroPlusBackgroundPlusFormImage from '../../images/Hero + Background + Form1x.png';
+import heroPlusFormImage from '../../images/Hero + Form1x.png';
+import heroPlusImagePlusButtonsImage from '../../images/Hero + Image + Buttons1x.png';
+import notificationImage from '../../images/Notification1x.png';
+import secondaryHeaderImage from '../../images/Secondary Header1x.png';
+import spacerImage from '../../images/spacer.png';
+
 import './page-builder.scss';
 
 // Define item types for drag and drop
@@ -95,17 +113,50 @@ interface FirebaseLayout extends SavedLayout {
 const renderPlaceholderComponent = (text: string) => {
   const img = () => {
     switch (text) {
-      case "Header":
-        return heroImage;
-      case "Narrative":
-        return narrativeImage;
-      case "Image":
-        return imageImage
+      case "Accordion":
+        return accordionsImage;
+      case "Advanced Narrative Block + Form":
+        return advancedNarrativeBlockPlusFormImage;
+      case "Advanced Narrative Block + Images slider":
+        return advancedNarrativeBlockImagesSlideImage;
+      case "Breadcrumbs":
+        return breadcrumbsImage;
       case "Button":
-        return buttonImage
+        return buttonImage;
+      case "2 Cards Row":
+        return twoCardsRowImage;
+      case "2 Cards with Icon Row":
+        return twoCardsRowIconImage;
+      case "3 Cards Row":
+        return threeCardsRowImage;
+      case "4 Cards Row":
+        return fourCardsRowImage;
       case "Form":
-        return formImage
+        return formImage;
+      case "Narrative Left Image":
+        return narrativeImageLeftImage;
+      case "Narrative Right Image":
+        return narrativeImageRightImage;
+      case "Filter Row":
+        return filterRow1xImage;
+      case "Combined Filter Row":
+        return filterRow2xImage;
+      case "Footer":
+        return footerImage;
+      case "Header":
+        return headerImage;
+      case "Secondary Header":
+        return secondaryHeaderImage;
+      case "Hero + Background + Form":
+        return heroPlusBackgroundPlusFormImage;
+      case "Hero + Form":
+        return heroPlusFormImage;
+      case "Hero + Image + Buttons":
+        return heroPlusImagePlusButtonsImage;
+      case "Notification":
+        return notificationImage;
       default:
+        return spacerImage;
     }
   }
   return (
@@ -132,10 +183,10 @@ const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }
     <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
       <Card className="mb-2">
         <CardBody>
-          <CardTitle tag="h6" className="mb-2">{text}</CardTitle>
-          <CardText className="text-muted small">
+          <CardTitle tag="h6" className="mb-0">{text}</CardTitle>
+          {/* <CardText className="text-muted small">
             {componentType}
-          </CardText>
+          </CardText> */}
         </CardBody>
       </Card>
     </div>
@@ -200,12 +251,7 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({
       style={{ 
         opacity: isDragging ? 0.5 : 1,
         cursor: 'move',
-        padding: '0.5rem',
-        marginBottom: '0.5rem',
-        backgroundColor: '#f8f9fa',
-        border: '1px dashed #dee2e6',
         position: 'relative',
-        borderRadius: '4px',
         transition: 'all 0.2s ease'
       }}
       className="hover:shadow-sm"
@@ -255,11 +301,9 @@ const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
       ref={drop}
       className="droppable-area"
       style={{
-        minHeight: '200px',
-        padding: '1rem',
+        minHeight: '100vh',
         backgroundColor: '#ffffff',
         border: '2px dashed #ced4da',
-        borderRadius: '4px'
       }}
     >
       {children}
@@ -271,13 +315,30 @@ const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
 function PageBuilder() {
   // Simplified components list
   const [components] = useState<{ id: number; text: string; componentType: string }[]>([
-    { id: 1, text: "Header", componentType: "Header" },
-    { id: 2, text: "Narrative", componentType: "Narrative Block" },
-    { id: 3, text: "Image", componentType: "Image" },
-    { id: 4, text: "Button", componentType: "Button" },
-    { id: 5, text: "Form", componentType: "Form" }
+    { id: 0, text: "Spacer", componentType: "Spacer" },
+    { id: 1, text: "Accordion", componentType: "Accordion" },
+    { id: 2, text: "Advanced Narrative Block + Form", componentType: "Advanced Narrative Block + Form" },
+    { id: 3, text: "Advanced Narrative Block + Images slider", componentType: "Advanced Narrative Block + Images slider" },
+    { id: 4, text: "Breadcrumbs", componentType: "Breadcrumbs" },
+    { id: 5, text: "Button", componentType: "Button" },
+    { id: 6, text: "2 Cards Row", componentType: "2 Cards Row" },
+    { id: 7, text: "2 Cards with Icon Row", componentType: "2 Cards with Icon Row" },
+    { id: 8, text: "3 Cards Row", componentType: "3 Cards Row" },
+    { id: 9, text: "4 Cards Row", componentType: "4 Cards Row" },
+    { id: 10, text: "Form", componentType: "Form" },
+    { id: 11, text: "Narrative Left Image", componentType: "Narrative Left Image" },
+    { id: 12, text: "Narrative Right Image", componentType: "Narrative Right Image" },
+    { id: 13, text: "Filter Row", componentType: "Filter Row" },
+    { id: 14, text: "Combined Filter Row", componentType: "Combined Filter Row" },
+    { id: 15, text: "Footer", componentType: "Footer" },
+    { id: 16, text: "Header", componentType: "Header" },
+    { id: 17, text: "Secondary Header", componentType: "Secondary Header" },
+    { id: 18, text: "Hero + Background + Form", componentType: "Hero + Background + Form" },
+    { id: 19, text: "Hero + Form", componentType: "Hero + Form" },
+    { id: 20, text: "Hero + Image + Buttons", componentType: "Hero + Image + Buttons" },
+    { id: 21, text: "Notification", componentType: "Notification" },
   ]);
-
+  
   const [droppedComponents, setDroppedComponents] = useState<DroppedComponent[]>([]);
   const [deletedComponents, setDeletedComponents] = useState<DeletedComponent[]>([]);
   const [showUndoAlert, setShowUndoAlert] = useState(false);
@@ -291,6 +352,9 @@ function PageBuilder() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
+  const [deleteLayoutId, setDeleteLayoutId] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentLayoutName, setCurrentLayoutName] = useState<string>('');
 
   // Load saved layouts from localStorage on mount
   useEffect(() => {
@@ -382,6 +446,7 @@ function PageBuilder() {
       });
 
       setCurrentLayoutId(newLayout.id);
+      setCurrentLayoutName(name); // Update current layout name
       setSaveMessage({ type: 'success', text: 'Layout saved to cloud!' });
       
       // Update localStorage
@@ -403,9 +468,9 @@ function PageBuilder() {
     if (layout) {
       setDroppedComponents(layout.components);
       setCurrentLayoutId(layout.id);
+      setCurrentLayoutName(layout.name); // Update current layout name
       setIsLoadModalOpen(false);
 
-      // If layout hasn't been synced to Firestore, sync it
       if (!layout.synced && layout.firestoreId) {
         try {
           setIsSyncing(true);
@@ -415,7 +480,6 @@ function PageBuilder() {
             lastModified: Timestamp.fromDate(new Date())
           });
           
-          // Update sync status
           setLayouts(prevLayouts => 
             prevLayouts.map(l => 
               l.id === layoutId ? { ...l, synced: true } : l
@@ -435,6 +499,44 @@ function PageBuilder() {
   // useEffect(() => {
   //   localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
   // }, [layouts]);
+  
+  // Add delete layout function
+  const deleteLayout = async (layoutId: string) => {
+    setIsSyncing(true);
+    setSyncError(null);
+
+    try {
+      const layoutToDelete = layouts.find(l => l.id === layoutId);
+      
+      if (layoutToDelete?.firestoreId) {
+        const layoutRef = doc(db, 'layouts', layoutToDelete.firestoreId);
+        await deleteDoc(layoutRef);
+      }
+
+      setLayouts(prevLayouts => prevLayouts.filter(l => l.id !== layoutId));
+      
+      const updatedLayouts = layouts.filter(l => l.id !== layoutId);
+      localStorage.setItem('pageBuilderLayouts', JSON.stringify(updatedLayouts));
+
+      // Clear current layout if it was deleted
+      if (currentLayoutId === layoutId) {
+        setCurrentLayoutId(null);
+        setCurrentLayoutName(''); // Clear current layout name
+        setDroppedComponents([]);
+      }
+
+      setSaveMessage({ type: 'success', text: 'Layout deleted successfully!' });
+    } catch (error) {
+      console.error('Error deleting layout:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to delete layout from cloud' });
+      setSyncError('Failed to delete from cloud');
+    } finally {
+      setIsSyncing(false);
+      setIsDeleteModalOpen(false);
+      setDeleteLayoutId(null);
+      setTimeout(() => setSaveMessage(null), 3000);
+    }
+  };
 
   const generateUniqueId = () => {
     return `${Date.now()}-${Math.random()}`;
@@ -534,21 +636,40 @@ function PageBuilder() {
     <div className="page-builder">
       <DndProvider backend={HTML5Backend}>
         <Container fluid={true}>
+          {/* Current Layout Display */}
+          <h1>Page Builder</h1>
+          <Row className="mb-3">
+            <Col>
+              <div className="d-flex align-items-center">
+                {currentLayoutName && (
+                  <div className="d-flex align-items-center">
+                    <h4 className="mb-2">
+                      <span className="text-muted me-2">Current Layout:</span>
+                      <span className="fw-bold">{currentLayoutName}</span>
+                    </h4>
+                  </div>
+                )}
+              </div>
+            </Col>
+          </Row>
+
           {/* Save/Load Controls */}
           <Row className="mb-4">
             <Col>
               <ButtonGroup>
-              <ReactstrapButton
+                <ReactstrapButton
                   color="primary"
-                  onClick={() => setIsSaveModalOpen(true)}
+                  onClick={() => {
+                    setNewLayoutName(currentLayoutName); // Pre-fill current name if editing
+                    setIsSaveModalOpen(true);
+                  }}
                   className="d-flex align-items-center gap-2"
                   disabled={isSyncing}
                 >
                   <Save size={16} />
-                  Save Layout
+                  {currentLayoutId ? 'Update Layout' : 'Save Layout'}
                   {isSyncing && <Spinner size="sm" className="ms-2" />}
                 </ReactstrapButton>
-                
                 <ReactstrapButton
                   color="secondary"
                   onClick={() => setIsLoadModalOpen(true)}
@@ -559,7 +680,6 @@ function PageBuilder() {
                   Load Layout
                   {isLoading && <Spinner size="sm" className="ms-2" />}
                 </ReactstrapButton>
-
                 <ReactstrapButton
                   color="info"
                   onClick={loadLayouts}
@@ -569,23 +689,6 @@ function PageBuilder() {
                   <Cloud size={16} />
                   Sync
                   {isSyncing && <Spinner size="sm" className="ms-2" />}
-                </ReactstrapButton>
-
-                <ReactstrapButton
-                  color="primary"
-                  onClick={() => setIsSaveModalOpen(true)}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <Save size={16} />
-                  Save Layout
-                </ReactstrapButton>
-                <ReactstrapButton
-                  color="secondary"
-                  onClick={() => setIsLoadModalOpen(true)}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <Upload size={16} />
-                  Load Layout
                 </ReactstrapButton>
                 <ReactstrapButton
                   color="info"
@@ -628,7 +731,9 @@ function PageBuilder() {
 
           {/* Save Modal */}
           <Modal isOpen={isSaveModalOpen} toggle={() => setIsSaveModalOpen(false)}>
-            <ModalHeader toggle={() => setIsSaveModalOpen(false)}>Save Layout</ModalHeader>
+            <ModalHeader toggle={() => setIsSaveModalOpen(false)}>
+              {currentLayoutId ? 'Update Layout' : 'Save Layout'}
+            </ModalHeader>
             <ModalBody>
               <Label for="layoutName">Layout Name</Label>
               <Input
@@ -647,14 +752,14 @@ function PageBuilder() {
                 onClick={() => saveLayout(newLayoutName)}
                 disabled={!newLayoutName.trim()}
               >
-                Save
+                {currentLayoutId ? 'Update' : 'Save'}
               </ReactstrapButton>
             </ModalFooter>
           </Modal>
 
           {/* Load Modal */}
-          <Modal isOpen={isLoadModalOpen} toggle={() => setIsLoadModalOpen(false)}>
-            <ModalHeader toggle={() => setIsLoadModalOpen(false)}>Load Layout</ModalHeader>
+          <Modal isOpen={isLoadModalOpen} toggle={() => setIsLoadModalOpen(false)} size="lg">
+            <ModalHeader toggle={() => setIsLoadModalOpen(false)}>Saved Layouts</ModalHeader>
             <ModalBody>
               {layouts.length === 0 ? (
                 <p>No saved layouts found.</p>
@@ -664,18 +769,37 @@ function PageBuilder() {
                     <CardBody>
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
-                          <h6>{layout.name}</h6>
+                          <h6 className="d-flex align-items-center gap-2">
+                            {layout.name}
+                            {layout.synced ? (
+                              <Cloud size={16} className="text-success" />
+                            ) : (
+                              <CloudOff size={16} className="text-warning" />
+                            )}
+                          </h6>
                           <small className="text-muted">
                             Last modified: {new Date(layout.lastModified).toLocaleDateString()}
                           </small>
                         </div>
-                        <ReactstrapButton
-                          color="primary"
-                          size="sm"
-                          onClick={() => loadLayout(layout.id)}
-                        >
-                          Load
-                        </ReactstrapButton>
+                        <div className="d-flex gap-2">
+                          <ReactstrapButton
+                            color="primary"
+                            size="sm"
+                            onClick={() => loadLayout(layout.id)}
+                          >
+                            Load
+                          </ReactstrapButton>
+                          <ReactstrapButton
+                            color="danger"
+                            size="sm"
+                            onClick={() => {
+                              setDeleteLayoutId(layout.id);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          >
+                            Delete
+                          </ReactstrapButton>
+                        </div>
                       </div>
                     </CardBody>
                   </Card>
@@ -688,6 +812,55 @@ function PageBuilder() {
               </ReactstrapButton>
             </ModalFooter>
           </Modal>
+
+          {/* Delete Confirmation Modal */}
+          <Modal isOpen={isDeleteModalOpen} toggle={() => setIsDeleteModalOpen(false)}>
+            <ModalHeader toggle={() => setIsDeleteModalOpen(false)}>Delete Layout</ModalHeader>
+            <ModalBody>
+              Are you sure you want to delete this layout? This action cannot be undone.
+            </ModalBody>
+            <ModalFooter>
+              <ReactstrapButton 
+                color="secondary" 
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                  setDeleteLayoutId(null);
+                }}
+              >
+                Cancel
+              </ReactstrapButton>
+              <ReactstrapButton
+                color="danger"
+                onClick={() => deleteLayoutId && deleteLayout(deleteLayoutId)}
+                disabled={isSyncing}
+              >
+                {isSyncing ? (
+                  <>
+                    <span>Deleting</span>
+                    <Spinner size="sm" className="ms-2" />
+                  </>
+                ) : (
+                  'Delete'
+                )}
+              </ReactstrapButton>
+            </ModalFooter>
+          </Modal>
+
+          {/* Add success/error messages for delete operations */}
+          {saveMessage && (
+            <Alert
+              color={saveMessage.type}
+              className="position-fixed"
+              style={{
+                bottom: '1rem',
+                right: '1rem',
+                zIndex: 1050,
+                minWidth: '250px'
+              }}
+            >
+              {saveMessage.text}
+            </Alert>
+          )}
 
           {showUndoAlert && lastDeletedComponent && (
             <div style={{ 
