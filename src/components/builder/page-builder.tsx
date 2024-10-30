@@ -1,12 +1,12 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { 
-  Container, 
-  Row, 
-  Col, 
-  Card, 
-  CardBody, 
-  CardTitle, 
-  CardText, 
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  CardTitle,
+  CardText,
   CardImg,
   Button as ReactstrapButton,
   Alert,
@@ -17,53 +17,43 @@ import {
   ModalFooter,
   Input,
   Label,
-  Spinner
-} from "reactstrap";
-import { DndProvider, useDrag, useDrop, DragSourceMonitor } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+  Spinner,
+} from 'reactstrap';
+import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { X, Save, Upload, Download, Cloud, CloudOff } from 'lucide-react';
 import { db } from '../../../firebase';
-import { 
-  collection, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  getDocs, 
-  doc, 
-  query, 
-  orderBy, 
-  Timestamp 
-} from 'firebase/firestore';
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy, Timestamp } from 'firebase/firestore';
 
 import accordionsImage from '../../images/Accordions1x.png';
-import advancedNarrativeBlockPlusFormImage from '../../images/Advanced Narrative Block + Form1x.png';
-import advancedNarrativeBlockImagesSlideImage from '../../images/Advanced Narrative Block + Images slide1x.png';
+import advancedNarrativeBlockPlusFormImage from '../../images/AdvancedNarrativeBlockForm1x.png';
+import advancedNarrativeBlockImagesSlideImage from '../../images/AdvancedNarrativeBlockImagesslide1x.png';
 import breadcrumbsImage from '../../images/Breadcrumbs1x.png';
 import buttonImage from '../../images/Button1x.png';
-import twoCardsRowImage from '../../images/Cards 2 Row1x.png';
-import twoCardsRowIconImage from '../../images/Cards 2 Row1x-1.png';
-import threeCardsRowImage from '../../images/Cards 3 Row1x.png';
-import fourCardsRowImage from '../../images/Cards 4 Row1x.png';
+import twoCardsRowImage from '../../images/Cards2Row1x.png';
+import twoCardsRowIconImage from '../../images/Cards2Row1x-1.png';
+import threeCardsRowImage from '../../images/Cards3Row1x.png';
+import fourCardsRowImage from '../../images/Cards4Row1x.png';
 import formImage from '../../images/Form1x.png';
 import narrativeImageLeftImage from '../../images/Narrative1x.png';
 import narrativeImageRightImage from '../../images/Narrative1x-1.png';
-import filterRow1xImage from '../../images/Filter 1 Row1x.png';
-import filterRow2xImage from '../../images/Filter 2 Row1x.png';
+import filterRow1xImage from '../../images/Filter1Row1x.png';
+import filterRow2xImage from '../../images/Filter2Row1x.png';
 import footerImage from '../../images/Footer1x.png';
 import headerImage from '../../images/Header1x.png';
-import heroPlusBackgroundPlusFormImage from '../../images/Hero + Background + Form1x.png';
-import heroPlusFormImage from '../../images/Hero + Form1x.png';
-import heroPlusImagePlusButtonsImage from '../../images/Hero + Image + Buttons1x.png';
+import heroPlusBackgroundPlusFormImage from '../../images/HeroBackgroundForm1x.png';
+import heroPlusFormImage from '../../images/HeroForm1x.png';
+import heroPlusImagePlusButtonsImage from '../../images/HeroImageButtons1x.png';
 import notificationImage from '../../images/Notification1x.png';
-import secondaryHeaderImage from '../../images/Secondary Header1x.png';
+import secondaryHeaderImage from '../../images/SecondaryHeader1x.png';
 import spacerImage from '../../images/spacer.png';
 
 import './page-builder.scss';
 
 // Define item types for drag and drop
 const ItemTypes = {
-  CARD: "card",
-  DROPPED_COMPONENT: "dropped_component"
+  CARD: 'card',
+  DROPPED_COMPONENT: 'dropped_component',
 };
 
 // Interfaces
@@ -113,52 +103,52 @@ interface FirebaseLayout extends SavedLayout {
 const renderPlaceholderComponent = (text: string) => {
   const img = () => {
     switch (text) {
-      case "Accordion":
+      case 'Accordion':
         return accordionsImage;
-      case "Advanced Narrative Block + Form":
+      case 'Advanced Narrative Block + Form':
         return advancedNarrativeBlockPlusFormImage;
-      case "Advanced Narrative Block + Images slider":
+      case 'Advanced Narrative Block + Images slider':
         return advancedNarrativeBlockImagesSlideImage;
-      case "Breadcrumbs":
+      case 'Breadcrumbs':
         return breadcrumbsImage;
-      case "Button":
+      case 'Button':
         return buttonImage;
-      case "2 Cards Row":
+      case '2 Cards Row':
         return twoCardsRowImage;
-      case "2 Cards with Icon Row":
+      case '2 Cards with Icon Row':
         return twoCardsRowIconImage;
-      case "3 Cards Row":
+      case '3 Cards Row':
         return threeCardsRowImage;
-      case "4 Cards Row":
+      case '4 Cards Row':
         return fourCardsRowImage;
-      case "Form":
+      case 'Form':
         return formImage;
-      case "Narrative Left Image":
+      case 'Narrative Left Image':
         return narrativeImageLeftImage;
-      case "Narrative Right Image":
+      case 'Narrative Right Image':
         return narrativeImageRightImage;
-      case "Filter Row":
+      case 'Filter Row':
         return filterRow1xImage;
-      case "Combined Filter Row":
+      case 'Combined Filter Row':
         return filterRow2xImage;
-      case "Footer":
+      case 'Footer':
         return footerImage;
-      case "Header":
+      case 'Header':
         return headerImage;
-      case "Secondary Header":
+      case 'Secondary Header':
         return secondaryHeaderImage;
-      case "Hero + Background + Form":
+      case 'Hero + Background + Form':
         return heroPlusBackgroundPlusFormImage;
-      case "Hero + Form":
+      case 'Hero + Form':
         return heroPlusFormImage;
-      case "Hero + Image + Buttons":
+      case 'Hero + Image + Buttons':
         return heroPlusImagePlusButtonsImage;
-      case "Notification":
+      case 'Notification':
         return notificationImage;
       default:
         return spacerImage;
     }
-  }
+  };
   return (
     <Card className="mb-2">
       <CardBody>
@@ -183,7 +173,9 @@ const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }
     <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
       <Card className="mb-2">
         <CardBody>
-          <CardTitle tag="h6" className="mb-0">{text}</CardTitle>
+          <CardTitle tag="h6" className="mb-0">
+            {text}
+          </CardTitle>
           {/* <CardText className="text-muted small">
             {componentType}
           </CardText> */}
@@ -194,13 +186,7 @@ const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }
 };
 
 // Draggable dropped component
-const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ 
-  id, 
-  index, 
-  children, 
-  moveComponent,
-  onDelete 
-}) => {
+const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, children, moveComponent, onDelete }) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -246,13 +232,13 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({
   drag(drop(ref));
 
   return (
-    <div 
+    <div
       ref={ref}
-      style={{ 
+      style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: 'move',
         position: 'relative',
-        transition: 'all 0.2s ease'
+        transition: 'all 0.2s ease',
       }}
       className="hover:shadow-sm"
     >
@@ -273,7 +259,7 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({
           borderRadius: '50%',
           backgroundColor: '#ffffff',
           boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-          transition: 'all 0.2s ease'
+          transition: 'all 0.2s ease',
         }}
         title="Delete component"
         className="hover:bg-gray-100"
@@ -315,30 +301,34 @@ const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
 function PageBuilder() {
   // Simplified components list
   const [components] = useState<{ id: number; text: string; componentType: string }[]>([
-    { id: 0, text: "Spacer", componentType: "Spacer" },
-    { id: 1, text: "Accordion", componentType: "Accordion" },
-    { id: 2, text: "Advanced Narrative Block + Form", componentType: "Advanced Narrative Block + Form" },
-    { id: 3, text: "Advanced Narrative Block + Images slider", componentType: "Advanced Narrative Block + Images slider" },
-    { id: 4, text: "Breadcrumbs", componentType: "Breadcrumbs" },
-    { id: 5, text: "Button", componentType: "Button" },
-    { id: 6, text: "2 Cards Row", componentType: "2 Cards Row" },
-    { id: 7, text: "2 Cards with Icon Row", componentType: "2 Cards with Icon Row" },
-    { id: 8, text: "3 Cards Row", componentType: "3 Cards Row" },
-    { id: 9, text: "4 Cards Row", componentType: "4 Cards Row" },
-    { id: 10, text: "Form", componentType: "Form" },
-    { id: 11, text: "Narrative Left Image", componentType: "Narrative Left Image" },
-    { id: 12, text: "Narrative Right Image", componentType: "Narrative Right Image" },
-    { id: 13, text: "Filter Row", componentType: "Filter Row" },
-    { id: 14, text: "Combined Filter Row", componentType: "Combined Filter Row" },
-    { id: 15, text: "Footer", componentType: "Footer" },
-    { id: 16, text: "Header", componentType: "Header" },
-    { id: 17, text: "Secondary Header", componentType: "Secondary Header" },
-    { id: 18, text: "Hero + Background + Form", componentType: "Hero + Background + Form" },
-    { id: 19, text: "Hero + Form", componentType: "Hero + Form" },
-    { id: 20, text: "Hero + Image + Buttons", componentType: "Hero + Image + Buttons" },
-    { id: 21, text: "Notification", componentType: "Notification" },
+    { id: 0, text: 'Spacer', componentType: 'Spacer' },
+    { id: 1, text: 'Accordion', componentType: 'Accordion' },
+    { id: 2, text: 'Advanced Narrative Block + Form', componentType: 'Advanced Narrative Block + Form' },
+    {
+      id: 3,
+      text: 'Advanced Narrative Block + Images slider',
+      componentType: 'Advanced Narrative Block + Images slider',
+    },
+    { id: 4, text: 'Breadcrumbs', componentType: 'Breadcrumbs' },
+    { id: 5, text: 'Button', componentType: 'Button' },
+    { id: 6, text: '2 Cards Row', componentType: '2 Cards Row' },
+    { id: 7, text: '2 Cards with Icon Row', componentType: '2 Cards with Icon Row' },
+    { id: 8, text: '3 Cards Row', componentType: '3 Cards Row' },
+    { id: 9, text: '4 Cards Row', componentType: '4 Cards Row' },
+    { id: 10, text: 'Form', componentType: 'Form' },
+    { id: 11, text: 'Narrative Left Image', componentType: 'Narrative Left Image' },
+    { id: 12, text: 'Narrative Right Image', componentType: 'Narrative Right Image' },
+    { id: 13, text: 'Filter Row', componentType: 'Filter Row' },
+    { id: 14, text: 'Combined Filter Row', componentType: 'Combined Filter Row' },
+    { id: 15, text: 'Footer', componentType: 'Footer' },
+    { id: 16, text: 'Header', componentType: 'Header' },
+    { id: 17, text: 'Secondary Header', componentType: 'Secondary Header' },
+    { id: 18, text: 'Hero + Background + Form', componentType: 'Hero + Background + Form' },
+    { id: 19, text: 'Hero + Form', componentType: 'Hero + Form' },
+    { id: 20, text: 'Hero + Image + Buttons', componentType: 'Hero + Image + Buttons' },
+    { id: 21, text: 'Notification', componentType: 'Notification' },
   ]);
-  
+
   const [droppedComponents, setDroppedComponents] = useState<DroppedComponent[]>([]);
   const [deletedComponents, setDeletedComponents] = useState<DeletedComponent[]>([]);
   const [showUndoAlert, setShowUndoAlert] = useState(false);
@@ -348,7 +338,7 @@ function PageBuilder() {
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [newLayoutName, setNewLayoutName] = useState('');
-  const [saveMessage, setSaveMessage] = useState<{type: string; text: string} | null>(null);
+  const [saveMessage, setSaveMessage] = useState<{ type: string; text: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
@@ -366,16 +356,16 @@ function PageBuilder() {
     try {
       // Load from localStorage
       const localLayouts = JSON.parse(localStorage.getItem('pageBuilderLayouts') || '[]');
-      
+
       // Load from Firestore
       const layoutsCollection = collection(db, 'layouts');
       const layoutsQuery = query(layoutsCollection, orderBy('lastModified', 'desc'));
       const querySnapshot = await getDocs(layoutsQuery);
-      
-      const firestoreLayouts = querySnapshot.docs.map(doc => ({
+
+      const firestoreLayouts = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
         firestoreId: doc.id,
-        synced: true
+        synced: true,
       })) as FirebaseLayout[];
 
       // Merge layouts, preferring Firestore versions
@@ -394,8 +384,8 @@ function PageBuilder() {
 
   const mergeLayouts = (local: FirebaseLayout[], remote: FirebaseLayout[]): FirebaseLayout[] => {
     const merged = [...local];
-    remote.forEach(remoteLayout => {
-      const localIndex = merged.findIndex(l => l.id === remoteLayout.id);
+    remote.forEach((remoteLayout) => {
+      const localIndex = merged.findIndex((l) => l.id === remoteLayout.id);
       if (localIndex >= 0) {
         // Update existing layout if remote is newer
         if (remoteLayout.lastModified > merged[localIndex].lastModified) {
@@ -413,29 +403,29 @@ function PageBuilder() {
   const saveLayout = async (name: string) => {
     setIsSyncing(true);
     setSyncError(null);
-    
+
     try {
       const newLayout: FirebaseLayout = {
         id: currentLayoutId || `layout-${Date.now()}`,
         name,
         components: droppedComponents,
         lastModified: Date.now(),
-        synced: false
+        synced: false,
       };
 
       // Save to Firestore
       const layoutsCollection = collection(db, 'layouts');
       const docRef = await addDoc(layoutsCollection, {
         ...newLayout,
-        lastModified: Timestamp.fromDate(new Date())
+        lastModified: Timestamp.fromDate(new Date()),
       });
 
       newLayout.firestoreId = docRef.id;
       newLayout.synced = true;
 
       // Update layouts state
-      setLayouts(prevLayouts => {
-        const layoutIndex = prevLayouts.findIndex(l => l.id === newLayout.id);
+      setLayouts((prevLayouts) => {
+        const layoutIndex = prevLayouts.findIndex((l) => l.id === newLayout.id);
         if (layoutIndex >= 0) {
           const updatedLayouts = [...prevLayouts];
           updatedLayouts[layoutIndex] = newLayout;
@@ -448,7 +438,7 @@ function PageBuilder() {
       setCurrentLayoutId(newLayout.id);
       setCurrentLayoutName(name); // Update current layout name
       setSaveMessage({ type: 'success', text: 'Layout saved to cloud!' });
-      
+
       // Update localStorage
       localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
     } catch (error) {
@@ -464,7 +454,7 @@ function PageBuilder() {
 
   // Load layout with Firestore sync
   const loadLayout = async (layoutId: string) => {
-    const layout = layouts.find(l => l.id === layoutId);
+    const layout = layouts.find((l) => l.id === layoutId);
     if (layout) {
       setDroppedComponents(layout.components);
       setCurrentLayoutId(layout.id);
@@ -477,14 +467,10 @@ function PageBuilder() {
           const layoutRef = doc(db, 'layouts', layout.firestoreId);
           await updateDoc(layoutRef, {
             components: layout.components,
-            lastModified: Timestamp.fromDate(new Date())
+            lastModified: Timestamp.fromDate(new Date()),
           });
-          
-          setLayouts(prevLayouts => 
-            prevLayouts.map(l => 
-              l.id === layoutId ? { ...l, synced: true } : l
-            )
-          );
+
+          setLayouts((prevLayouts) => prevLayouts.map((l) => (l.id === layoutId ? { ...l, synced: true } : l)));
         } catch (error) {
           console.error('Error syncing layout:', error);
           setSyncError('Failed to sync with cloud');
@@ -499,23 +485,23 @@ function PageBuilder() {
   // useEffect(() => {
   //   localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
   // }, [layouts]);
-  
+
   // Add delete layout function
   const deleteLayout = async (layoutId: string) => {
     setIsSyncing(true);
     setSyncError(null);
 
     try {
-      const layoutToDelete = layouts.find(l => l.id === layoutId);
-      
+      const layoutToDelete = layouts.find((l) => l.id === layoutId);
+
       if (layoutToDelete?.firestoreId) {
         const layoutRef = doc(db, 'layouts', layoutToDelete.firestoreId);
         await deleteDoc(layoutRef);
       }
 
-      setLayouts(prevLayouts => prevLayouts.filter(l => l.id !== layoutId));
-      
-      const updatedLayouts = layouts.filter(l => l.id !== layoutId);
+      setLayouts((prevLayouts) => prevLayouts.filter((l) => l.id !== layoutId));
+
+      const updatedLayouts = layouts.filter((l) => l.id !== layoutId);
       localStorage.setItem('pageBuilderLayouts', JSON.stringify(updatedLayouts));
 
       // Clear current layout if it was deleted
@@ -562,37 +548,39 @@ function PageBuilder() {
     });
   }, []);
 
-  const handleDelete = useCallback((id: string) => {
-    const componentToDelete = droppedComponents.find(comp => comp.uniqueId === id);
-    if (componentToDelete) {
-      const deletedComponent = {
-        ...componentToDelete,
-        timestamp: Date.now()
-      };
-      
-      setDroppedComponents(prev => prev.filter(comp => comp.uniqueId !== id));
-      setDeletedComponents(prev => [...prev, deletedComponent]);
-      setLastDeletedComponent(deletedComponent);
-      setShowUndoAlert(true);
+  const handleDelete = useCallback(
+    (id: string) => {
+      const componentToDelete = droppedComponents.find((comp) => comp.uniqueId === id);
+      if (componentToDelete) {
+        const deletedComponent = {
+          ...componentToDelete,
+          timestamp: Date.now(),
+        };
 
-      // Hide undo alert after 5 seconds
-      setTimeout(() => {
-        setShowUndoAlert(false);
-        setLastDeletedComponent(null);
-      }, 5000);
-    }
-  }, [droppedComponents]);
+        setDroppedComponents((prev) => prev.filter((comp) => comp.uniqueId !== id));
+        setDeletedComponents((prev) => [...prev, deletedComponent]);
+        setLastDeletedComponent(deletedComponent);
+        setShowUndoAlert(true);
+
+        // Hide undo alert after 5 seconds
+        setTimeout(() => {
+          setShowUndoAlert(false);
+          setLastDeletedComponent(null);
+        }, 5000);
+      }
+    },
+    [droppedComponents]
+  );
 
   const handleUndo = useCallback(() => {
     if (lastDeletedComponent) {
       const { timestamp, ...componentWithoutTimestamp } = lastDeletedComponent;
-      setDroppedComponents(prev => [...prev, componentWithoutTimestamp]);
-      setDeletedComponents(prev => prev.filter(comp => comp.uniqueId !== lastDeletedComponent.uniqueId));
+      setDroppedComponents((prev) => [...prev, componentWithoutTimestamp]);
+      setDeletedComponents((prev) => prev.filter((comp) => comp.uniqueId !== lastDeletedComponent.uniqueId));
       setShowUndoAlert(false);
       setLastDeletedComponent(null);
     }
   }, [lastDeletedComponent]);
-
 
   // Export layout
   const exportLayout = () => {
@@ -600,7 +588,7 @@ function PageBuilder() {
       components: droppedComponents,
       exportedAt: new Date().toISOString(),
     };
-    
+
     const blob = new Blob([JSON.stringify(layout, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -630,7 +618,7 @@ function PageBuilder() {
       };
       reader.readAsText(file);
     }
-  };  
+  };
 
   return (
     <div className="page-builder">
@@ -690,18 +678,11 @@ function PageBuilder() {
                   Sync
                   {isSyncing && <Spinner size="sm" className="ms-2" />}
                 </ReactstrapButton>
-                <ReactstrapButton
-                  color="info"
-                  onClick={exportLayout}
-                  className="d-flex align-items-center gap-2"
-                >
+                <ReactstrapButton color="info" onClick={exportLayout} className="d-flex align-items-center gap-2">
                   <Download size={16} />
                   Export
                 </ReactstrapButton>
-                <ReactstrapButton
-                  color="info"
-                  className="d-flex align-items-center gap-2"
-                >
+                <ReactstrapButton color="info" className="d-flex align-items-center gap-2">
                   <label style={{ cursor: 'pointer', marginBottom: 0 }}>
                     <Upload size={16} />
                     Import
@@ -710,7 +691,9 @@ function PageBuilder() {
                       accept=".json"
                       style={{ display: 'none' }}
                       onChange={importLayout}
-                      onClick={(e) => { (e.target as HTMLInputElement).value = '' }}
+                      onClick={(e) => {
+                        (e.target as HTMLInputElement).value = '';
+                      }}
                     />
                   </label>
                 </ReactstrapButton>
@@ -722,9 +705,7 @@ function PageBuilder() {
           {saveMessage && (
             <Row className="mb-3">
               <Col>
-                <Alert color={saveMessage.type}>
-                  {saveMessage.text}
-                </Alert>
+                <Alert color={saveMessage.type}>{saveMessage.text}</Alert>
               </Col>
             </Row>
           )}
@@ -764,7 +745,7 @@ function PageBuilder() {
               {layouts.length === 0 ? (
                 <p>No saved layouts found.</p>
               ) : (
-                layouts.map(layout => (
+                layouts.map((layout) => (
                   <Card key={layout.id} className="mb-2">
                     <CardBody>
                       <div className="d-flex justify-content-between align-items-center">
@@ -782,11 +763,7 @@ function PageBuilder() {
                           </small>
                         </div>
                         <div className="d-flex gap-2">
-                          <ReactstrapButton
-                            color="primary"
-                            size="sm"
-                            onClick={() => loadLayout(layout.id)}
-                          >
+                          <ReactstrapButton color="primary" size="sm" onClick={() => loadLayout(layout.id)}>
                             Load
                           </ReactstrapButton>
                           <ReactstrapButton
@@ -816,12 +793,10 @@ function PageBuilder() {
           {/* Delete Confirmation Modal */}
           <Modal isOpen={isDeleteModalOpen} toggle={() => setIsDeleteModalOpen(false)}>
             <ModalHeader toggle={() => setIsDeleteModalOpen(false)}>Delete Layout</ModalHeader>
-            <ModalBody>
-              Are you sure you want to delete this layout? This action cannot be undone.
-            </ModalBody>
+            <ModalBody>Are you sure you want to delete this layout? This action cannot be undone.</ModalBody>
             <ModalFooter>
-              <ReactstrapButton 
-                color="secondary" 
+              <ReactstrapButton
+                color="secondary"
                 onClick={() => {
                   setIsDeleteModalOpen(false);
                   setDeleteLayoutId(null);
@@ -855,7 +830,7 @@ function PageBuilder() {
                 bottom: '1rem',
                 right: '1rem',
                 zIndex: 1050,
-                minWidth: '250px'
+                minWidth: '250px',
               }}
             >
               {saveMessage.text}
@@ -863,39 +838,31 @@ function PageBuilder() {
           )}
 
           {showUndoAlert && lastDeletedComponent && (
-            <div style={{ 
-              position: 'fixed', 
-              bottom: '1rem', 
-              right: '1rem', 
-              zIndex: 1000,
-              width: '300px'
-            }}>
+            <div
+              style={{
+                position: 'fixed',
+                bottom: '1rem',
+                right: '1rem',
+                zIndex: 1000,
+                width: '300px',
+              }}
+            >
               <Alert color="info" style={{ marginBottom: 0 }}>
                 <div className="d-flex justify-content-between align-items-center">
                   <span>Component deleted</span>
-                  <ReactstrapButton
-                    color="link"
-                    size="sm"
-                    onClick={handleUndo}
-                    style={{ padding: '0 0.5rem' }}
-                  >
+                  <ReactstrapButton color="link" size="sm" onClick={handleUndo} style={{ padding: '0 0.5rem' }}>
                     Undo
                   </ReactstrapButton>
                 </div>
               </Alert>
             </div>
           )}
-          
+
           <Row>
             <Col md={2}>
               <h4>Components</h4>
               {components.map((comp) => (
-                <DraggableCard
-                  key={comp.id}
-                  id={comp.id}
-                  text={comp.text}
-                  componentType={comp.componentType}
-                />
+                <DraggableCard key={comp.id} id={comp.id} text={comp.text} componentType={comp.componentType} />
               ))}
             </Col>
             <Col md={10}>
