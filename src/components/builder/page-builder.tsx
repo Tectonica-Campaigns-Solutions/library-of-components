@@ -284,9 +284,9 @@ function PageBuilder() {
   const [isExporting, setIsExporting] = useState(false);  
   
   // Load saved layouts from localStorage on mount
-  // useEffect(() => {
-  //   loadLayouts();
-  // }, []);
+  useEffect(() => {
+    loadLayouts();
+  }, []);
 
   const loadLayouts = async () => {
     setIsLoading(true);
