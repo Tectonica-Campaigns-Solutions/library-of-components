@@ -41,6 +41,7 @@
     "gatsby-source-filesystem": "^5.13.1",
     "gatsby-transformer-sharp": "^5.13.1",
     "gsap": "^3.12.5",
+    "html2canvas": "^1.4.1",
     "lucide-react": "^0.453.0",
     "mapbox-gl": "^3.5.2",
     "path": "^0.12.7",

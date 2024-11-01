@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef  } from 'react';
+import html2canvas from 'html2canvas';
 import {
   Container,
   Row,
@@ -21,7 +22,7 @@ import {
 } from 'reactstrap';
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { X, Save, Upload, Download, Cloud, CloudOff } from 'lucide-react';
+import { X, Save, Upload, Download, Cloud, CloudOff, Camera } from 'lucide-react';
 import { db } from '../../../firebase';
 import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy, Timestamp } from 'firebase/firestore';
 
@@ -99,6 +100,19 @@ interface FirebaseLayout extends SavedLayout {
   synced: boolean;
 }
 
+interface ComponentCategory {
+  id: string;
+  name: string;
+  components: ComponentItem[];
+  isOpen: boolean;
+}
+
+interface ComponentItem {
+  id: number;
+  text: string;
+  componentType: string;
+}
+
 // Simple component renderer
 const renderPlaceholderComponent = (text: string) => {
   const img = () => {
@@ -150,9 +164,11 @@ const renderPlaceholderComponent = (text: string) => {
     }
   };
   return (
-    <Card className="mb-2">
-      <CardBody>
-        <CardTitle tag="h5">{text}</CardTitle>
+    <Card className="mb-2" style={{
+      border: 'none',
+      padding: 0,
+    }}>
+      <CardBody style={{ padding: 0 }}>
         <CardImg top width="100%" src={img()} alt="Card image cap" />
       </CardBody>
     </Card>
@@ -170,129 +186,18 @@ const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }
   });
 
   return (
-    <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
-      <Card className="mb-2">
+    <div 
+      ref={drag} 
+      style={{ 
+        opacity: isDragging ? 0.5 : 1,
+        cursor: 'grab'
+      }}
+    >
+      <Card className="card">
         <CardBody>
-          <CardTitle tag="h6" className="mb-0">
-            {text}
-          </CardTitle>
-          {/* <CardText className="text-muted small">
-            {componentType}
-          </CardText> */}
+          <CardTitle tag="h6" className="card-title">{text}</CardTitle>
         </CardBody>
       </Card>
-    </div>
-  );
-};
-
-// Draggable dropped component
-const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, children, moveComponent, onDelete }) => {
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.DROPPED_COMPONENT,
-    item: () => ({ type: ItemTypes.DROPPED_COMPONENT, id, index }),
-    collect: (monitor: DragSourceMonitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  const [, drop] = useDrop({
-    accept: ItemTypes.DROPPED_COMPONENT,
-    hover(item: { type: string; id: string; index: number }, monitor) {
-      if (!ref.current) {
-        return;
-      }
-
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
-
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      moveComponent(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-  });
-
-  drag(drop(ref));
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-        cursor: 'move',
-        position: 'relative',
-        transition: 'all 0.2s ease',
-      }}
-      className="hover:shadow-sm"
-    >
-      <button
-        onClick={() => onDelete(id)}
-        style={{
-          position: 'absolute',
-          top: '0.5rem',
-          right: '0.5rem',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: '4px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 10,
-          borderRadius: '50%',
-          backgroundColor: '#ffffff',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-          transition: 'all 0.2s ease',
-        }}
-        title="Delete component"
-        className="hover:bg-gray-100"
-      >
-        <X size={16} color="#666666" />
-      </button>
-      {children}
-    </div>
-  );
-};
-
-// Droppable area
-const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
-  const [, drop] = useDrop({
-    accept: [ItemTypes.CARD, ItemTypes.DROPPED_COMPONENT],
-    drop: (item: { id: number; type: string }) => {
-      if (item.type === ItemTypes.CARD) {
-        onDrop(item.id);
-      }
-    },
-  });
-
-  return (
-    <div
-      ref={drop}
-      className="droppable-area"
-      style={{
-        minHeight: '100vh',
-        backgroundColor: '#ffffff',
-        border: '2px dashed #ced4da',
-      }}
-    >
-      {children}
     </div>
   );
 };
@@ -300,33 +205,62 @@ const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
 // Main PageBuilder component
 function PageBuilder() {
   // Simplified components list
-  const [components] = useState<{ id: number; text: string; componentType: string }[]>([
-    { id: 0, text: 'Spacer', componentType: 'Spacer' },
-    { id: 1, text: 'Accordion', componentType: 'Accordion' },
-    { id: 2, text: 'Advanced Narrative Block + Form', componentType: 'Advanced Narrative Block + Form' },
+  const [categories, setCategories] = useState<ComponentCategory[]>([
+
     {
-      id: 3,
-      text: 'Advanced Narrative Block + Images slider',
-      componentType: 'Advanced Narrative Block + Images slider',
+      id: 'basic',
+      name: 'Basic Elements',
+      isOpen: true,
+      components: [
+        { id: 0, text: 'Spacer', componentType: 'Spacer' },
+        { id: 1, text: 'Accordion', componentType: 'Accordion' },
+        { id: 5, text: 'Button', componentType: 'Button' },
+      ]
     },
-    { id: 4, text: 'Breadcrumbs', componentType: 'Breadcrumbs' },
-    { id: 5, text: 'Button', componentType: 'Button' },
-    { id: 6, text: '2 Cards Row', componentType: '2 Cards Row' },
-    { id: 7, text: '2 Cards with Icon Row', componentType: '2 Cards with Icon Row' },
-    { id: 8, text: '3 Cards Row', componentType: '3 Cards Row' },
-    { id: 9, text: '4 Cards Row', componentType: '4 Cards Row' },
-    { id: 10, text: 'Form', componentType: 'Form' },
-    { id: 11, text: 'Narrative Left Image', componentType: 'Narrative Left Image' },
-    { id: 12, text: 'Narrative Right Image', componentType: 'Narrative Right Image' },
-    { id: 13, text: 'Filter Row', componentType: 'Filter Row' },
-    { id: 14, text: 'Combined Filter Row', componentType: 'Combined Filter Row' },
-    { id: 15, text: 'Footer', componentType: 'Footer' },
-    { id: 16, text: 'Header', componentType: 'Header' },
-    { id: 17, text: 'Secondary Header', componentType: 'Secondary Header' },
-    { id: 18, text: 'Hero + Background + Form', componentType: 'Hero + Background + Form' },
-    { id: 19, text: 'Hero + Form', componentType: 'Hero + Form' },
-    { id: 20, text: 'Hero + Image + Buttons', componentType: 'Hero + Image + Buttons' },
-    { id: 21, text: 'Notification', componentType: 'Notification' },
+    {
+      id: 'header',
+      name: 'Header',
+      isOpen: false,
+      components: [
+        { id: 4, text: 'Breadcrumbs', componentType: 'Breadcrumbs' },
+        { id: 21, text: 'Notification', componentType: 'Notification' },
+        { id: 16, text: 'Header', componentType: 'Header' },
+        { id: 17, text: 'Secondary Header', componentType: 'Secondary Header' },
+      ]
+    },
+    {
+      id: 'heros',
+      name: 'Heros',
+      isOpen: false,
+      components: [
+        { id: 18, text: 'Hero + Background + Form', componentType: 'Hero + Background + Form' },
+        { id: 19, text: 'Hero + Form', componentType: 'Hero + Form' },
+        { id: 20, text: 'Hero + Image + Buttons', componentType: 'Hero + Image + Buttons' },
+      ]
+    },
+    {
+      id: 'layout',
+      name: 'Layout',
+      isOpen: false,
+      components: [
+        { id: 11, text: 'Narrative Left Image', componentType: 'Narrative Left Image' },
+        { id: 12, text: 'Narrative Right Image', componentType: 'Narrative Right Image' },
+        { id: 2, text: 'Advanced Narrative Block + Form', componentType: 'Advanced Narrative Block + Form' },
+        {
+          id: 3,
+          text: 'Advanced Narrative Block + Images slider',
+          componentType: 'Advanced Narrative Block + Images slider',
+        },
+        { id: 6, text: '2 Cards Row', componentType: '2 Cards Row' },
+        { id: 7, text: '2 Cards with Icon Row', componentType: '2 Cards with Icon Row' },
+        { id: 8, text: '3 Cards Row', componentType: '3 Cards Row' },
+        { id: 9, text: '4 Cards Row', componentType: '4 Cards Row' },
+        { id: 10, text: 'Form', componentType: 'Form' },
+        { id: 13, text: 'Filter Row', componentType: 'Filter Row' },
+        { id: 14, text: 'Combined Filter Row', componentType: 'Combined Filter Row' },
+        { id: 15, text: 'Footer', componentType: 'Footer' },
+      ]
+    }
   ]);
 
   const [droppedComponents, setDroppedComponents] = useState<DroppedComponent[]>([]);
@@ -345,7 +279,10 @@ function PageBuilder() {
   const [deleteLayoutId, setDeleteLayoutId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentLayoutName, setCurrentLayoutName] = useState<string>('');
-
+  // Add ref for the droppable area
+  const droppableAreaRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);  
+  
   // Load saved layouts from localStorage on mount
   useEffect(() => {
     loadLayouts();
@@ -482,9 +419,9 @@ function PageBuilder() {
   };
 
   // Save layouts to localStorage whenever they change
-  // useEffect(() => {
-  //   localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
-  // }, [layouts]);
+  useEffect(() => {
+    localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
+  }, [layouts]);
 
   // Add delete layout function
   const deleteLayout = async (layoutId: string) => {
@@ -529,7 +466,10 @@ function PageBuilder() {
   };
 
   const handleDrop = (id: number) => {
-    const component = components.find((comp) => comp.id === id);
+    const component = categories
+      .flatMap(category => category.components)
+      .find(comp => comp.id === id);
+  
     if (component) {
       const newDroppedComponent = {
         ...component,
@@ -620,6 +560,186 @@ function PageBuilder() {
     }
   };
 
+  // export to PNG function
+  const exportToPNG = async () => {
+    if (!droppableAreaRef.current) return;
+    
+    setIsExporting(true);
+    try {
+      // First, create a clone of the droppable area to remove any drag-drop styling
+      const element = droppableAreaRef.current;
+      const clone = element.cloneNode(true) as HTMLElement;
+      
+      // Remove drag-drop related classes and styles
+      clone.style.border = 'none';
+      clone.style.backgroundColor = 'white';
+      clone.style.padding = '20px';
+      const deleteButtons = clone.getElementsByClassName('delete-button');
+      while (deleteButtons.length > 0) {
+        deleteButtons[0].remove();
+      }
+
+      // Temporarily append clone to document
+      clone.style.position = 'absolute';
+      clone.style.left = '-9999px';
+      document.body.appendChild(clone);
+
+      // Capture the clone
+      const canvas = await html2canvas(clone, {
+        backgroundColor: '#ffffff',
+        scale: 2, // Higher quality
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      // Remove clone
+      document.body.removeChild(clone);
+
+      // Create download link
+      const link = document.createElement('a');
+      link.download = `${currentLayoutName || 'layout'}-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      setSaveMessage({ type: 'success', text: 'Layout exported as PNG successfully!' });
+    } catch (error) {
+      console.error('Error exporting PNG:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to export layout as PNG' });
+    } finally {
+      setIsExporting(false);
+      setTimeout(() => setSaveMessage(null), 3000);
+    }
+  };
+
+  // Droppable area
+  const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
+    const [, drop] = useDrop({
+      accept: [ItemTypes.CARD, ItemTypes.DROPPED_COMPONENT],
+      drop: (item: { id: number; type: string }) => {
+        if (item.type === ItemTypes.CARD) {
+          onDrop(item.id);
+        }
+      },
+    });
+
+    return (
+      <div
+        ref={(node) => {
+          drop(node);
+          if (node) {
+            droppableAreaRef.current = node;
+          }
+        }}
+        className="droppable-area"
+        style={{
+          minHeight: '100vh',
+          backgroundColor: '#ffffff',
+          border: '2px dashed #ced4da',
+        }}
+      >
+        {children}
+      </div>
+    );
+  };
+
+// Draggable dropped component
+const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, children, moveComponent, onDelete }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.DROPPED_COMPONENT,
+    item: () => ({ type: ItemTypes.DROPPED_COMPONENT, id, index }),
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [, drop] = useDrop({
+    accept: ItemTypes.DROPPED_COMPONENT,
+    hover(item: { type: string; id: string; index: number }, monitor) {
+      if (!ref.current) {
+        return;
+      }
+
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
+
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      moveComponent(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+
+  drag(drop(ref));
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        cursor: 'move',
+        position: 'relative',
+        transition: 'all 0.2s ease',
+      }}
+      className="hover:shadow-sm"
+    >
+      <button
+        onClick={() => onDelete(id)}
+        style={{
+          position: 'absolute',
+          top: '0.5rem',
+          right: '0.5rem',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10,
+          borderRadius: '50%',
+          backgroundColor: '#ffffff',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+          transition: 'all 0.2s ease',
+        }}
+        title="Delete component"
+        className="delete-button hover:bg-gray-100"
+      >
+        <X size={16} color="#666666" />
+      </button>
+      {children}
+    </div>
+  );
+};  
+
+  // Add function to toggle category
+  const toggleCategory = (categoryId: string) => {
+    setCategories(prevCategories =>
+      prevCategories.map(category =>
+        category.id === categoryId
+          ? { ...category, isOpen: !category.isOpen }
+          : category
+      )
+    );
+  };
+
   return (
     <div className="page-builder">
       <DndProvider backend={HTML5Backend}>
@@ -678,14 +798,25 @@ function PageBuilder() {
                   Sync
                   {isSyncing && <Spinner size="sm" className="ms-2" />}
                 </ReactstrapButton>
+                <ReactstrapButton
+                  color="info"
+                  onClick={exportToPNG}
+                  className="d-flex align-items-center gap-2"
+                  disabled={isExporting || droppedComponents.length === 0}
+                  title={droppedComponents.length === 0 ? "Add components to export" : "Export as PNG"}
+                >
+                  <Camera size={16} />
+                  Export PNG
+                  {isExporting && <Spinner size="sm" className="ms-2" />}
+                </ReactstrapButton>
                 <ReactstrapButton color="info" onClick={exportLayout} className="d-flex align-items-center gap-2">
                   <Download size={16} />
-                  Export
+                  Export JSON
                 </ReactstrapButton>
                 <ReactstrapButton color="info" className="d-flex align-items-center gap-2">
                   <label style={{ cursor: 'pointer', marginBottom: 0 }}>
                     <Upload size={16} />
-                    Import
+                    Import JSON
                     <Input
                       type="file"
                       accept=".json"
@@ -860,11 +991,45 @@ function PageBuilder() {
 
           <Row>
             <Col md={2}>
-              <h4>Components</h4>
-              {components.map((comp) => (
-                <DraggableCard key={comp.id} id={comp.id} text={comp.text} componentType={comp.componentType} />
-              ))}
+              <div className="components-sidebar">
+                <div className="components-header">
+                  <h5 className="mb-0">Components</h5>
+                </div>
+                <div className="components-list">
+                  {categories.map((category) => (
+                    <div key={category.id} className="component-category">
+                      <button
+                        className="category-header"
+                        onClick={() => toggleCategory(category.id)}
+                      >
+                        <span className="category-name">{category.name}</span>
+                        <span className={`category-icon ${category.isOpen ? 'open' : ''}`}>
+                          ▾
+                        </span>
+                      </button>
+                      <div 
+                        className={`category-items ${category.isOpen ? 'open' : ''}`}
+                        style={{
+                          // Add these inline styles for smoother animation
+                          visibility: category.isOpen ? 'visible' : 'hidden',
+                          marginBottom: category.isOpen ? '0.5rem' : '0'
+                        }}
+                      >
+                        {category.components.map((comp) => (
+                          <DraggableCard
+                            key={comp.id}
+                            id={comp.id}
+                            text={comp.text}
+                            componentType={comp.componentType}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </Col>
+
             <Col md={10}>
               <Container>
                 <h4>Build Area</h4>
@@ -889,5 +1054,24 @@ function PageBuilder() {
     </div>
   );
 }
+
+// Add some optional styling to improve the exported image
+const styles = `
+  .droppable-area {
+    background-color: white !important;
+    page-break-inside: avoid;
+  }
+
+  .droppable-area > div {
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  @media print {
+    .droppable-area {
+      border: none !important;
+    }
+  }
+`;
 
 export default PageBuilder;
