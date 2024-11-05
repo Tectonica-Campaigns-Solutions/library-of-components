@@ -48,8 +48,8 @@ import heroPlusImagePlusButtonsImage from '../../images/HeroImageButtons1x.png';
 import notificationImage from '../../images/Notification1x.png';
 import secondaryHeaderImage from '../../images/SecondaryHeader1x.png';
 import spacerImage from '../../images/spacer.png';
-import sidebarPlusCardsImage from '../../images/Sidebar+Cards.png';
-import sidebarPlusTextImage from '../../images/Sidebar+Text.png'
+import sidebarPlusCardsImage from '../../images/SidebarPlusCards.png';
+import sidebarPlusTextImage from '../../images/SidebarPlusText.png'
 
 import './page-builder.scss';
 
