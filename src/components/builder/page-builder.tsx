@@ -26,15 +26,15 @@ import { X, Save, Upload, Download, Cloud, CloudOff, Camera } from 'lucide-react
 import { db } from '../../../firebase';
 import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy, Timestamp } from 'firebase/firestore';
 
-import accordionsImage from '../../images/Accordions1x.png';
+import accordionsImage from '../../images/Accordions.png';
 import advancedNarrativeBlockPlusFormImage from '../../images/AdvancedNarrativeBlockForm1x.png';
 import advancedNarrativeBlockImagesSlideImage from '../../images/AdvancedNarrativeBlockImagesslide1x.png';
 import breadcrumbsImage from '../../images/Breadcrumbs1x.png';
 import buttonImage from '../../images/Button1x.png';
-import twoCardsRowImage from '../../images/Cards2Row1x.png';
-import twoCardsRowIconImage from '../../images/Cards2Row1x-1.png';
-import threeCardsRowImage from '../../images/Cards3Row1x.png';
-import fourCardsRowImage from '../../images/Cards4Row1x.png';
+import twoCardsRowImage from '../../images/Cards2Row.png';
+import twoCardsRowIconImage from '../../images/Cards2Row-1.png';
+import threeCardsRowImage from '../../images/Cards3Row.png';
+import fourCardsRowImage from '../../images/Cards4Row.png';
 import formImage from '../../images/Form1x.png';
 import narrativeImageLeftImage from '../../images/Narrative1x.png';
 import narrativeImageRightImage from '../../images/Narrative1x-1.png';
@@ -48,6 +48,8 @@ import heroPlusImagePlusButtonsImage from '../../images/HeroImageButtons1x.png';
 import notificationImage from '../../images/Notification1x.png';
 import secondaryHeaderImage from '../../images/SecondaryHeader1x.png';
 import spacerImage from '../../images/spacer.png';
+import sidebarPlusCardsImage from '../../images/Sidebar+Cards.png';
+import sidebarPlusTextImage from '../../images/Sidebar+Text.png'
 
 import './page-builder.scss';
 
@@ -159,6 +161,10 @@ const renderPlaceholderComponent = (text: string) => {
         return heroPlusImagePlusButtonsImage;
       case 'Notification':
         return notificationImage;
+      case 'Sidebar + Cards':
+        return sidebarPlusCardsImage;
+      case 'Sidebar + Text':
+        return sidebarPlusTextImage;
       default:
         return spacerImage;
     }
@@ -260,6 +266,15 @@ function PageBuilder() {
         { id: 14, text: 'Combined Filter Row', componentType: 'Combined Filter Row' },
         { id: 15, text: 'Footer', componentType: 'Footer' },
       ]
+    },
+    {
+      id: 'sidebar',
+      name: 'Sidebar',
+      isOpen: false,
+      components: [
+        { id: 22, text: 'Sidebar + Cards', componentType: 'Sidebar + Cards' },
+        { id: 23, text: 'Sidebar + Text', componentType: 'Sidebar + Text' },
+      ]
     }
   ]);
 
@@ -282,6 +297,13 @@ function PageBuilder() {
   // Add ref for the droppable area
   const droppableAreaRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);  
+
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  // Add toggle function
+  const toggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };  
   
   // Load saved layouts from localStorage on mount
   useEffect(() => {
@@ -991,9 +1013,19 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
 
           <Row>
             <Col md={2}>
+            
               <div className="components-sidebar">
                 <div className="components-header">
-                  <h5 className="mb-0">Components</h5>
+                  <h5 className="mb-0">
+                    {/* <button
+                      onClick={toggleSidebar}
+                      className="sidebar-toggle me-2"
+                      title={isSidebarVisible ? "Hide Components" : "Show Components"}
+                    >
+                      {isSidebarVisible ? '◀' : '▶'}
+                    </button>  */}
+                    Components
+                  </h5>
                 </div>
                 <div className="components-list">
                   {categories.map((category) => (

@@ -5,6 +5,36 @@ body {
     padding: 0;
   }
 
+  .sidebar-toggle {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .sidebar-toggle:hover {
+    background: #f8f9fa;
+    border-color: #ced4da;
+  }
+
+  .sidebar-container {
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .sidebar-container {
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
   .components-sidebar {
     background-color: #f8f9fa;
     border-radius: 8px;
@@ -14,6 +44,19 @@ body {
     position: sticky;
     top: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .components-sidebar.hidden {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  .components-sidebar.visible {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .components-header {
@@ -221,5 +264,20 @@ body {
         min-height: 200px;
       }
     }
+
+    .components-sidebar {
+      height: calc(100vh - 150px);
+    }
+
+    .sidebar-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 1000;
+      background: #f8f9fa;
+      padding: 1rem;
+    }
+    
   }
   
