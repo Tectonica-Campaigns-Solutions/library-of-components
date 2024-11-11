@@ -21,7 +21,7 @@ const Sidebar = ({ links = [], activeItem, setActiveItem }) => {
             onClick={() => {
               setActiveItem(-1);
               toggleSidebar();
-              document.querySelector('.componentInfo').classList.remove('hide');
+              document.querySelector('.componentInfo').classList.add('hide');
             }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none" style={{ verticalAlign: 'sub', marginRight: '0.25rem' }}>
