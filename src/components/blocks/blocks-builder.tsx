@@ -52,6 +52,9 @@ interface Block {
   };
   ctas: any[];
   image: any;
+  name: string;
+  description: string;
+  composedBy: string
 }
 
 interface BlocksBuilderProps {
@@ -120,6 +123,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
               </div>
             );
           case 'DatoCmsNavbar':
+
             return (
               <div key={block.id} className={`${activeItem === index ? 'show' : 'hide'}`}>
                 <Header />
@@ -446,12 +450,20 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
               </div>
             );
           case 'DatoCmsSplashPage':
+
             return (
               <div key={block.id} className={`splash-page__wrap ${activeItem === index ? 'show' : 'hide'}`}>
                 {/* @ts-ignore */}
                 <SplashPage block={block} visible={true} />
               </div>
             );
+          case 'DatoCmsComponentInfo':
+            return (
+              <div key={block.id} className={`componentInfo hide ${blocks[index+1].__typename}`}>
+                <h2>{block.name} <span>{block.composedBy}</span></h2>
+                <p>{block.description}</p>
+              </div>
+           );
 
           default:
             return null;

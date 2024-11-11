@@ -2,11 +2,20 @@ import * as React from 'react';
 import { graphql } from 'gatsby';
 import PageBuilder from '../components/builder/page-builder';
 import CustomSeoDatoCMS from '../components/custom-seo-dato-cms';
+import TopBar from '../layout/topbar/TopBar';
 
 const Builder = ({data: { homepage, favicon } }) => {
   const { seo, blocks = [] } = homepage;
     return (
       <>
+        <TopBar 
+          bgColor="#C8730F" 
+          logo={"Nazca"}
+          title="Layout Builder" 
+          buttonLabel="PLATE | Components Library" 
+          page='builder'
+          onButtonClick={() => document.location.href = "/"} 
+        />
         <CustomSeoDatoCMS seo={seo} favicon={favicon} />
         <PageBuilder blocks={blocks} />
       </>

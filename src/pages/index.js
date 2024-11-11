@@ -4,6 +4,7 @@ import Dashboard from '../layout/dashboard/dashboard';
 import BlocksBuilder from '../components/blocks/blocks-builder';
 import CustomSeoDatoCMS from '../components/custom-seo-dato-cms';
 import { getSidebarLinksFromBlocks } from '../utils/dato.utils';
+import TopBar from '../layout/topbar/TopBar';
 import Logs from '../components/blocks/Logs/Logs';
 
 const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
@@ -14,6 +15,14 @@ const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
 
   return (
     <>
+      <TopBar 
+          bgColor="#262626" 
+          logo={"Plate"}
+          title="Components Library for Organizational Themes" 
+          buttonLabel="NAZCA | Layout Builder" 
+          page="library"
+          onButtonClick={() => document.location.href = "/builder"} 
+        />
       <CustomSeoDatoCMS seo={seo} favicon={favicon} />
 
       <Dashboard
@@ -107,6 +116,12 @@ export const HomepageQuery = graphql`
         ...SidebarWrapper
         ...ParallaxContentSection
         ...SplashPage
+        ...on DatoCmsComponentInfo {
+          __typename
+          name
+          description
+          composedBy
+        }
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags

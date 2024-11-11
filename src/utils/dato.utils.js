@@ -10,10 +10,19 @@ export const pathToModel = (model = null, slug = '') => {
 
 // Sidebar
 export const getSidebarLinksFromBlocks = (blocks = []) => {
-  return blocks.map((b) => ({
-    id: b.id,
-    label: b.__typename === 'DatoCmsSectionTitle' ? b.title : b.internalName,
-    wrapper: b.__typename === 'DatoCmsSectionTitle',
-    icon: itemIcon,
-  }));
+  return blocks.map((b) => {
+    if (b.__typename !== 'DatoCmsComponentInfo') {
+      return (
+        {
+          id: b.id,
+          label: b.__typename === 'DatoCmsSectionTitle' ? b.title : b.internalName,
+          wrapper: b.__typename === 'DatoCmsSectionTitle',
+          icon: itemIcon,
+          type: b.__typename,
+        }
+      )
+    } else {
+      return false
+    }
+  });
 };

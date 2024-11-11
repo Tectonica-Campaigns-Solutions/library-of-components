@@ -19,6 +19,7 @@ import {
   Input,
   Label,
   Spinner,
+  Button,
 } from 'reactstrap';
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -102,17 +103,40 @@ interface FirebaseLayout extends SavedLayout {
   synced: boolean;
 }
 
-interface ComponentCategory {
+interface ComponentItem {
+  id: number;
+  text: string;
+  componentType: string;
+}
+
+interface ComponentSubcategory {
   id: string;
   name: string;
   components: ComponentItem[];
   isOpen: boolean;
 }
 
-interface ComponentItem {
-  id: number;
+interface ComponentCategory {
+  id: string;
+  name: string;
+  isOpen: boolean;
+  components?: ComponentItem[]; // Direct components
+  subcategories?: ComponentSubcategory[]; // Optional subcategories
+}
+
+// Add new interfaces for notes
+interface LayoutNote {
+  id: string;
   text: string;
-  componentType: string;
+  timestamp: number;
+}
+
+interface SavedLayout {
+  id: string;
+  name: string;
+  components: DroppedComponent[];
+  notes: LayoutNote[];
+  lastModified: number;
 }
 
 // Simple component renderer
@@ -199,11 +223,12 @@ const DraggableCard: React.FC<DraggableCardProps> = ({ id, text, componentType }
         cursor: 'grab'
       }}
     >
-      <Card className="card">
+      <div className="card-title">{text}</div>
+      {/* <Card className="card">
         <CardBody>
           <CardTitle tag="h6" className="card-title">{text}</CardTitle>
         </CardBody>
-      </Card>
+      </Card> */}
     </div>
   );
 };
@@ -217,21 +242,108 @@ function PageBuilder() {
       id: 'basic',
       name: 'Basic Elements',
       isOpen: true,
+      subcategories: [
+        { 
+          id: 'Buttons', 
+          name: 'Buttons', 
+          isOpen: false,
+          components: [
+            { id: 5, text: 'Button', componentType: 'Button' },
+          ]
+        },
+        { 
+          id: 'Forms', 
+          name: 'Forms', 
+          isOpen: false,
+          components: [
+            { id: 10, text: 'Form', componentType: 'Form' },
+          ]
+        },
+        {
+          id: 'text',
+          name: 'Spacers',
+          isOpen: false,
+          components: [
+            { id: 0, text: 'Spacer 16px', componentType: 'Spacer' },
+            { id: 26, text: 'Spacer 32px', componentType: 'Spacer' },
+            { id: 27, text: 'Spacer 49px', componentType: 'Spacer' },
+          ]
+        },
+      ],
       components: [
-        { id: 0, text: 'Spacer', componentType: 'Spacer' },
         { id: 1, text: 'Accordion', componentType: 'Accordion' },
-        { id: 5, text: 'Button', componentType: 'Button' },
+        { id: 24, text: 'Pagination', componentType: 'Pagination' },
+        { id: 25, text: 'Social Share', componentType: 'Social Share' },
       ]
     },
     {
-      id: 'header',
-      name: 'Header',
+      id: 'layout',
+      name: 'Layout Components',
       isOpen: false,
+      subcategories: [
+        {
+          id: 'Cards',
+          name: 'Card Rows',
+          isOpen: false,
+          components: [
+            { id: 2, text: 'Advanced Narrative Block + Form', componentType: 'Advanced Narrative Block + Form' },
+            {
+              id: 3,
+              text: 'Advanced Narrative Block + Images slider',
+              componentType: 'Advanced Narrative Block + Images slider',
+            },
+            { id: 6, text: '2 Cards Row', componentType: '2 Cards Row' },
+            { id: 7, text: '2 Cards with Icon Row', componentType: '2 Cards with Icon Row' },
+            { id: 8, text: '3 Cards Row', componentType: '3 Cards Row' },
+            { id: 9, text: '4 Cards Row', componentType: '4 Cards Row' },
+          ]
+        },
+        {
+          id: 'Narrative',
+          name: 'Narrative Blocks',
+          isOpen: false,
+          components: [
+            { id: 11, text: 'Narrative Left Image', componentType: 'Narrative Left Image' },
+            { id: 12, text: 'Narrative Right Image', componentType: 'Narrative Right Image' },
+          ]
+        },
+        {
+          id: 'Filter',
+          name: 'Filter',
+          isOpen: false,
+          components: [
+            { id: 13, text: 'Filter Row', componentType: 'Filter Row' },
+            { id: 14, text: 'Combined Filter Row', componentType: 'Combined Filter Row' },
+          ]
+        },
+        {
+          id: 'Footer',
+          name: 'Footer',
+          isOpen: false,
+          components: [
+            { id: 15, text: 'Footer', componentType: 'Footer' },
+          ]
+        }
+      ],
+    },
+    {
+      id: 'headers',
+      name: 'Headers',
+      isOpen: false,
+      subcategories: [
+        { 
+          id: 'Headers', 
+          name: 'Headers', 
+          isOpen: false,
+          components: [
+            { id: 16, text: 'Header', componentType: 'Header' },
+            { id: 17, text: 'Secondary Header', componentType: 'Secondary Header' },
+            { id: 21, text: 'Notification', componentType: 'Notification' },
+          ]
+        },
+      ],
       components: [
         { id: 4, text: 'Breadcrumbs', componentType: 'Breadcrumbs' },
-        { id: 21, text: 'Notification', componentType: 'Notification' },
-        { id: 16, text: 'Header', componentType: 'Header' },
-        { id: 17, text: 'Secondary Header', componentType: 'Secondary Header' },
       ]
     },
     {
@@ -245,34 +357,20 @@ function PageBuilder() {
       ]
     },
     {
-      id: 'layout',
-      name: 'Layout',
-      isOpen: false,
-      components: [
-        { id: 11, text: 'Narrative Left Image', componentType: 'Narrative Left Image' },
-        { id: 12, text: 'Narrative Right Image', componentType: 'Narrative Right Image' },
-        { id: 2, text: 'Advanced Narrative Block + Form', componentType: 'Advanced Narrative Block + Form' },
-        {
-          id: 3,
-          text: 'Advanced Narrative Block + Images slider',
-          componentType: 'Advanced Narrative Block + Images slider',
-        },
-        { id: 6, text: '2 Cards Row', componentType: '2 Cards Row' },
-        { id: 7, text: '2 Cards with Icon Row', componentType: '2 Cards with Icon Row' },
-        { id: 8, text: '3 Cards Row', componentType: '3 Cards Row' },
-        { id: 9, text: '4 Cards Row', componentType: '4 Cards Row' },
-        { id: 10, text: 'Form', componentType: 'Form' },
-        { id: 13, text: 'Filter Row', componentType: 'Filter Row' },
-        { id: 14, text: 'Combined Filter Row', componentType: 'Combined Filter Row' },
-        { id: 15, text: 'Footer', componentType: 'Footer' },
-      ]
-    },
-    {
       id: 'sidebar',
-      name: 'Sidebar',
+      name: 'Sidebar Components',
       isOpen: false,
+      subcategories: [
+        { 
+          id: 'Sidebar', 
+          name: 'Sidebar + Cards', 
+          isOpen: false,
+          components: [
+            { id: 22, text: '2 Vertical Cards Row', componentType: 'Sidebar + Cards' },
+          ]
+        },
+      ],
       components: [
-        { id: 22, text: 'Sidebar + Cards', componentType: 'Sidebar + Cards' },
         { id: 23, text: 'Sidebar + Text', componentType: 'Sidebar + Text' },
       ]
     }
@@ -299,6 +397,12 @@ function PageBuilder() {
   const [isExporting, setIsExporting] = useState(false);  
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  // States for Notes
+  const [notes, setNotes] = useState<LayoutNote[]>([]);
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [newNote, setNewNote] = useState('');
+  const [isSavingNote, setIsSavingNote] = useState(false);
 
   // Add toggle function
   const toggleSidebar = () => {
@@ -362,42 +466,45 @@ function PageBuilder() {
   const saveLayout = async (name: string) => {
     setIsSyncing(true);
     setSyncError(null);
-
+    
     try {
-      const newLayout: FirebaseLayout = {
+      const newLayout: SavedLayout = {
         id: currentLayoutId || `layout-${Date.now()}`,
         name,
         components: droppedComponents,
-        lastModified: Date.now(),
-        synced: false,
+        notes: notes,
+        lastModified: Date.now()
       };
 
       // Save to Firestore
       const layoutsCollection = collection(db, 'layouts');
       const docRef = await addDoc(layoutsCollection, {
         ...newLayout,
-        lastModified: Timestamp.fromDate(new Date()),
+        lastModified: Timestamp.fromDate(new Date())
       });
 
-      newLayout.firestoreId = docRef.id;
-      newLayout.synced = true;
+      const updatedLayout = {
+        ...newLayout,
+        firestoreId: docRef.id,
+        synced: true
+      };
 
       // Update layouts state
-      setLayouts((prevLayouts) => {
-        const layoutIndex = prevLayouts.findIndex((l) => l.id === newLayout.id);
+      setLayouts(prevLayouts => {
+        const layoutIndex = prevLayouts.findIndex(l => l.id === newLayout.id);
         if (layoutIndex >= 0) {
           const updatedLayouts = [...prevLayouts];
-          updatedLayouts[layoutIndex] = newLayout;
+          updatedLayouts[layoutIndex] = updatedLayout;
           return updatedLayouts;
         } else {
-          return [...prevLayouts, newLayout];
+          return [...prevLayouts, updatedLayout];
         }
       });
 
       setCurrentLayoutId(newLayout.id);
-      setCurrentLayoutName(name); // Update current layout name
+      setCurrentLayoutName(name);
       setSaveMessage({ type: 'success', text: 'Layout saved to cloud!' });
-
+      
       // Update localStorage
       localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
     } catch (error) {
@@ -413,11 +520,12 @@ function PageBuilder() {
 
   // Load layout with Firestore sync
   const loadLayout = async (layoutId: string) => {
-    const layout = layouts.find((l) => l.id === layoutId);
+    const layout = layouts.find(l => l.id === layoutId);
     if (layout) {
       setDroppedComponents(layout.components);
       setCurrentLayoutId(layout.id);
-      setCurrentLayoutName(layout.name); // Update current layout name
+      setCurrentLayoutName(layout.name);
+      setNotes(layout.notes || []); // Load notes
       setIsLoadModalOpen(false);
 
       if (!layout.synced && layout.firestoreId) {
@@ -426,10 +534,15 @@ function PageBuilder() {
           const layoutRef = doc(db, 'layouts', layout.firestoreId);
           await updateDoc(layoutRef, {
             components: layout.components,
-            lastModified: Timestamp.fromDate(new Date()),
+            notes: layout.notes || [], // Include notes in sync
+            lastModified: Timestamp.fromDate(new Date())
           });
-
-          setLayouts((prevLayouts) => prevLayouts.map((l) => (l.id === layoutId ? { ...l, synced: true } : l)));
+          
+          setLayouts(prevLayouts => 
+            prevLayouts.map(l => 
+              l.id === layoutId ? { ...l, synced: true } : l
+            )
+          );
         } catch (error) {
           console.error('Error syncing layout:', error);
           setSyncError('Failed to sync with cloud');
@@ -483,14 +596,34 @@ function PageBuilder() {
     }
   };
 
+  const newLayout = async() => {
+    setDroppedComponents([]);
+  }
+
   const generateUniqueId = () => {
     return `${Date.now()}-${Math.random()}`;
   };
 
   const handleDrop = (id: number) => {
-    const component = categories
-      .flatMap(category => category.components)
-      .find(comp => comp.id === id);
+    const component = categories.reduce<ComponentItem | undefined>((found, category) => {
+      if (found) return found;
+      
+      // Check direct components
+      if (category.components) {
+        const directComponent = category.components.find(comp => comp.id === id);
+        if (directComponent) return directComponent;
+      }
+      
+      // Check subcategories
+      if (category.subcategories) {
+        const subcategoryComponent = category.subcategories
+          .flatMap(sub => sub.components)
+          .find(comp => comp.id === id);
+        if (subcategoryComponent) return subcategoryComponent;
+      }
+      
+      return found;
+    }, undefined);
   
     if (component) {
       const newDroppedComponent = {
@@ -634,6 +767,83 @@ function PageBuilder() {
     }
   };
 
+  // Add note handlers
+  const addNote = async () => {
+    if (!newNote.trim() || !currentLayoutId) return;
+
+    setIsSavingNote(true);
+    try {
+      const note: LayoutNote = {
+        id: generateUniqueId(),
+        text: newNote.trim(),
+        timestamp: Date.now()
+      };
+
+      const updatedNotes = [...notes, note];
+      setNotes(updatedNotes);
+      setNewNote('');
+
+      // Update Firestore if we have a current layout
+      if (currentLayoutId) {
+        const layout = layouts.find(l => l.id === currentLayoutId);
+        if (layout?.firestoreId) {
+          const layoutRef = doc(db, 'layouts', layout.firestoreId);
+          await updateDoc(layoutRef, {
+            notes: updatedNotes,
+            lastModified: Timestamp.fromDate(new Date())
+          });
+
+          // Update local layouts state
+          setLayouts(prevLayouts =>
+            prevLayouts.map(l =>
+              l.id === currentLayoutId
+                ? { ...l, notes: updatedNotes, lastModified: Date.now() }
+                : l
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error saving note:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to save note to cloud' });
+    } finally {
+      setIsSavingNote(false);
+    }
+  };
+
+  const deleteNote = async (noteId: string) => {
+    if (!currentLayoutId) return;
+
+    try {
+      const updatedNotes = notes.filter(note => note.id !== noteId);
+      setNotes(updatedNotes);
+
+      // Update Firestore if we have a current layout
+      if (currentLayoutId) {
+        const layout = layouts.find(l => l.id === currentLayoutId);
+        if (layout?.firestoreId) {
+          const layoutRef = doc(db, 'layouts', layout.firestoreId);
+          await updateDoc(layoutRef, {
+            notes: updatedNotes,
+            lastModified: Timestamp.fromDate(new Date())
+          });
+
+          // Update local layouts state
+          setLayouts(prevLayouts =>
+            prevLayouts.map(l =>
+              l.id === currentLayoutId
+                ? { ...l, notes: updatedNotes, lastModified: Date.now() }
+                : l
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting note:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to delete note from cloud' });
+    }
+  };
+
   // Droppable area
   const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
     const [, drop] = useDrop({
@@ -656,7 +866,6 @@ function PageBuilder() {
         className="droppable-area"
         style={{
           minHeight: '100vh',
-          backgroundColor: '#ffffff',
           border: '2px dashed #ced4da',
         }}
       >
@@ -752,6 +961,16 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
 };  
 
   // Add function to toggle category
+  // const toggleCategory = (categoryId: string) => {
+  //   setCategories(prevCategories =>
+  //     prevCategories.map(category =>
+  //       category.id === categoryId
+  //         ? { ...category, isOpen: !category.isOpen }
+  //         : category
+  //     )
+  //   );
+  // };
+
   const toggleCategory = (categoryId: string) => {
     setCategories(prevCategories =>
       prevCategories.map(category =>
@@ -762,106 +981,28 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
     );
   };
 
+  // Add toggle function for subcategories
+  const toggleSubcategory = (categoryId: string, subcategoryId: string) => {
+    setCategories(prevCategories =>
+      prevCategories.map(category =>
+        category.id === categoryId && category.subcategories
+          ? {
+              ...category,
+              subcategories: category.subcategories.map(subcategory =>
+                subcategory.id === subcategoryId
+                  ? { ...subcategory, isOpen: !subcategory.isOpen }
+                  : subcategory
+              )
+            }
+          : category
+      )
+    );
+  };
+
   return (
     <div className="page-builder">
       <DndProvider backend={HTML5Backend}>
         <Container fluid={true}>
-          {/* Current Layout Display */}
-          <h1>Page Builder</h1>
-          <Row className="mb-3">
-            <Col>
-              <div className="d-flex align-items-center">
-                {currentLayoutName && (
-                  <div className="d-flex align-items-center">
-                    <h4 className="mb-2">
-                      <span className="text-muted me-2">Current Layout:</span>
-                      <span className="fw-bold">{currentLayoutName}</span>
-                    </h4>
-                  </div>
-                )}
-              </div>
-            </Col>
-          </Row>
-
-          {/* Save/Load Controls */}
-          <Row className="mb-4">
-            <Col>
-              <ButtonGroup>
-                <ReactstrapButton
-                  color="primary"
-                  onClick={() => {
-                    setNewLayoutName(currentLayoutName); // Pre-fill current name if editing
-                    setIsSaveModalOpen(true);
-                  }}
-                  className="d-flex align-items-center gap-2"
-                  disabled={isSyncing}
-                >
-                  <Save size={16} />
-                  {currentLayoutId ? 'Update Layout' : 'Save Layout'}
-                  {isSyncing && <Spinner size="sm" className="ms-2" />}
-                </ReactstrapButton>
-                <ReactstrapButton
-                  color="secondary"
-                  onClick={() => setIsLoadModalOpen(true)}
-                  className="d-flex align-items-center gap-2"
-                  disabled={isLoading}
-                >
-                  <Upload size={16} />
-                  Load Layout
-                  {isLoading && <Spinner size="sm" className="ms-2" />}
-                </ReactstrapButton>
-                <ReactstrapButton
-                  color="info"
-                  onClick={loadLayouts}
-                  className="d-flex align-items-center gap-2"
-                  disabled={isSyncing}
-                >
-                  <Cloud size={16} />
-                  Sync
-                  {isSyncing && <Spinner size="sm" className="ms-2" />}
-                </ReactstrapButton>
-                <ReactstrapButton
-                  color="info"
-                  onClick={exportToPNG}
-                  className="d-flex align-items-center gap-2"
-                  disabled={isExporting || droppedComponents.length === 0}
-                  title={droppedComponents.length === 0 ? "Add components to export" : "Export as PNG"}
-                >
-                  <Camera size={16} />
-                  Export PNG
-                  {isExporting && <Spinner size="sm" className="ms-2" />}
-                </ReactstrapButton>
-                <ReactstrapButton color="info" onClick={exportLayout} className="d-flex align-items-center gap-2">
-                  <Download size={16} />
-                  Export JSON
-                </ReactstrapButton>
-                <ReactstrapButton color="info" className="d-flex align-items-center gap-2">
-                  <label style={{ cursor: 'pointer', marginBottom: 0 }}>
-                    <Upload size={16} />
-                    Import JSON
-                    <Input
-                      type="file"
-                      accept=".json"
-                      style={{ display: 'none' }}
-                      onChange={importLayout}
-                      onClick={(e) => {
-                        (e.target as HTMLInputElement).value = '';
-                      }}
-                    />
-                  </label>
-                </ReactstrapButton>
-              </ButtonGroup>
-            </Col>
-          </Row>
-
-          {/* Save/Load Message */}
-          {saveMessage && (
-            <Row className="mb-3">
-              <Col>
-                <Alert color={saveMessage.type}>{saveMessage.text}</Alert>
-              </Col>
-            </Row>
-          )}
 
           {/* Save Modal */}
           <Modal isOpen={isSaveModalOpen} toggle={() => setIsSaveModalOpen(false)}>
@@ -1012,11 +1153,11 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
           )}
 
           <Row>
-            <Col md={2}>
+            <Col md={2} style={{ backgroundColor: '#F8F8F8' }}>
             
               <div className="components-sidebar">
                 <div className="components-header">
-                  <h5 className="mb-0">
+                  <h6>
                     {/* <button
                       onClick={toggleSidebar}
                       className="sidebar-toggle me-2"
@@ -1024,8 +1165,8 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                     >
                       {isSidebarVisible ? '◀' : '▶'}
                     </button>  */}
-                    Components
-                  </h5>
+                    Arrange components into the build area
+                  </h6>
                 </div>
                 <div className="components-list">
                   {categories.map((category) => (
@@ -1036,24 +1177,54 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                       >
                         <span className="category-name">{category.name}</span>
                         <span className={`category-icon ${category.isOpen ? 'open' : ''}`}>
-                          ▾
+                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                            <path d="M9 1L5 5L1 1" stroke="#C6C9CE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
                         </span>
                       </button>
-                      <div 
-                        className={`category-items ${category.isOpen ? 'open' : ''}`}
-                        style={{
-                          // Add these inline styles for smoother animation
-                          visibility: category.isOpen ? 'visible' : 'hidden',
-                          marginBottom: category.isOpen ? '0.5rem' : '0'
-                        }}
-                      >
-                        {category.components.map((comp) => (
-                          <DraggableCard
-                            key={comp.id}
-                            id={comp.id}
-                            text={comp.text}
-                            componentType={comp.componentType}
-                          />
+                      <div className={`category-items ${category.isOpen ? 'open' : ''}`}>
+                        {/* Render direct components if they exist */}
+                        {category.components && (
+                          <div className="category-direct-items">
+                            {category.components.map((comp) => (
+                              <DraggableCard
+                                key={comp.id}
+                                id={comp.id}
+                                text={comp.text}
+                                componentType={comp.componentType}
+                              />
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Render subcategories if they exist */}
+                        {category.subcategories && category.subcategories.map((subcategory) => (
+                          <div key={subcategory.id} className="subcategory">
+                            <button
+                              className="subcategory-header"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleSubcategory(category.id, subcategory.id);
+                              }}
+                            >
+                              <span className="subcategory-name">{subcategory.name}</span>
+                              <span className={`subcategory-icon ${subcategory.isOpen ? 'open' : ''}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                                  <path d="M9 1L5 5L1 1" stroke="#C6C9CE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </span>
+                            </button>
+                            <div className={`subcategory-items ${subcategory.isOpen ? 'open' : ''}`}>
+                              {subcategory.components.map((comp) => (
+                                <DraggableCard
+                                  key={comp.id}
+                                  id={comp.id}
+                                  text={comp.text}
+                                  componentType={comp.componentType}
+                                />
+                              ))}
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -1063,8 +1234,242 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
             </Col>
 
             <Col md={10}>
-              <Container>
-                <h4>Build Area</h4>
+              <Container className='builder-panel'>
+                {/* Current Layout Display */}
+                <Row className="mb-3">
+                  <Col>
+                    <div className="d-flex align-items-center">
+                      {currentLayoutName && (
+                        <div className="d-flex align-items-center">
+                          <h2 className="mb-2">{currentLayoutName}</h2>
+                        </div>
+                      )}
+                    </div>
+                  </Col>
+                </Row>
+                {/* Save/Load Controls */}
+                <Row className="mb-4">
+                  <Col>
+                    <ButtonGroup>
+                      <ReactstrapButton
+                        color="transparent"
+                        onClick={() => {
+                          newLayout();
+                        }}
+                        className="d-flex align-items-center gap-2"
+                        disabled={isSyncing}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M9.563 15.654L8.75 18.5L7.937 15.654C7.72687 14.9189 7.3329 14.2494 6.79226 13.7087C6.25162 13.1681 5.58214 12.7741 4.847 12.564L2 11.75L4.846 10.937C5.58114 10.7269 6.25062 10.3329 6.79126 9.79226C7.3319 9.25162 7.72587 8.58214 7.936 7.847L8.75 5L9.563 7.846C9.77313 8.58114 10.1671 9.25062 10.7077 9.79126C11.2484 10.3319 11.9179 10.7259 12.653 10.936L15.5 11.75L12.654 12.563C11.9189 12.7731 11.2494 13.1671 10.7087 13.7077C10.1681 14.2484 9.77413 14.9179 9.564 15.653L9.563 15.654ZM18.009 8.465L17.75 9.5L17.491 8.465C17.3427 7.87159 17.036 7.32962 16.6036 6.89703C16.1712 6.46444 15.6294 6.15749 15.036 6.009L14 5.75L15.036 5.491C15.6294 5.34251 16.1712 5.03556 16.6036 4.60297C17.036 4.17038 17.3427 3.62841 17.491 3.035L17.75 2L18.009 3.035C18.1573 3.62854 18.4642 4.17059 18.8968 4.60319C19.3294 5.03579 19.8715 5.34267 20.465 5.491L21.5 5.75L20.465 6.009C19.8715 6.15733 19.3294 6.46421 18.8968 6.89681C18.4642 7.32941 18.1573 7.87147 18.009 8.465ZM16.644 20.317L16.25 21.5L15.856 20.317C15.7455 19.9856 15.5594 19.6845 15.3125 19.4375C15.0655 19.1906 14.7644 19.0045 14.433 18.894L13.25 18.5L14.433 18.106C14.7644 17.9955 15.0655 17.8094 15.3125 17.5625C15.5594 17.3155 15.7455 17.0144 15.856 16.683L16.25 15.5L16.644 16.683C16.7545 17.0144 16.9406 17.3155 17.1875 17.5625C17.4345 17.8094 17.7356 17.9955 18.067 18.106L19.25 18.5L18.067 18.894C17.7356 19.0045 17.4345 19.1906 17.1875 19.4375C16.9406 19.6845 16.7545 19.9856 16.644 20.317Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Create
+                        {isSyncing && <Spinner size="sm" className="ms-2" />}
+                      </ReactstrapButton>
+                      <ReactstrapButton
+                        color="transparent"
+                        onClick={() => {
+                          setNewLayoutName(currentLayoutName); // Pre-fill current name if editing
+                          setIsSaveModalOpen(true);
+                        }}
+                        className="d-flex align-items-center gap-2"
+                        disabled={isSyncing}
+                      >
+                        {/* <Save size={16} /> */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11M11 8L8 11M8 11L5 8M8 11V2" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        {currentLayoutId ? 'Update' : 'Save'}
+                        {isSyncing && <Spinner size="sm" className="ms-2" />}
+                      </ReactstrapButton>
+                      <ReactstrapButton
+                        color="transparent"
+                        onClick={() => setIsLoadModalOpen(true)}
+                        className="d-flex align-items-center gap-2"
+                        disabled={isLoading}
+                      >
+                        {/* <Upload size={16} /> */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M5 5L8 2M8 2L11 5M8 2L8 11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Load
+                        {isLoading && <Spinner size="sm" className="ms-2" />}
+                      </ReactstrapButton>
+                      <ReactstrapButton
+                        color="transparent"
+                        onClick={loadLayouts}
+                        className="d-flex align-items-center gap-2"
+                        disabled={isSyncing}
+                      >
+                        {/* <Cloud size={16} /> */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M10.682 6.23196H14.01L11.8894 4.10996C11.2066 3.42721 10.3562 2.93622 9.42352 2.68636C8.49086 2.4365 7.50885 2.43658 6.57623 2.68658C5.6436 2.93657 4.79322 3.42768 4.11058 4.11054C3.42794 4.79339 2.93709 5.64392 2.68738 6.57663M1.99005 13.096V9.76796M1.99005 9.76796H5.31805M1.99005 9.76796L4.11005 11.89C4.79279 12.5727 5.64324 13.0637 6.57591 13.3136C7.50857 13.5634 8.49057 13.5633 9.4232 13.3133C10.3558 13.0633 11.2062 12.5722 11.8888 11.8894C12.5715 11.2065 13.0623 10.356 13.312 9.42329M14.01 2.90396V6.23063" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Sync
+                        {isSyncing && <Spinner size="sm" className="ms-2" />}
+                      </ReactstrapButton>
+                      <ReactstrapButton
+                        color="transparent"
+                        onClick={exportToPNG}
+                        className="d-flex align-items-center gap-2"
+                        disabled={isExporting || droppedComponents.length === 0}
+                        title={droppedComponents.length === 0 ? "Add components to export" : "Export as PNG"}
+                      >
+                        {/* <Camera size={16} /> */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M1.5 10.5L4.93933 7.06067C5.07862 6.92138 5.24398 6.81089 5.42597 6.7355C5.60796 6.66012 5.80302 6.62132 6 6.62132C6.19698 6.62132 6.39204 6.66012 6.57403 6.7355C6.75602 6.81089 6.92138 6.92138 7.06067 7.06067L10.5 10.5M9.5 9.5L10.4393 8.56067C10.5786 8.42138 10.744 8.31089 10.926 8.2355C11.108 8.16012 11.303 8.12132 11.5 8.12132C11.697 8.12132 11.892 8.16012 12.074 8.2355C12.256 8.31089 12.4214 8.42138 12.5607 8.56067L14.5 10.5M2.5 13H13.5C13.7652 13 14.0196 12.8946 14.2071 12.7071C14.3946 12.5196 14.5 12.2652 14.5 12V4C14.5 3.73478 14.3946 3.48043 14.2071 3.29289C14.0196 3.10536 13.7652 3 13.5 3H2.5C2.23478 3 1.98043 3.10536 1.79289 3.29289C1.60536 3.48043 1.5 3.73478 1.5 4V12C1.5 12.2652 1.60536 12.5196 1.79289 12.7071C1.98043 12.8946 2.23478 13 2.5 13ZM9.5 5.5H9.50533V5.50533H9.5V5.5ZM9.75 5.5C9.75 5.5663 9.72366 5.62989 9.67678 5.67678C9.62989 5.72366 9.5663 5.75 9.5 5.75C9.4337 5.75 9.37011 5.72366 9.32322 5.67678C9.27634 5.62989 9.25 5.5663 9.25 5.5C9.25 5.4337 9.27634 5.37011 9.32322 5.32322C9.37011 5.27634 9.4337 5.25 9.5 5.25C9.5663 5.25 9.62989 5.27634 9.67678 5.32322C9.72366 5.37011 9.75 5.4337 9.75 5.5Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Export PNG
+                        {isExporting && <Spinner size="sm" className="ms-2" />}
+                      </ReactstrapButton>
+                      <ReactstrapButton 
+                        color="transparent" 
+                        onClick={exportLayout} 
+                        className="d-flex align-items-center gap-2"
+                      >
+                        {/* <Download size={16} /> */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11M11 8L8 11M8 11L5 8M8 11V2" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Export JSON
+                      </ReactstrapButton>
+                      <ReactstrapButton 
+                        color="transparent" 
+                        className="d-flex align-items-center gap-2">
+                        <label style={{ cursor: 'pointer', marginBottom: 0, gap: '.5rem', display: 'flex' }}>
+                          {/* <Upload size={16} /> */}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 5L8 2M8 2L11 5M8 2L8 11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          Import JSON
+                          <Input
+                            type="file"
+                            accept=".json"
+                            style={{ display: 'none' }}
+                            onChange={importLayout}
+                            onClick={(e) => {
+                              (e.target as HTMLInputElement).value = '';
+                            }}
+                          />
+                        </label>
+                      </ReactstrapButton>
+                    </ButtonGroup>
+                  </Col>
+                </Row>
+
+                {/* Save/Load Message */}
+                {saveMessage && (
+                  <Row className="mb-3">
+                    <Col>
+                      <Alert color={saveMessage.type}>{saveMessage.text}</Alert>
+                    </Col>
+                  </Row>
+                )}
+
+                <Row className="align-items-center mb-3">
+                  <Col>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h6 className="mb-0">Build Area</h6>
+                      <ReactstrapButton
+                        color="transparent" 
+                        onClick={() => setIsNotesOpen(!isNotesOpen)}
+                        className="d-flex align-items-center gap-2 btn btn-transparent"
+                      >
+                        {isNotesOpen ? (
+                          <>
+                            <X size={16} />
+                            Close Notes
+                          </>
+                        ) : (
+                          <>
+                            Add Notes
+                          </>
+                        )}
+                      </ReactstrapButton>
+                    </div>
+                  </Col>
+                </Row>
+                {/* Notes Section */}
+                {isNotesOpen && (
+                <Row className="mb-4">
+                  <Col>
+                    <Card className="notes-section">
+                      <CardBody>
+                        <div className="notes-header mb-3">
+                          <h5 className="mb-3">Notes</h5>
+                          <div className="d-flex gap-2">
+                            <Input
+                              type="textarea"
+                              value={newNote}
+                              onChange={(e) => setNewNote(e.target.value)}
+                              placeholder={currentLayoutId 
+                                ? "Add a note about this layout..." 
+                                : "Save or load a layout to add notes"}
+                              rows={2}
+                              className="flex-grow-1"
+                              disabled={!currentLayoutId || isSavingNote}
+                            />
+                            <Button
+                              color="primary"
+                              onClick={addNote}
+                              disabled={!newNote.trim() || !currentLayoutId || isSavingNote}
+                            >
+                              {isSavingNote ? (
+                                <>
+                                  <span>Saving...</span>
+                                  <Spinner size="sm" className="ms-2" />
+                                </>
+                              ) : (
+                                'Add Note'
+                              )}
+                            </Button>
+                          </div>
+                          {!currentLayoutId && (
+                            <small className="text-muted mt-2 d-block">
+                              Save or load a layout to start adding notes
+                            </small>
+                          )}
+                        </div>
+                        
+                        <div className="notes-list">
+                          {notes.length === 0 ? (
+                            <div className="text-muted text-center py-3">
+                              {currentLayoutId 
+                                ? "No notes yet. Add one above!" 
+                                : "Notes will appear here when you load a layout"}
+                            </div>
+                          ) : (
+                            notes.map((note) => (
+                              <Card key={note.id} className="note-item mb-2">
+                                <CardBody>
+                                  <div className="d-flex justify-content-between align-items-start">
+                                    <div className="note-content">
+                                      <p className="mb-1">{note.text}</p>
+                                      <small className="text-muted">
+                                        {new Date(note.timestamp).toLocaleString()}
+                                      </small>
+                                    </div>
+                                    <Button
+                                      color="link"
+                                      className="p-0 text-danger"
+                                      onClick={() => deleteNote(note.id)}
+                                    >
+                                      <X size={16} />
+                                    </Button>
+                                  </div>
+                                </CardBody>
+                              </Card>
+                            ))
+                          )}
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                </Row>
+              )}
+
+                {/* Build Area */}
                 <DroppableArea onDrop={handleDrop}>
                   {droppedComponents.map((comp, index) => (
                     <DroppedComponentWrapper
@@ -1078,6 +1483,7 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                     </DroppedComponentWrapper>
                   ))}
                 </DroppableArea>
+
               </Container>
             </Col>
           </Row>
@@ -1090,7 +1496,6 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
 // Add some optional styling to improve the exported image
 const styles = `
   .droppable-area {
-    background-color: white !important;
     page-break-inside: avoid;
   }
 
