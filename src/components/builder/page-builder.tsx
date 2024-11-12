@@ -23,34 +23,58 @@ import {
 } from 'reactstrap';
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { X, Save, Upload, Download, Cloud, CloudOff, Camera } from 'lucide-react';
+import { X, Save, Upload, Download, Cloud, CloudOff, Camera, ImageOff } from 'lucide-react';
 import { db } from '../../../firebase';
 import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy, Timestamp } from 'firebase/firestore';
 
-import accordionsImage from '../../images/Accordions.png';
-import advancedNarrativeBlockPlusFormImage from '../../images/AdvancedNarrativeBlockForm1x.png';
-import advancedNarrativeBlockImagesSlideImage from '../../images/AdvancedNarrativeBlockImagesslide1x.png';
-import breadcrumbsImage from '../../images/Breadcrumbs1x.png';
-import buttonImage from '../../images/Button1x.png';
-import twoCardsRowImage from '../../images/Cards2Row.png';
-import twoCardsRowIconImage from '../../images/Cards2Row-1.png';
-import threeCardsRowImage from '../../images/Cards3Row.png';
-import fourCardsRowImage from '../../images/Cards4Row.png';
-import formImage from '../../images/Form1x.png';
-import narrativeImageLeftImage from '../../images/Narrative1x.png';
-import narrativeImageRightImage from '../../images/Narrative1x-1.png';
-import filterRow1xImage from '../../images/Filter1Row1x.png';
-import filterRow2xImage from '../../images/Filter2Row1x.png';
-import footerImage from '../../images/Footer1x.png';
-import headerImage from '../../images/Header1x.png';
-import heroPlusBackgroundPlusFormImage from '../../images/HeroBackgroundForm1x.png';
-import heroPlusFormImage from '../../images/HeroForm1x.png';
-import heroPlusImagePlusButtonsImage from '../../images/HeroImageButtons1x.png';
-import notificationImage from '../../images/Notification1x.png';
-import secondaryHeaderImage from '../../images/SecondaryHeader1x.png';
-import spacerImage from '../../images/spacer.png';
-import sidebarPlusCardsImage from '../../images/SidebarPlusCards.png';
-import sidebarPlusTextImage from '../../images/SidebarPlusText.png'
+import accordionsImage from '../../images/basic-elements/accordions.png';
+import buttonImage from '../../images/basic-elements/button.png';
+import buttonCenterImage from '../../images/basic-elements/buttonsCenter.png';
+import buttonLeftImage from '../../images/basic-elements/buttonsLeft.png';
+import horizontalFormImage from '../../images/basic-elements/horizontalForm.png';
+import mediaPlusRightFormImage from '../../images/basic-elements/mediaPlusRightForm.png';
+import socialShareImage from '../../images/basic-elements/socialShare.png';
+import spacer16pxImage from '../../images/basic-elements/spacer16px.png';
+import spacer32pxImage from '../../images/basic-elements/spacer32px.png';
+import spacer49pxImage from '../../images/basic-elements/spacer49px.png';
+import textPlusRightFormImage from '../../images/basic-elements/textPlusRightForm.png';
+
+import breadcrumbsImage from '../../images/headers/Breadcrumbs.png';
+import megamenuImage from '../../images/headers/MegaMenu.png';
+import secondaryMenuImage from '../../images/headers/SecondaryMenu.png';
+import simpleMenuImage from '../../images/headers/SimpleMenu.png';
+import notificationImage from '../../images/headers/TopNotification.png';
+
+import heroPlusFormImage from '../../images/heroes/HeroPlusForm.png';
+import heroPlusMediaImage from '../../images/heroes/HeroPlusMedia.png';
+import heroPlusImagePlusButtonsImage from '../../images/heroes/HeroPlusMediaPlusCTAs.png';
+import heroPlusBackgroundPlusFormImage from '../../images/heroes/HeroPlusMediaPlusForm.png';
+import simpleInnerHeroImage from '../../images/heroes/SimpleInnerHero.png';
+
+import twoCardsRowIconImage from '../../images/layout-components/2CardsRowIcon.png';
+import twoCardsRowImage from '../../images/layout-components/2CardsRowMedia.png';
+import threeCardsRowImage from '../../images/layout-components/3CardsRow.png';
+import fourCardsRowImage from '../../images/layout-components/4CardsRow.png';
+import filterRow1xImage from '../../images/layout-components/Filter.png';
+import filterRow2xImage from '../../images/layout-components/FilterCombined.png';
+import footerImage from '../../images/layout-components/Footer.png';
+import footerPlusFormImage from '../../images/layout-components/FooterForm.png';
+import narrativeImageLeftImage from '../../images/layout-components/NarrativeMediaLeft.png';
+import narrativeImageRightImage from '../../images/layout-components/NarrativeMediaRight.png';
+import narrativeImageSliderLeftImage from '../../images/layout-components/NarrativeMediaSliderLeft.png';
+import narrativeImageSliderPlusFormImage from '../../images/layout-components/NarrativeMediaSliderPlusForm.png';
+
+import sidebar2HorizontalCardsRowImage from '../../images/sidebar-components/Sidebar2HorizontalCardsRow.png';
+import sidebar2VerticalCardsRowImage from '../../images/sidebar-components/Sidebar2VerticalCardsRow.png';
+import sidebar3VerticalCardsRowImage from '../../images/sidebar-components/Sidebar3VerticalCardsRow.png';
+import sidebarTextPlusFormImage from '../../images/sidebar-components/SidebarTextPlusForm.png';
+import sidebarTextPlusMediaImage from '../../images/sidebar-components/SidebarTextPlusMedia.png';
+
+
+// import formImage from '../../images/Form1x.png';
+// import headerImage from '../../images/Header1x.png';
+// import spacerImage from '../../images/spacer.png';
+
 
 import './page-builder.scss';
 
@@ -145,52 +169,92 @@ const renderPlaceholderComponent = (text: string) => {
     switch (text) {
       case 'Accordion':
         return accordionsImage;
-      case 'Advanced Narrative Block + Form':
-        return advancedNarrativeBlockPlusFormImage;
-      case 'Advanced Narrative Block + Images slider':
-        return advancedNarrativeBlockImagesSlideImage;
-      case 'Breadcrumbs':
-        return breadcrumbsImage;
       case 'Button':
         return buttonImage;
+      case 'Button Center':
+        return buttonCenterImage;
+      case 'Button Left':
+        return buttonLeftImage;
+      case 'Horizontal Form':
+        return horizontalFormImage;
+      case 'Text + Right Form':
+        return textPlusRightFormImage;
+      case 'Media + Right Form':
+        return mediaPlusRightFormImage;
+      case 'Social Share':
+        return socialShareImage;
+      case '16px Spacer':
+        return spacer16pxImage;
+      case '32px Spacer':
+        return spacer32pxImage;
+      case '49px Spacer':
+        return spacer49pxImage;
+
       case '2 Cards Row':
         return twoCardsRowImage;
-      case '2 Cards with Icon Row':
-        return twoCardsRowIconImage;
       case '3 Cards Row':
         return threeCardsRowImage;
       case '4 Cards Row':
         return fourCardsRowImage;
-      case 'Form':
-        return formImage;
-      case 'Narrative Left Image':
+      case '2 Cards Row with Icon':  
+        return twoCardsRowIconImage
+      case 'Simple Filter':
+        return filterRow1xImage;        
+      case 'Combined Filter':
+        return filterRow2xImage;  
+      case 'Media Left':
         return narrativeImageLeftImage;
-      case 'Narrative Right Image':
+      case 'Media Right':
         return narrativeImageRightImage;
+      case 'Media Slider Left':
+        return narrativeImageSliderLeftImage
+      case 'Media Slider + Form':
+        return narrativeImageSliderPlusFormImage;
+
+      case '2 Vertical Cards Row':
+       return sidebar2VerticalCardsRowImage;
+      case '3 Vertical Cards Row':
+       return sidebar3VerticalCardsRowImage;
+      case '2 Horizontal Cards Row':
+        return sidebar2HorizontalCardsRowImage;       
+      case 'Sidebar + Text and Form':
+       return sidebarTextPlusFormImage;
+      case 'Sidebar + Text and Media':
+       return sidebarTextPlusMediaImage;
+
       case 'Filter Row':
         return filterRow1xImage;
       case 'Combined Filter Row':
         return filterRow2xImage;
       case 'Footer':
         return footerImage;
-      case 'Header':
-        return headerImage;
-      case 'Secondary Header':
-        return secondaryHeaderImage;
-      case 'Hero + Background + Form':
+      case 'Footer + Form':
+        return footerPlusFormImage;
+
+      case 'Breadcrumbs':
+        return breadcrumbsImage;
+      case 'Megamenu':
+        return megamenuImage;    
+      case 'Secondary Menu':
+        return secondaryMenuImage;
+      case 'Simple Menu':
+        return simpleMenuImage;    
+      case 'Top Notification':
+        return notificationImage;
+
+      case 'Hero + Media + Form':
         return heroPlusBackgroundPlusFormImage;
+      case 'Hero + Media':
+        return heroPlusMediaImage;
+      case 'Hero + Media + CTAs':
+        return heroPlusImagePlusButtonsImage;
       case 'Hero + Form':
         return heroPlusFormImage;
-      case 'Hero + Image + Buttons':
-        return heroPlusImagePlusButtonsImage;
-      case 'Notification':
-        return notificationImage;
-      case 'Sidebar + Cards':
-        return sidebarPlusCardsImage;
-      case 'Sidebar + Text':
-        return sidebarPlusTextImage;
+      case 'Simple Inner Hero':
+        return simpleInnerHeroImage
+
       default:
-        return spacerImage;
+        return null;
     }
   };
   return (
@@ -248,7 +312,9 @@ function PageBuilder() {
           name: 'Buttons', 
           isOpen: false,
           components: [
-            { id: 5, text: 'Button', componentType: 'Button' },
+            { id: 1, text: 'Button', componentType: 'buttonImage' },
+            { id: 2, text: 'Button Center', componentType: 'Button Center' },
+            { id: 3, text: 'Button Left', componentType: 'Button Left' },
           ]
         },
         { 
@@ -256,7 +322,9 @@ function PageBuilder() {
           name: 'Forms', 
           isOpen: false,
           components: [
-            { id: 10, text: 'Form', componentType: 'Form' },
+            { id: 4, text: 'Horizontal Form', componentType: 'Horizontal Form' },
+            { id: 5, text: 'Text + Right Form', componentType: 'Text + Right Form' },
+            { id: 6, text: 'Media + Right Form', componentType: 'Media + Right Form' },
           ]
         },
         {
@@ -264,16 +332,16 @@ function PageBuilder() {
           name: 'Spacers',
           isOpen: false,
           components: [
-            { id: 0, text: 'Spacer 16px', componentType: 'Spacer' },
-            { id: 26, text: 'Spacer 32px', componentType: 'Spacer' },
-            { id: 27, text: 'Spacer 49px', componentType: 'Spacer' },
+            { id: 7, text: '16px Spacer', componentType: '16px Spacer' },
+            { id: 8, text: '32px Spacer', componentType: '32px Spacer' },
+            { id: 9, text: '49px Spacer', componentType: '49px Spacer' },
           ]
         },
       ],
       components: [
-        { id: 1, text: 'Accordion', componentType: 'Accordion' },
-        { id: 24, text: 'Pagination', componentType: 'Pagination' },
-        { id: 25, text: 'Social Share', componentType: 'Social Share' },
+        { id: 10, text: 'Accordion', componentType: 'Accordion' },
+        { id: 11, text: 'Pagination', componentType: 'Pagination' },
+        { id: 12, text: 'Social Share', componentType: 'Social Share' },
       ]
     },
     {
@@ -286,16 +354,10 @@ function PageBuilder() {
           name: 'Card Rows',
           isOpen: false,
           components: [
-            { id: 2, text: 'Advanced Narrative Block + Form', componentType: 'Advanced Narrative Block + Form' },
-            {
-              id: 3,
-              text: 'Advanced Narrative Block + Images slider',
-              componentType: 'Advanced Narrative Block + Images slider',
-            },
-            { id: 6, text: '2 Cards Row', componentType: '2 Cards Row' },
-            { id: 7, text: '2 Cards with Icon Row', componentType: '2 Cards with Icon Row' },
-            { id: 8, text: '3 Cards Row', componentType: '3 Cards Row' },
-            { id: 9, text: '4 Cards Row', componentType: '4 Cards Row' },
+            { id: 13, text: '2 Cards Row', componentType: '2 Cards Row' },
+            { id: 14, text: '3 Cards Row', componentType: '3 Cards Row' },
+            { id: 15, text: '4 Cards Row', componentType: '4 Cards Row' },
+            { id: 16, text: '2 Cards Row with Icon', componentType: '2 Cards Row with Icon' },
           ]
         },
         {
@@ -303,8 +365,10 @@ function PageBuilder() {
           name: 'Narrative Blocks',
           isOpen: false,
           components: [
-            { id: 11, text: 'Narrative Left Image', componentType: 'Narrative Left Image' },
-            { id: 12, text: 'Narrative Right Image', componentType: 'Narrative Right Image' },
+            { id: 17, text: 'Media Left', componentType: 'Media Left' },
+            { id: 18, text: 'Media Right', componentType: 'Media Right' },
+            { id: 19, text: 'Media Slider Left', componentType: 'Media Slider Left' },
+            { id: 20, text: 'Media Slider + Form', componentType: 'Media Right' },
           ]
         },
         {
@@ -312,8 +376,8 @@ function PageBuilder() {
           name: 'Filter',
           isOpen: false,
           components: [
-            { id: 13, text: 'Filter Row', componentType: 'Filter Row' },
-            { id: 14, text: 'Combined Filter Row', componentType: 'Combined Filter Row' },
+            { id: 21, text: 'Simple Filter', componentType: 'Simple Filter' },
+            { id: 22, text: 'Combined Filter', componentType: 'Combined Filter' },
           ]
         },
         {
@@ -321,7 +385,8 @@ function PageBuilder() {
           name: 'Footer',
           isOpen: false,
           components: [
-            { id: 15, text: 'Footer', componentType: 'Footer' },
+            { id: 23, text: 'Footer', componentType: 'Footer' },
+            { id: 24, text: 'Footer + Form', componentType: 'Footer + Form' },
           ]
         }
       ],
@@ -336,24 +401,36 @@ function PageBuilder() {
           name: 'Headers', 
           isOpen: false,
           components: [
-            { id: 16, text: 'Header', componentType: 'Header' },
-            { id: 17, text: 'Secondary Header', componentType: 'Secondary Header' },
-            { id: 21, text: 'Notification', componentType: 'Notification' },
+            { id: 25, text: 'Megamenu', componentType: 'Megamenu' },
+            { id: 26, text: 'Secondary Menu', componentType: 'Secondary Menu' },
+            { id: 27, text: 'Simple Menu', componentType: 'Simple Menu' },
+            { id: 28, text: 'Top Notification', componentType: 'Top Notification' },
           ]
         },
       ],
       components: [
-        { id: 4, text: 'Breadcrumbs', componentType: 'Breadcrumbs' },
+        { id: 29, text: 'Breadcrumbs', componentType: 'Breadcrumbs' },
       ]
     },
     {
       id: 'heros',
       name: 'Heros',
       isOpen: false,
+      subcategories: [
+        { 
+          id: 'Landing Heroes', 
+          name: 'Landing Heroes', 
+          isOpen: false,
+          components: [
+            { id: 30, text: 'Hero + Media + Form', componentType: 'Hero + Media + Form' },
+            { id: 31, text: 'Hero + Media', componentType: 'Hero + Media' },
+            { id: 32, text: 'Hero + Media + CTAs', componentType: 'Hero + Media + CTAs' },
+            { id: 33, text: 'Hero + Form', componentType: 'Hero + Form' },
+          ]
+        },
+      ],
       components: [
-        { id: 18, text: 'Hero + Background + Form', componentType: 'Hero + Background + Form' },
-        { id: 19, text: 'Hero + Form', componentType: 'Hero + Form' },
-        { id: 20, text: 'Hero + Image + Buttons', componentType: 'Hero + Image + Buttons' },
+        { id: 34, text: 'Simple Inner Hero', componentType: 'Simple Inner Hero' },
       ]
     },
     {
@@ -366,12 +443,15 @@ function PageBuilder() {
           name: 'Sidebar + Cards', 
           isOpen: false,
           components: [
-            { id: 22, text: '2 Vertical Cards Row', componentType: 'Sidebar + Cards' },
+            { id: 35, text: '2 Vertical Cards Row', componentType: 'Sidebar + Cards' },
+            { id: 36, text: '3 Vertical Cards Row', componentType: '3 Vertical Cards Row' },
+            { id: 37, text: '2 Horizontal Cards Row', componentType: '2 Horizontal Cards Row' },
           ]
         },
       ],
       components: [
-        { id: 23, text: 'Sidebar + Text', componentType: 'Sidebar + Text' },
+        { id: 38, text: 'Sidebar + Text and Form', componentType: 'Sidebar + Text and Form' },
+        { id: 39, text: 'Sidebar + Text and Media', componentType: 'Sidebar + Text and Media' },
       ]
     }
   ]);
