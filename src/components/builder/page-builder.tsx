@@ -40,7 +40,7 @@ import spacer49pxImage from '../../images/basic-elements/spacer49px.png';
 import textPlusRightFormImage from '../../images/basic-elements/textPlusRightForm.png';
 
 import breadcrumbsImage from '../../images/headers/Breadcrumbs.png';
-import megamenuImage from '../../images/headers/MegaMenu.png';
+import megamenuImage from '../../images/headers/Megamenu.png';
 import secondaryMenuImage from '../../images/headers/SecondaryMenu.png';
 import simpleMenuImage from '../../images/headers/SimpleMenu.png';
 import notificationImage from '../../images/headers/TopNotification.png';
