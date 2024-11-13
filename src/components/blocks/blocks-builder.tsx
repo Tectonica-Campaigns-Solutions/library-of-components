@@ -459,7 +459,7 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             );
           case 'DatoCmsComponentInfo':
             return (
-              <div key={block.id} className={`componentInfo hide ${blocks[index+1].__typename}`}>
+              <div key={block.id} className={`componentInfo hide ${blocks[index+1].__typename}${blocks[index+1].id}`}>
                 <h2>{block.name} {block.composedBy && <span>{block.composedBy}</span>}</h2>
                 {block.description && <p>{block.description}</p>}
               </div>

@@ -163,6 +163,19 @@ interface SavedLayout {
   lastModified: number;
 }
 
+interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: number;
+  lastModified: number;
+  firestoreId?: string;
+}
+
+interface ProjectWithLayouts extends Project {
+  layouts: SavedLayout[];
+}
+
 // Simple component renderer
 const renderPlaceholderComponent = (text: string) => {
   const img = () => {
@@ -483,6 +496,14 @@ function PageBuilder() {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [newNote, setNewNote] = useState('');
   const [isSavingNote, setIsSavingNote] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Add new state for projects
+  const [projects, setProjects] = useState<ProjectWithLayouts[]>([]);
+  const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [newProjectData, setNewProjectData] = useState({ name: '', description: '' });
 
   // Add toggle function
   const toggleSidebar = () => {
@@ -924,6 +945,55 @@ function PageBuilder() {
     }
   };
 
+  // Add search filter function
+  const filterComponents = (category: ComponentCategory) => {
+    const searchLower = searchTerm.toLowerCase();
+    
+    if (category.components) {
+      // Filter direct components
+      const filteredComponents = category.components.filter(comp =>
+        comp.text.toLowerCase().includes(searchLower) ||
+        comp.componentType.toLowerCase().includes(searchLower)
+      );
+      
+      if (filteredComponents.length > 0) {
+        return {
+          ...category,
+          components: filteredComponents
+        };
+      }
+    }
+    
+    if (category.subcategories) {
+      // Filter subcategories and their components
+      const filteredSubcategories = category.subcategories
+        .map(sub => ({
+          ...sub,
+          components: sub.components.filter(comp =>
+            comp.text.toLowerCase().includes(searchLower) ||
+            comp.componentType.toLowerCase().includes(searchLower)
+          )
+        }))
+        .filter(sub => sub.components.length > 0);
+      
+      if (filteredSubcategories.length > 0) {
+        return {
+          ...category,
+          subcategories: filteredSubcategories
+        };
+      }
+    }
+    
+    return null;
+  };
+
+  // Get filtered categories
+  const filteredCategories = searchTerm
+    ? categories
+        .map(filterComponents)
+        .filter((cat): cat is ComponentCategory => cat !== null)
+    : categories;
+
   // Droppable area
   const DroppableArea: React.FC<DroppableAreaProps> = ({ children, onDrop }) => {
     const [, drop] = useDrop({
@@ -1237,6 +1307,24 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
             
               <div className="components-sidebar">
                 <div className="components-header">
+                  <div className="search-container">
+                    <Input
+                      type="text"
+                      placeholder="Search component..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="search-input"
+                    />
+                    {searchTerm && (
+                      <button
+                        className="search-clear"
+                        onClick={() => setSearchTerm('')}
+                        title="Clear search"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
                   <h6>
                     {/* <button
                       onClick={toggleSidebar}
@@ -1249,53 +1337,29 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                   </h6>
                 </div>
                 <div className="components-list">
-                  {categories.map((category) => (
-                    <div key={category.id} className="component-category">
-                      <button
-                        className="category-header"
-                        onClick={() => toggleCategory(category.id)}
-                      >
-                        <span className="category-name">{category.name}</span>
-                        <span className={`category-icon ${category.isOpen ? 'open' : ''}`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                            <path d="M9 1L5 5L1 1" stroke="#C6C9CE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </span>
-                      </button>
-                      <div className={`category-items ${category.isOpen ? 'open' : ''}`}>
-                        {/* Render direct components if they exist */}
-                        {category.components && (
-                          <div className="category-direct-items">
-                            {category.components.map((comp) => (
-                              <DraggableCard
-                                key={comp.id}
-                                id={comp.id}
-                                text={comp.text}
-                                componentType={comp.componentType}
-                              />
-                            ))}
-                          </div>
-                        )}
-                        
-                        {/* Render subcategories if they exist */}
-                        {category.subcategories && category.subcategories.map((subcategory) => (
-                          <div key={subcategory.id} className="subcategory">
-                            <button
-                              className="subcategory-header"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                toggleSubcategory(category.id, subcategory.id);
-                              }}
-                            >
-                              <span className="subcategory-name">{subcategory.name}</span>
-                              <span className={`subcategory-icon ${subcategory.isOpen ? 'open' : ''}`}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                  <path d="M9 1L5 5L1 1" stroke="#C6C9CE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                              </span>
-                            </button>
-                            <div className={`subcategory-items ${subcategory.isOpen ? 'open' : ''}`}>
-                              {subcategory.components.map((comp) => (
+                  {filteredCategories.length === 0 ? (
+                    <div className="no-results">
+                      No components found for "{searchTerm}"
+                    </div>
+                  ) : (
+                    filteredCategories.map((category) => (
+                      <div key={category.id} className="component-category">
+                        <button
+                          className="category-header"
+                          onClick={() => toggleCategory(category.id)}
+                        >
+                          <span className="category-name">{category.name}</span>
+                          <span className={`category-icon ${category.isOpen ? 'open' : ''}`}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                              <path d="M9 1L5 5L1 1" stroke="#C6C9CE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
+                        </button>
+                        <div className={`category-items ${category.isOpen ? 'open' : ''}`}>
+                          {/* Render direct components if they exist */}
+                          {category.components && (
+                            <div className="category-direct-items">
+                              {category.components.map((comp) => (
                                 <DraggableCard
                                   key={comp.id}
                                   id={comp.id}
@@ -1304,11 +1368,41 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                                 />
                               ))}
                             </div>
-                          </div>
-                        ))}
+                          )}
+                          
+                          {/* Render subcategories if they exist */}
+                          {category.subcategories && category.subcategories.map((subcategory) => (
+                            <div key={subcategory.id} className="subcategory">
+                              <button
+                                className="subcategory-header"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  toggleSubcategory(category.id, subcategory.id);
+                                }}
+                              >
+                                <span className="subcategory-name">{subcategory.name}</span>
+                                <span className={`subcategory-icon ${subcategory.isOpen ? 'open' : ''}`}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none">
+                                    <path d="M9 1L5 5L1 1" stroke="#C6C9CE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </span>
+                              </button>
+                              <div className={`subcategory-items ${subcategory.isOpen ? 'open' : ''}`}>
+                                {subcategory.components.map((comp) => (
+                                  <DraggableCard
+                                    key={comp.id}
+                                    id={comp.id}
+                                    text={comp.text}
+                                    componentType={comp.componentType}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </Col>
