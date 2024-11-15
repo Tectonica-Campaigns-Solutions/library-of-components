@@ -310,6 +310,37 @@ body {
     opacity: 1;
     padding: 0.5rem;
   }  
+
+  .project-section {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+
+  .project-header {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .layouts-list {
+    padding-top: 0.5rem;
+  }
+
+  .current-layout {
+    margin-right: 0.5em;
+  }
+
+  .current-project {
+    text-transform: uppercase;
+    padding: 0.1rem 0rem 0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+
+    h4 {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+  }
   
   /* Main container styles */
 .page-builder {
@@ -465,6 +496,21 @@ body {
   background: #555;
 }
 
+.components-list-display {
+  margin-top: 0.5rem;
+  
+  .badge {
+    padding: 0.35em 0.65em;
+    font-weight: normal;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }
+}
 
   @media (max-width: 768px) {
     .page-builder {

@@ -23,9 +23,9 @@ import {
 } from 'reactstrap';
 import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { X, Save, Upload, Download, Cloud, CloudOff, Camera, ImageOff } from 'lucide-react';
+import { X, Save, Upload, Download, Cloud, CloudOff, Camera, ImageOff, Folder } from 'lucide-react';
 import { db } from '../../../firebase';
-import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy, Timestamp, where } from 'firebase/firestore';
 
 import accordionsImage from '../../images/basic-elements/accordions.png';
 import buttonImage from '../../images/basic-elements/button.png';
@@ -77,6 +77,8 @@ import sidebarTextPlusMediaImage from '../../images/sidebar-components/SidebarTe
 
 
 import './page-builder.scss';
+import ProjectManagement from './ProjectManagement';
+import migrateLayouts from './migrateLayouts';
 
 // Define item types for drag and drop
 const ItemTypes = {
@@ -115,14 +117,7 @@ interface DeletedComponent extends DroppedComponent {
   timestamp: number;
 }
 
-interface SavedLayout {
-  id: string;
-  name: string;
-  components: DroppedComponent[];
-  lastModified: number;
-}
-
-interface FirebaseLayout extends SavedLayout {
+interface FirebaseLayout extends Layout {
   firestoreId?: string;
   synced: boolean;
 }
@@ -155,25 +150,39 @@ interface LayoutNote {
   timestamp: number;
 }
 
-interface SavedLayout {
+interface Project {
+  firestoreId?: string;
+  name: string;
+  description?: string;
+  createdAt: Timestamp;
+  lastModified: Timestamp;
+  layouts?: Layout[];
+}
+
+interface Layout {
   id: string;
   name: string;
   components: DroppedComponent[];
   notes: LayoutNote[];
-  lastModified: number;
+  lastModified: Timestamp;
+  firestoreId?: string;
+  projectId: string | null; // Make projectId required but nullable
+  synced?: boolean;
 }
 
-interface Project {
+interface FirebaseLayout extends Layout {
+  firestoreId?: string;
+  synced: boolean;
+}
+
+// Add this interface for layout creation
+interface NewLayout {
   id: string;
   name: string;
-  description?: string;
-  createdAt: number;
-  lastModified: number;
-  firestoreId?: string;
-}
-
-interface ProjectWithLayouts extends Project {
-  layouts: SavedLayout[];
+  components: DroppedComponent[];
+  notes: LayoutNote[];
+  lastModified: Timestamp;
+  projectId: string | null;
 }
 
 // Simple component renderer
@@ -473,7 +482,7 @@ function PageBuilder() {
   const [deletedComponents, setDeletedComponents] = useState<DeletedComponent[]>([]);
   const [showUndoAlert, setShowUndoAlert] = useState(false);
   const [lastDeletedComponent, setLastDeletedComponent] = useState<DeletedComponent | null>(null);
-  const [layouts, setLayouts] = useState<SavedLayout[]>([]);
+  const [layouts, setLayouts] = useState<Layout[]>([]);
   const [currentLayoutId, setCurrentLayoutId] = useState<string | null>(null);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
@@ -499,11 +508,85 @@ function PageBuilder() {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Add new state for projects
-  const [projects, setProjects] = useState<ProjectWithLayouts[]>([]);
+  // State for projects
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState<boolean>(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-  const [newProjectData, setNewProjectData] = useState({ name: '', description: '' });
+
+  // Add the function
+const runMigration = async () => {
+  try {
+    setIsLoading(true);
+    await migrateLayouts();
+    // Reload layouts after migration
+    await loadLayouts(currentProject?.firestoreId);
+    setSaveMessage({ type: 'success', text: 'Database migration completed!' });
+  } catch (error) {
+    console.error('Migration error:', error);
+    setSaveMessage({ type: 'danger', text: 'Migration failed. Check console.' });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  // Add new handlers
+  const handleProjectCreated = (project: Project): void => {
+    setCurrentProject(project);
+    setIsProjectModalOpen(false);
+  };
+
+  // Update the project selection handler
+  const handleProjectSelected = async (project: Project): Promise<void> => {
+    try {
+      setIsLoading(true);
+      console.log('Selecting project:', project.firestoreId); // Debug log
+      
+      // Clear current state
+      setDroppedComponents([]);
+      setCurrentLayoutId(null);
+      setCurrentLayoutName('');
+      setNotes([]);
+      
+      // Set current project
+      setCurrentProject(project);
+      
+      // Load layouts for the selected project
+      await loadLayouts(project.firestoreId);
+      
+    } catch (error) {
+      console.error('Error selecting project:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to load project layouts' });
+    } finally {
+      setIsLoading(false);
+      setIsProjectModalOpen(false);
+    }
+  };
+  
+  const clearProjectSelection = async (): Promise<void> => {
+    try {
+      setIsLoading(true);
+      console.log('Clearing project selection'); // Debug log
+      
+      // Clear all state
+      setCurrentProject(null);
+      setDroppedComponents([]);
+      setCurrentLayoutId(null);
+      setCurrentLayoutName('');
+      setNotes([]);
+      
+      // Load unassigned layouts
+      await loadLayouts();
+      
+    } catch (error) {
+      console.error('Error clearing project:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to load layouts' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLayoutAssigned = (): void => {
+    loadLayouts();
+  };
 
   // Add toggle function
   const toggleSidebar = () => {
@@ -511,40 +594,66 @@ function PageBuilder() {
   };  
   
   // Load saved layouts from localStorage on mount
+  // useEffect(() => {
+  //   // Initial load - either load project layouts or all layouts
+  //   loadLayouts(currentProject?.firestoreId);
+  // }, [currentProject?.firestoreId]); // Add currentProject.firestoreId as dependency
+
+
   useEffect(() => {
-    loadLayouts();
-  }, []);
+    if (currentProject?.firestoreId) {
+      loadLayouts(currentProject.firestoreId);
+    } else {
+      loadLayouts();
+    }
+  }, [currentProject?.firestoreId]);
 
-  const loadLayouts = async () => {
-    setIsLoading(true);
-    try {
-      // Load from localStorage
-      const localLayouts = JSON.parse(localStorage.getItem('pageBuilderLayouts') || '[]');
+// In page-builder.tsx
+const loadLayouts = async (projectId?: string): Promise<void> => {
+  setIsLoading(true);
+  try {
+    const layoutsCollection = collection(db, 'layouts');
+    let layoutsQuery;
+    
+    if (projectId) {
+      console.log('Loading layouts for project:', projectId);
+      layoutsQuery = query(
+        layoutsCollection,
+        where('projectId', '==', projectId)
+      );
+    } else {
+      console.log('Loading unassigned layouts');
+      layoutsQuery = query(
+        layoutsCollection,
+        where('projectId', '==', null)
+      );
+    }
 
-      // Load from Firestore
-      const layoutsCollection = collection(db, 'layouts');
-      const layoutsQuery = query(layoutsCollection, orderBy('lastModified', 'desc'));
-      const querySnapshot = await getDocs(layoutsQuery);
-
-      const firestoreLayouts = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
+    const querySnapshot = await getDocs(layoutsQuery);
+    console.log(`Found ${querySnapshot.docs.length} layouts`);
+    
+    const firestoreLayouts = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      console.log('Layout:', {
+        id: doc.id,
+        name: data.name,
+        projectId: data.projectId
+      });
+      return {
+        ...data,
         firestoreId: doc.id,
         synced: true,
-      })) as FirebaseLayout[];
+      };
+    }) as FirebaseLayout[];
 
-      // Merge layouts, preferring Firestore versions
-      const mergedLayouts = mergeLayouts(localLayouts, firestoreLayouts);
-      setLayouts(mergedLayouts);
-
-      // Update localStorage with merged layouts
-      localStorage.setItem('pageBuilderLayouts', JSON.stringify(mergedLayouts));
-    } catch (error) {
-      console.error('Error loading layouts:', error);
-      setSyncError('Failed to load layouts from cloud');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setLayouts(firestoreLayouts);
+  } catch (error) {
+    console.error('Error loading layouts:', error);
+    setSyncError('Failed to load layouts from cloud');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const mergeLayouts = (local: FirebaseLayout[], remote: FirebaseLayout[]): FirebaseLayout[] => {
     const merged = [...local];
@@ -564,53 +673,58 @@ function PageBuilder() {
   };
 
   // Save layout to both localStorage and Firestore
-  const saveLayout = async (name: string) => {
+  const saveLayout = async (name: string): Promise<void> => {
     setIsSyncing(true);
     setSyncError(null);
     
     try {
-      const newLayout: SavedLayout = {
+      const projectId = currentProject?.firestoreId || null;
+      
+      const newLayout = {
         id: currentLayoutId || `layout-${Date.now()}`,
         name,
         components: droppedComponents,
         notes: notes,
-        lastModified: Date.now()
+        lastModified: Timestamp.now(),
+        projectId: projectId // Explicitly set projectId
       };
-
+  
       // Save to Firestore
       const layoutsCollection = collection(db, 'layouts');
-      const docRef = await addDoc(layoutsCollection, {
-        ...newLayout,
-        lastModified: Timestamp.fromDate(new Date())
-      });
-
+      const docRef = await addDoc(layoutsCollection, newLayout);
+  
       const updatedLayout = {
         ...newLayout,
         firestoreId: docRef.id,
         synced: true
       };
-
-      // Update layouts state
+  
+      // Update layouts state based on project context
       setLayouts(prevLayouts => {
-        const layoutIndex = prevLayouts.findIndex(l => l.id === newLayout.id);
-        if (layoutIndex >= 0) {
-          const updatedLayouts = [...prevLayouts];
-          updatedLayouts[layoutIndex] = updatedLayout;
-          return updatedLayouts;
-        } else {
+        // If we're in a project context, only add if it belongs to this project
+        if (currentProject?.firestoreId) {
+          if (projectId === currentProject.firestoreId) {
+            return [...prevLayouts, updatedLayout];
+          }
+          return prevLayouts;
+        }
+        // If no project context, only add if it's unassigned
+        if (!projectId) {
           return [...prevLayouts, updatedLayout];
         }
+        return prevLayouts;
       });
-
+  
       setCurrentLayoutId(newLayout.id);
       setCurrentLayoutName(name);
       setSaveMessage({ type: 'success', text: 'Layout saved to cloud!' });
       
-      // Update localStorage
-      localStorage.setItem('pageBuilderLayouts', JSON.stringify(layouts));
+      // Reload layouts to ensure proper filtering
+      await loadLayouts(projectId);
+      
     } catch (error) {
       console.error('Error saving layout:', error);
-      setSaveMessage({ type: 'danger', text: 'Failed to save to cloud. Layout saved locally.' });
+      setSaveMessage({ type: 'danger', text: 'Failed to save to cloud.' });
       setSyncError('Failed to sync with cloud');
     } finally {
       setIsSyncing(false);
@@ -1110,16 +1224,30 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
   );
 };  
 
-  // Add function to toggle category
-  // const toggleCategory = (categoryId: string) => {
-  //   setCategories(prevCategories =>
-  //     prevCategories.map(category =>
-  //       category.id === categoryId
-  //         ? { ...category, isOpen: !category.isOpen }
-  //         : category
-  //     )
-  //   );
-  // };
+// Add a way to display current project context in the UI
+const renderProjectContext = () => (
+  <div className="mb-3">
+    {currentProject ? (
+      <div className="d-flex align-items-center gap-2">
+        <Folder size={16} className="text-primary" />
+        <span>Project: {currentProject.name}</span>
+        <Button
+          color="link"
+          size="sm"
+          className="p-0 ms-2"
+          onClick={clearProjectSelection}
+        >
+          (Show All Layouts)
+        </Button>
+      </div>
+    ) : (
+      <div className="text-muted d-flex align-items-center gap-2">
+        <Folder size={16} />
+        <span>Showing Unassigned Layouts</span>
+      </div>
+    )}
+  </div>
+);
 
   const toggleCategory = (categoryId: string) => {
     setCategories(prevCategories =>
@@ -1146,6 +1274,32 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
             }
           : category
       )
+    );
+  };
+
+  const renderComponentsList = (components: DroppedComponent[]) => {
+    if (!components || components.length === 0) return null;
+  
+    // Group components by type and count them
+    const componentCounts = components.reduce((acc: { [key: string]: number }, component) => {
+      acc[component.text] = (acc[component.text] || 0) + 1;
+      return acc;
+    }, {});
+  
+    return (
+      <div className="components-list-display">
+        <div className="d-flex flex-wrap gap-2">
+          {Object.entries(componentCounts).map(([componentName, count]) => (
+            <span 
+              key={componentName}
+              className="badge rounded-pill bg-light text-dark border"
+              style={{ fontSize: '0.8em' }}
+            >
+              {componentName} {count > 1 && `(${count})`}
+            </span>
+          ))}
+        </div>
+      </div>
     );
   };
 
@@ -1186,15 +1340,16 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
           <Modal isOpen={isLoadModalOpen} toggle={() => setIsLoadModalOpen(false)} size="lg">
             <ModalHeader toggle={() => setIsLoadModalOpen(false)}>Saved Layouts</ModalHeader>
             <ModalBody>
+              {renderProjectContext()}
               {layouts.length === 0 ? (
                 <p>No saved layouts found.</p>
               ) : (
                 layouts.map((layout) => (
                   <Card key={layout.id} className="mb-2">
                     <CardBody>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h6 className="d-flex align-items-center gap-2">
+                      <div className="d-flex justify-content-between align-items-start">
+                        <div style={{ flex: 1 }}>
+                          <h6 className="d-flex align-items-center gap-2 mb-2">
                             {layout.name}
                             {layout.synced ? (
                               <Cloud size={16} className="text-success" />
@@ -1202,12 +1357,17 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                               <CloudOff size={16} className="text-warning" />
                             )}
                           </h6>
-                          <small className="text-muted">
+                          {renderComponentsList(layout.components)}
+                          <small className="text-muted d-block mt-2">
                             Last modified: {new Date(layout.lastModified).toLocaleDateString()}
                           </small>
                         </div>
                         <div className="d-flex gap-2">
-                          <ReactstrapButton color="primary" size="sm" onClick={() => loadLayout(layout.id)}>
+                          <ReactstrapButton 
+                            color="primary" 
+                            size="sm" 
+                            onClick={() => loadLayout(layout.id)}
+                          >
                             Load
                           </ReactstrapButton>
                           <ReactstrapButton
@@ -1413,11 +1573,16 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                 <Row className="mb-3">
                   <Col>
                     <div className="d-flex align-items-center">
-                      {currentLayoutName && (
-                        <div className="d-flex align-items-center">
-                          <h2 className="mb-2">{currentLayoutName}</h2>
-                        </div>
-                      )}
+                        {currentLayoutName && (
+                          <div className="d-flex align-items-center current-layout">
+                            <h2 className="mb-2 mr-2">{currentLayoutName}</h2>
+                          </div>
+                        )}
+                        {currentProject && (
+                          <div className="current-project">
+                            <h4>{currentProject.name}</h4>
+                          </div>
+                        )}
                     </div>
                   </Col>
                 </Row>
@@ -1428,15 +1593,28 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                       <ReactstrapButton
                         color="transparent"
                         onClick={() => {
+                          setIsProjectModalOpen(true);
+                          // clearProjectSelection()
+                        }}
+                        className="d-flex align-items-center gap-2"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M1.875 10.625V10C1.875 9.50272 2.07254 9.02581 2.42417 8.67417C2.77581 8.32254 3.25272 8.125 3.75 8.125H16.25C16.7473 8.125 17.2242 8.32254 17.5758 8.67417C17.9275 9.02581 18.125 9.50272 18.125 10V10.625M10.8833 5.25833L9.11667 3.49167C9.0006 3.37546 8.86278 3.28327 8.71107 3.22035C8.55936 3.15744 8.39674 3.12504 8.2325 3.125H3.75C3.25272 3.125 2.77581 3.32254 2.42417 3.67417C2.07254 4.02581 1.875 4.50272 1.875 5V15C1.875 15.4973 2.07254 15.9742 2.42417 16.3258C2.77581 16.6775 3.25272 16.875 3.75 16.875H16.25C16.7473 16.875 17.2242 16.6775 17.5758 16.3258C17.9275 15.9742 18.125 15.4973 18.125 15V7.5C18.125 7.00272 17.9275 6.52581 17.5758 6.17417C17.2242 5.82254 16.7473 5.625 16.25 5.625H11.7675C11.4361 5.62471 11.1175 5.49282 10.8833 5.25833Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Projects
+                      </ReactstrapButton>
+                      <ReactstrapButton
+                        color="transparent"
+                        onClick={() => {
                           newLayout();
                         }}
                         className="d-flex align-items-center gap-2"
                         disabled={isSyncing}
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                          <path d="M9.563 15.654L8.75 18.5L7.937 15.654C7.72687 14.9189 7.3329 14.2494 6.79226 13.7087C6.25162 13.1681 5.58214 12.7741 4.847 12.564L2 11.75L4.846 10.937C5.58114 10.7269 6.25062 10.3329 6.79126 9.79226C7.3319 9.25162 7.72587 8.58214 7.936 7.847L8.75 5L9.563 7.846C9.77313 8.58114 10.1671 9.25062 10.7077 9.79126C11.2484 10.3319 11.9179 10.7259 12.653 10.936L15.5 11.75L12.654 12.563C11.9189 12.7731 11.2494 13.1671 10.7087 13.7077C10.1681 14.2484 9.77413 14.9179 9.564 15.653L9.563 15.654ZM18.009 8.465L17.75 9.5L17.491 8.465C17.3427 7.87159 17.036 7.32962 16.6036 6.89703C16.1712 6.46444 15.6294 6.15749 15.036 6.009L14 5.75L15.036 5.491C15.6294 5.34251 16.1712 5.03556 16.6036 4.60297C17.036 4.17038 17.3427 3.62841 17.491 3.035L17.75 2L18.009 3.035C18.1573 3.62854 18.4642 4.17059 18.8968 4.60319C19.3294 5.03579 19.8715 5.34267 20.465 5.491L21.5 5.75L20.465 6.009C19.8715 6.15733 19.3294 6.46421 18.8968 6.89681C18.4642 7.32941 18.1573 7.87147 18.009 8.465ZM16.644 20.317L16.25 21.5L15.856 20.317C15.7455 19.9856 15.5594 19.6845 15.3125 19.4375C15.0655 19.1906 14.7644 19.0045 14.433 18.894L13.25 18.5L14.433 18.106C14.7644 17.9955 15.0655 17.8094 15.3125 17.5625C15.5594 17.3155 15.7455 17.0144 15.856 16.683L16.25 15.5L16.644 16.683C16.7545 17.0144 16.9406 17.3155 17.1875 17.5625C17.4345 17.8094 17.7356 17.9955 18.067 18.106L19.25 18.5L18.067 18.894C17.7356 19.0045 17.4345 19.1906 17.1875 19.4375C16.9406 19.6845 16.7545 19.9856 16.644 20.317Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M14.0517 3.73913L15.4575 2.33246C15.7506 2.0394 16.148 1.87476 16.5625 1.87476C16.977 1.87476 17.3744 2.0394 17.6675 2.33246C17.9606 2.62553 18.1252 3.02301 18.1252 3.43746C18.1252 3.85192 17.9606 4.2494 17.6675 4.54246L8.81833 13.3916C8.37777 13.8319 7.83447 14.1556 7.2375 14.3333L5 15L5.66667 12.7625C5.8444 12.1655 6.16803 11.6222 6.60833 11.1816L14.0517 3.73913ZM14.0517 3.73913L16.25 5.93746M15 11.6666V15.625C15 16.1222 14.8025 16.5992 14.4508 16.9508C14.0992 17.3024 13.6223 17.5 13.125 17.5H4.375C3.87772 17.5 3.40081 17.3024 3.04917 16.9508C2.69754 16.5992 2.5 16.1222 2.5 15.625V6.87496C2.5 6.37768 2.69754 5.90077 3.04917 5.54914C3.40081 5.19751 3.87772 4.99996 4.375 4.99996H8.33333" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        Create
+                        Create layout
                         {isSyncing && <Spinner size="sm" className="ms-2" />}
                       </ReactstrapButton>
                       <ReactstrapButton
@@ -1452,7 +1630,7 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                           <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11M11 8L8 11M8 11L5 8M8 11V2" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        {currentLayoutId ? 'Update' : 'Save'}
+                        {currentLayoutId ? 'Update' : 'Save'} layout
                         {isSyncing && <Spinner size="sm" className="ms-2" />}
                       </ReactstrapButton>
                       <ReactstrapButton
@@ -1466,7 +1644,7 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                           <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                           <path d="M5 5L8 2M8 2L11 5M8 2L8 11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        Load
+                        Load layout
                         {isLoading && <Spinner size="sm" className="ms-2" />}
                       </ReactstrapButton>
                       <ReactstrapButton
@@ -1490,8 +1668,9 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
                         title={droppedComponents.length === 0 ? "Add components to export" : "Export as PNG"}
                       >
                         {/* <Camera size={16} /> */}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M1.5 10.5L4.93933 7.06067C5.07862 6.92138 5.24398 6.81089 5.42597 6.7355C5.60796 6.66012 5.80302 6.62132 6 6.62132C6.19698 6.62132 6.39204 6.66012 6.57403 6.7355C6.75602 6.81089 6.92138 6.92138 7.06067 7.06067L10.5 10.5M9.5 9.5L10.4393 8.56067C10.5786 8.42138 10.744 8.31089 10.926 8.2355C11.108 8.16012 11.303 8.12132 11.5 8.12132C11.697 8.12132 11.892 8.16012 12.074 8.2355C12.256 8.31089 12.4214 8.42138 12.5607 8.56067L14.5 10.5M2.5 13H13.5C13.7652 13 14.0196 12.8946 14.2071 12.7071C14.3946 12.5196 14.5 12.2652 14.5 12V4C14.5 3.73478 14.3946 3.48043 14.2071 3.29289C14.0196 3.10536 13.7652 3 13.5 3H2.5C2.23478 3 1.98043 3.10536 1.79289 3.29289C1.60536 3.48043 1.5 3.73478 1.5 4V12C1.5 12.2652 1.60536 12.5196 1.79289 12.7071C1.98043 12.8946 2.23478 13 2.5 13ZM9.5 5.5H9.50533V5.50533H9.5V5.5ZM9.75 5.5C9.75 5.5663 9.72366 5.62989 9.67678 5.67678C9.62989 5.72366 9.5663 5.75 9.5 5.75C9.4337 5.75 9.37011 5.72366 9.32322 5.67678C9.27634 5.62989 9.25 5.5663 9.25 5.5C9.25 5.4337 9.27634 5.37011 9.32322 5.32322C9.37011 5.27634 9.4337 5.25 9.5 5.25C9.5663 5.25 9.62989 5.27634 9.67678 5.32322C9.72366 5.37011 9.75 5.4337 9.75 5.5Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 14" fill="none">
+                          <path d="M4.55133 3.11656C4.43133 3.3065 4.27121 3.46788 4.08222 3.58938C3.89324 3.71088 3.67995 3.78956 3.45733 3.81989C3.204 3.85589 2.95267 3.89456 2.70133 3.93656C1.99933 4.05323 1.5 4.67123 1.5 5.38256V10.9999C1.5 11.3977 1.65804 11.7792 1.93934 12.0606C2.22064 12.3419 2.60218 12.4999 3 12.4999H13C13.3978 12.4999 13.7794 12.3419 14.0607 12.0606C14.342 11.7792 14.5 11.3977 14.5 10.9999V5.38256C14.5 4.67123 14 4.05323 13.2987 3.93656C13.0471 3.89465 12.7951 3.85576 12.5427 3.81989C12.3202 3.78947 12.107 3.71075 11.9181 3.58925C11.7293 3.46775 11.5693 3.30642 11.4493 3.11656L10.9013 2.23923C10.7783 2.03929 10.6088 1.87196 10.4074 1.75138C10.2059 1.63081 9.97836 1.56055 9.744 1.54656C8.58217 1.48415 7.41783 1.48415 6.256 1.54656C6.02164 1.56055 5.7941 1.63081 5.59264 1.75138C5.39118 1.87196 5.22174 2.03929 5.09867 2.23923L4.55133 3.11656Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M11 7.5C11 8.29565 10.6839 9.05871 10.1213 9.62132C9.55871 10.1839 8.79565 10.5 8 10.5C7.20435 10.5 6.44129 10.1839 5.87868 9.62132C5.31607 9.05871 5 8.29565 5 7.5C5 6.70435 5.31607 5.94129 5.87868 5.37868C6.44129 4.81607 7.20435 4.5 8 4.5C8.79565 4.5 9.55871 4.81607 10.1213 5.37868C10.6839 5.94129 11 6.70435 11 7.5ZM12.5 6H12.5053V6.00533H12.5V6Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Export PNG
                         {isExporting && <Spinner size="sm" className="ms-2" />}
@@ -1661,6 +1840,16 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
               </Container>
             </Col>
           </Row>
+
+          <ProjectManagement
+            isOpen={isProjectModalOpen}
+            toggle={() => setIsProjectModalOpen(!isProjectModalOpen)}
+            onProjectCreated={handleProjectCreated}
+            onProjectSelected={handleProjectSelected}
+            currentProject={currentProject}
+            layouts={layouts}
+            onLayoutAssigned={handleLayoutAssigned}
+          />
         </Container>
       </DndProvider>
     </div>
