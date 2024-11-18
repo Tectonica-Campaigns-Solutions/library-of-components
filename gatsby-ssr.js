@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AuthProvider } from './src/context/AuthContext';
 
 // Example of preload fonts
 export const onRenderBody = ({ setHeadComponents }) => {
@@ -9,3 +10,7 @@ export const onRenderBody = ({ setHeadComponents }) => {
     />,
   ]);
 };
+
+export const wrapRootElement = ({ element }) => (
+  <AuthProvider>{element}</AuthProvider>
+);

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { graphql } from 'gatsby';
+import Layout from '../components/ProtectedLayout';
 import Dashboard from '../layout/dashboard/dashboard';
 import BlocksBuilder from '../components/blocks/blocks-builder';
 import CustomSeoDatoCMS from '../components/custom-seo-dato-cms';
@@ -8,35 +9,44 @@ import TopBar from '../layout/topbar/TopBar';
 import Logs from '../components/blocks/Logs/Logs';
 
 const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
+  
   const { seo, blocks = [] } = homepage;
   const sidebarLinks = getSidebarLinksFromBlocks(blocks);
 
   const [activeItem, setActiveItem] = React.useState(-1);
 
-  return (
-    <>
-      <TopBar 
-          bgColor="#262626" 
-          logo={"Plate"}
-          title="Components Library for Organizational Themes" 
-          buttonLabel="NAZCA | Layout Builder" 
-          page="library"
-          onButtonClick={() => document.location.href = "/builder"} 
-        />
-      <CustomSeoDatoCMS seo={seo} favicon={favicon} />
+  const renderPage = () => {
+    
+    return (
+      <Layout>
+        <TopBar 
+            bgColor="#262626" 
+            logo={"Plate"}
+            title="Components Library for Organizational Themes" 
+            buttonLabel="NAZCA | Layout Builder" 
+            page="library"
+            onButtonClick={() => document.location.href = "/builder"} 
+          />
+        <CustomSeoDatoCMS seo={seo} favicon={favicon} />
 
-      <Dashboard
-        sidebarLinks={sidebarLinks}
-        extraLinks={navbar.nodes}
-        activeItem={activeItem}
-        setActiveItem={setActiveItem}
-      >
-        <div className="px-4">
-          {activeItem === -1 ? <Logs /> : null}
-          <BlocksBuilder blocks={blocks} footer={footer} activeItem={activeItem} />
-        </div>
-      </Dashboard>
-    </>
+        <Dashboard
+          sidebarLinks={sidebarLinks}
+          extraLinks={navbar.nodes}
+          activeItem={activeItem}
+          setActiveItem={setActiveItem}
+        >
+          <div className="px-4">
+            {activeItem === -1 ? <Logs /> : null}
+            <BlocksBuilder blocks={blocks} footer={footer} activeItem={activeItem} />
+          </div>
+        </Dashboard>
+      </Layout>
+    )
+  };
+
+  return (
+    // <ProtectedRoute component={renderPage} />
+    renderPage()
   );
 };
 

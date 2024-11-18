@@ -38,6 +38,10 @@ import spacer16pxImage from '../../images/basic-elements/spacer16px.png';
 import spacer32pxImage from '../../images/basic-elements/spacer32px.png';
 import spacer49pxImage from '../../images/basic-elements/spacer49px.png';
 import textPlusRightFormImage from '../../images/basic-elements/textPlusRightForm.png';
+import h36ColsImage from '../../images/basic-elements/H36.png';
+import h39ColsImage from '../../images/basic-elements/H39.png';
+import h312ColsImage from '../../images/basic-elements/H312Cols.png';
+import tabHorizontalImage from '../../images/basic-elements/TabHorizontal.png';
 
 import breadcrumbsImage from '../../images/headers/Breadcrumbs.png';
 import megamenuImage from '../../images/headers/Megamenu.png';
@@ -63,6 +67,15 @@ import narrativeImageLeftImage from '../../images/layout-components/NarrativeMed
 import narrativeImageRightImage from '../../images/layout-components/NarrativeMediaRight.png';
 import narrativeImageSliderLeftImage from '../../images/layout-components/NarrativeMediaSliderLeft.png';
 import narrativeImageSliderPlusFormImage from '../../images/layout-components/NarrativeMediaSliderPlusForm.png';
+import cardsSliderImage from '../../images/layout-components/CardsSlider.png';
+import image6colsImage from '../../images/layout-components/Image6cols.png';
+import image9ColsImage from '../../images/layout-components/Image9Cols.png';
+import imageFullImage from '../../images/layout-components/ImageFull.png';
+import text2ColsImage from '../../images/layout-components/Text2Cols.png';
+import textParagraph6ColsImage from '../../images/layout-components/TextParagraph6Cols.png';
+import textParagraph9ColsImage from '../../images/layout-components/TextParagraph9Cols.png';
+import textParagraph12ColsImage from '../../images/layout-components/TextParagraph12Cols.png';
+
 
 import sidebar2HorizontalCardsRowImage from '../../images/sidebar-components/Sidebar2HorizontalCardsRow.png';
 import sidebar2VerticalCardsRowImage from '../../images/sidebar-components/Sidebar2VerticalCardsRow.png';
@@ -211,6 +224,14 @@ const renderPlaceholderComponent = (text: string) => {
         return spacer32pxImage;
       case '49px Spacer':
         return spacer49pxImage;
+      case 'Header 6 Columns':
+        return h36ColsImage;
+      case 'Header 9 Columns':
+        return h39ColsImage;
+      case 'Header 12 Columns':
+        return h312ColsImage;
+      case 'Tab Horizontal':
+        return tabHorizontalImage;
 
       case '2 Cards Row':
         return twoCardsRowImage;
@@ -232,7 +253,6 @@ const renderPlaceholderComponent = (text: string) => {
         return narrativeImageSliderLeftImage
       case 'Media Slider + Form':
         return narrativeImageSliderPlusFormImage;
-
       case '2 Vertical Cards Row':
        return sidebar2VerticalCardsRowImage;
       case '3 Vertical Cards Row':
@@ -243,6 +263,23 @@ const renderPlaceholderComponent = (text: string) => {
        return sidebarTextPlusFormImage;
       case 'Sidebar + Text and Media':
        return sidebarTextPlusMediaImage;
+
+      case 'Cards Slider':
+        return cardsSliderImage;
+      case 'Image 6 Columns':
+        return image6colsImage;
+      case 'Image 9 Columns':
+        return image9ColsImage;
+      case 'Image Full':
+        return imageFullImage;
+      case 'Text 2 Columns':
+        return text2ColsImage;
+      case 'Text Paragraph 6 Columns':
+        return textParagraph6ColsImage;
+      case 'Text Paragraph 9 Columns':
+        return textParagraph9ColsImage;
+      case 'Text Paragraph 12 Columns':
+        return textParagraph12ColsImage       
 
       case 'Filter Row':
         return filterRow1xImage;
@@ -349,6 +386,16 @@ function PageBuilder() {
             { id: 6, text: 'Media + Right Form', componentType: 'Media + Right Form' },
           ]
         },
+        { 
+          id: 'Headers', 
+          name: 'Headers', 
+          isOpen: false,
+          components: [
+            { id: 40, text: 'Header 6 Columns', componentType: 'Header 6 Columns' },
+            { id: 41, text: 'Header 9 Columns', componentType: 'Header 9 Columns' },
+            { id: 42, text: 'Header 12 Columns', componentType: 'Header 12 Columns' },
+          ]
+        },
         {
           id: 'text',
           name: 'Spacers',
@@ -364,6 +411,7 @@ function PageBuilder() {
         { id: 10, text: 'Accordion', componentType: 'Accordion' },
         { id: 11, text: 'Pagination', componentType: 'Pagination' },
         { id: 12, text: 'Social Share', componentType: 'Social Share' },
+        { id: 43, text: 'Tab Horizontal', componentType: 'Tab Horizontal' },
       ]
     },
     {
@@ -380,6 +428,17 @@ function PageBuilder() {
             { id: 14, text: '3 Cards Row', componentType: '3 Cards Row' },
             { id: 15, text: '4 Cards Row', componentType: '4 Cards Row' },
             { id: 16, text: '2 Cards Row with Icon', componentType: '2 Cards Row with Icon' },
+            { id: 44, text: 'Cards Slider', componentType: 'Cards Slider' },
+          ]
+        },
+        {
+          id: 'Images',
+          name: 'Images',
+          isOpen: false,
+          components: [
+            { id: 45, text: 'Image 6 Columns', componentType: 'Image 6 Columns' },
+            { id: 46, text: 'Image 9 Columns', componentType: 'Image 9 Columns' },
+            { id: 47, text: 'Image Full', componentType: 'Image Full' },
           ]
         },
         {
@@ -409,6 +468,17 @@ function PageBuilder() {
           components: [
             { id: 23, text: 'Footer', componentType: 'Footer' },
             { id: 24, text: 'Footer + Form', componentType: 'Footer + Form' },
+          ]
+        },
+        {
+          id: 'Text',
+          name: 'Text',
+          isOpen: false,
+          components: [
+            { id: 48, text: 'Text 2 Columns', componentType: 'Text 2 Columns' },
+            { id: 49, text: 'Text Paragraph 6 Columns', componentType: 'Text Paragraph 6 Columns' },
+            { id: 50, text: 'Text Paragraph 9 Columns', componentType: 'Text Paragraph 9 Columns' },
+            { id: 51, text: 'Text Paragraph 12 Columns', componentType: 'Text Paragraph 12 Columns' },
           ]
         }
       ],
@@ -1304,6 +1374,7 @@ const renderProjectContext = () => (
   };
 
   return (
+    
     <div className="page-builder">
       <DndProvider backend={HTML5Backend}>
         <Container fluid={true}>

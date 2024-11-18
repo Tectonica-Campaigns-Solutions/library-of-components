@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { graphql } from 'gatsby';
+// import Layout from '../components/ProtectedLayout';
 import PageBuilder from '../components/builder/page-builder';
 import CustomSeoDatoCMS from '../components/custom-seo-dato-cms';
 import TopBar from '../layout/topbar/TopBar';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const Builder = ({data: { homepage, favicon } }) => {
   const { seo, blocks = [] } = homepage;
+
+  const renderPage = () => {
     return (
       <>
         <TopBar 
@@ -19,7 +23,12 @@ const Builder = ({data: { homepage, favicon } }) => {
         <CustomSeoDatoCMS seo={seo} favicon={favicon} />
         <PageBuilder blocks={blocks} />
       </>
-    );
+    )
+  }
+
+  return (
+    <ProtectedRoute component={renderPage} />
+  );
 
 };
   

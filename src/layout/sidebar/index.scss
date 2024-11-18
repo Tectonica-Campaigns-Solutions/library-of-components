@@ -41,6 +41,8 @@
     padding-left: 0.5rem;
     margin-left: -0.5rem;
 
+    width: 100%;
+
     svg {
       width: 1rem;
       height: 1rem;
@@ -54,6 +56,40 @@
       svg {
         filter: invert(1);
       }
+
+      &:hover {
+        color: #FFF;
+      }
+    }
+
+    .items-counter {
+      margin-left: auto;
+      padding: 0.25rem 0;
+      border-radius: 4px;
+      background-color: rgba(24, 24, 27, 0.9);
+      color: #FFF;
+      font-size: 0.75rem;
+      line-height: 0.75rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      text-align: center;
+
+      svg {
+        margin-right: 0;
+        margin-top: -0.25rem;
+      }
+    }
+
+    &:hover {
+      color: #003293;
+
+      .items-counter {
+        background-color: #003293;
+      }
+    }
+
+    &.nested {
+      font-size: 0.85rem;
     }
   }
 
