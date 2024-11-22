@@ -2,6 +2,7 @@
 
   z-index: 9;
   overflow-y: auto;
+  padding-bottom: 80px;
 
   .logo {
     padding-left: .75rem;
@@ -103,6 +104,10 @@
       margin-top: 1.5rem;
     }
   }
+}
+
+.mega-menu {
+  top: 370px;
 }
 
 @media screen and (max-width: 767px) {

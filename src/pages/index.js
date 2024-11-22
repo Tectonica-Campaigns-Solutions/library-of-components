@@ -7,6 +7,7 @@ import CustomSeoDatoCMS from '../components/custom-seo-dato-cms';
 import { getSidebarLinksFromBlocks } from '../utils/dato.utils';
 import TopBar from '../layout/topbar/TopBar';
 import Logs from '../components/blocks/Logs/Logs';
+import AppFooter from '../layout/Footer';
 
 const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
   
@@ -20,7 +21,7 @@ const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
     return (
       <Layout>
         <TopBar 
-            bgColor="#262626" 
+            bgColor="#003293" 
             logo={"Plate"}
             title="Components Library for Organizational Themes" 
             buttonLabel="NAZCA | Layout Builder" 
@@ -40,6 +41,13 @@ const IndexPage = ({ data: { homepage, navbar, footer, favicon } }) => {
             <BlocksBuilder blocks={blocks} footer={footer} activeItem={activeItem} />
           </div>
         </Dashboard>
+
+        <AppFooter 
+          page='library'
+          buttonLabel='Try Nazca Layout Builder' 
+          onButtonClick={() => document.location.href = "/builder"} 
+        />
+
       </Layout>
     )
   };

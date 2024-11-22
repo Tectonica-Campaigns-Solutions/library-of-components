@@ -35,6 +35,7 @@ import {
 import FormExample from './form-example/FormExample';
 import Header from '../../layout/Header';
 import { StructuredText } from 'react-datocms/structured-text';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Block {
   __typename: string;
@@ -64,6 +65,9 @@ interface BlocksBuilderProps {
 }
 
 export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: BlocksBuilderProps) {
+
+  const [isVisible, setIsVisible] = useState(true);
+
   return (
     <>
       {blocks.map((block, index) => {
@@ -461,7 +465,16 @@ export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: Blocks
             return (
               <div key={block.id} className={`componentInfo hide ${blocks[index+1].__typename}${blocks[index+1].id}`}>
                 <h2>{block.name} {block.composedBy && <span>{block.composedBy}</span>}</h2>
-                {block.description && <p>{block.description}</p>}
+                <button 
+                  onClick={() => setIsVisible(!isVisible)}
+                  className="flex items-center btn-link border-0 btn-toggler"
+                >
+                  {isVisible ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  <span>{isVisible ? 'Hide Description' : 'Show Description'}</span>
+                </button>
+                {isVisible && (
+                <div dangerouslySetInnerHTML={{ __html: block.description }} />
+                )}
               </div>
            );
 

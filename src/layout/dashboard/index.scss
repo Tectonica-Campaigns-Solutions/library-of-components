@@ -1,19 +1,25 @@
 .app-dashboard {
   display: grid;
   grid-template-columns: 2fr 10fr;
-  height: 100vh;
+  // height: 100vh;
   overflow: hidden;
 
   main {
     position: relative;
     overflow-y: auto;
-    padding-top: 3rem;
+    // padding-top: 3rem;
+  }
+
+  .logs-wrapper {
+    margin-top: 25px;
   }
 
   .componentInfo {
-    border-bottom: 1px solid #C6C9CE;
-    padding-bottom: 2rem;
+    border-radius: 10px;
+    background-color: #F8F8F8;
+    padding: 20px 20px 40px 20px;
     margin-bottom: 2rem;
+    margin-top: 25px;
 
     h2 {
       color: #262626;
@@ -33,11 +39,25 @@
     }
 
     p {
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: 400;
       line-height: 135%;
-      max-width: 80%;
       margin-bottom: 0;
+    }
+  }
+
+  .btn-toggler {
+    color: var(--main-color);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 135%;
+    background-color: transparent;
+    text-decoration: none;
+
+    svg {
+      margin-right: 5px;
+      margin-top: -5px;
     }
   }
 }

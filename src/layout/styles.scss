@@ -225,6 +225,54 @@
   background-color: var(--white);
 }
 
+.footer {
+  background-color: #262626;
+  padding: 40px;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-content-top {
+  font-size: 0.9rem;
+  max-width: 684px;
+}
+
+.footer-links {
+  border-top: 1px solid #575757;
+  padding-top: 35px;
+  margin-top: 35px;
+  width: 100%;
+}
+
+.footer-link {
+  color: #ffffff;
+  font-size: 0.8rem;
+  text-decoration: none;
+
+  &:after {
+    content: '|';
+    margin: 0 10px;
+  }
+
+  &:last-child:after {
+    content: '';
+  }
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+.footer-text {
+  color: #ffffff;
+}
+
 @media screen and (max-width: 991px) {
   .navbar {
     min-height: auto;

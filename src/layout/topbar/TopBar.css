@@ -9,13 +9,21 @@
   color: #fff;
 
   .top-bar-button {
-    background-color: #0044C8;
+    background-color: #FF5A00;
+    font-size: 1rem;
+    line-height: 24px;
     border: none;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 
     svg {
       margin-right: 10px;
+    }
+  }
+
+  &.top-bar-builder {
+    .top-bar-button {
+      background-color: #003293;
     }
   }
 }
