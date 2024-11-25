@@ -25,7 +25,7 @@ import { DndProvider, useDrag, useDrop, DragSourceMonitor } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { X, Save, Upload, Download, Cloud, CloudOff, Camera, ImageOff, Folder } from 'lucide-react';
 import { db } from '../../../firebase';
-import { collection, addDoc, updateDoc, deleteDoc, getDocs, doc, query, orderBy, Timestamp, where } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, deleteDoc, getDocs, getDoc, doc, query, orderBy, Timestamp, where } from 'firebase/firestore';
 
 import accordionsImage from '../../images/basic-elements/accordions.png';
 import buttonImage from '../../images/basic-elements/button.png';
@@ -179,7 +179,8 @@ interface Layout {
   notes: LayoutNote[];
   lastModified: Timestamp;
   firestoreId?: string;
-  projectId: string | null; // Make projectId required but nullable
+  projectId: string | null;
+  project?: Project;
   synced?: boolean;
 }
 
@@ -669,14 +670,13 @@ const runMigration = async () => {
   //   loadLayouts(currentProject?.firestoreId);
   // }, [currentProject?.firestoreId]); // Add currentProject.firestoreId as dependency
 
-
   useEffect(() => {
     if (currentProject?.firestoreId) {
       loadLayouts(currentProject.firestoreId);
     } else {
       loadLayouts();
     }
-  }, [currentProject?.firestoreId]);
+  }, [currentProject?.firestoreId]);  
 
 // In page-builder.tsx
 const loadLayouts = async (projectId?: string): Promise<void> => {
@@ -686,13 +686,11 @@ const loadLayouts = async (projectId?: string): Promise<void> => {
     let layoutsQuery;
     
     if (projectId) {
-      console.log('Loading layouts for project:', projectId);
       layoutsQuery = query(
         layoutsCollection,
         where('projectId', '==', projectId)
       );
     } else {
-      console.log('Loading unassigned layouts');
       layoutsQuery = query(
         layoutsCollection,
         where('projectId', '==', null)
@@ -700,15 +698,14 @@ const loadLayouts = async (projectId?: string): Promise<void> => {
     }
 
     const querySnapshot = await getDocs(layoutsQuery);
-    console.log(`Found ${querySnapshot.docs.length} layouts`);
     
     const firestoreLayouts = querySnapshot.docs.map((doc) => {
       const data = doc.data();
-      console.log('Layout:', {
-        id: doc.id,
-        name: data.name,
-        projectId: data.projectId
-      });
+      // console.log('Layout:', {
+      //   id: doc.id,
+      //   name: data.name,
+      //   projectId: data.projectId
+      // });
       return {
         ...data,
         firestoreId: doc.id,
@@ -718,7 +715,6 @@ const loadLayouts = async (projectId?: string): Promise<void> => {
 
     setLayouts(firestoreLayouts);
   } catch (error) {
-    console.error('Error loading layouts:', error);
     setSyncError('Failed to load layouts from cloud');
   } finally {
     setIsLoading(false);
@@ -803,23 +799,46 @@ const loadLayouts = async (projectId?: string): Promise<void> => {
     }
   };
 
-  // Load layout with Firestore sync
+
   const loadLayout = async (layoutId: string) => {
     const layout = layouts.find(l => l.id === layoutId);
     if (layout) {
-      setDroppedComponents(layout.components);
-      setCurrentLayoutId(layout.id);
-      setCurrentLayoutName(layout.name);
-      setNotes(layout.notes || []); // Load notes
-      setIsLoadModalOpen(false);
-
-      if (!layout.synced && layout.firestoreId) {
-        try {
+      try {
+        setIsLoading(true);
+        
+        // First get the project information if there's a projectId
+        if (layout.projectId) {
+          const projectRef = doc(db, 'projects', layout.projectId);
+          const projectDoc = await getDoc(projectRef);
+          
+          if (projectDoc.exists()) {
+            const projectData = projectDoc.data();
+            const project: Project = {
+              ...projectData,
+              firestoreId: projectDoc.id,
+            } as Project;
+            
+            console.log('Setting current project:', project);
+            setCurrentProject(project);
+          }
+        } else {
+          // Clear current project if layout isn't associated with one
+          setCurrentProject(null);
+        }
+  
+        // Then load the layout content
+        setDroppedComponents(layout.components);
+        setCurrentLayoutId(layout.id);
+        setCurrentLayoutName(layout.name);
+        setNotes(layout.notes || []);
+        setIsLoadModalOpen(false);
+  
+        if (!layout.synced && layout.firestoreId) {
           setIsSyncing(true);
           const layoutRef = doc(db, 'layouts', layout.firestoreId);
           await updateDoc(layoutRef, {
             components: layout.components,
-            notes: layout.notes || [], // Include notes in sync
+            notes: layout.notes || [],
             lastModified: Timestamp.fromDate(new Date())
           });
           
@@ -828,12 +847,12 @@ const loadLayouts = async (projectId?: string): Promise<void> => {
               l.id === layoutId ? { ...l, synced: true } : l
             )
           );
-        } catch (error) {
-          console.error('Error syncing layout:', error);
-          setSyncError('Failed to sync with cloud');
-        } finally {
-          setIsSyncing(false);
         }
+      } catch (error) {
+        console.error('Error loading layout:', error);
+        setSyncError('Failed to sync with cloud');
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -1373,6 +1392,34 @@ const renderProjectContext = () => (
     );
   };
 
+  const handleLayoutSelected = async (layout: Layout, project: Project) => {
+    try {
+      setIsLoading(true);
+      console.log('handleLayoutSelected - Project:', project);
+      console.log('handleLayoutSelected - Layout:', layout);
+      
+      // First set the project
+      setCurrentProject(project);
+      
+      // Then load the layout content
+      setDroppedComponents(layout.components);
+      setCurrentLayoutId(layout.id);
+      setCurrentLayoutName(layout.name);
+      setNotes(layout.notes || []);
+      
+      // Update project context if needed
+      if (!currentProject || currentProject.firestoreId !== project.firestoreId) {
+        await loadLayouts(project.firestoreId);
+      }
+      
+    } catch (error) {
+      console.error('Error loading layout:', error);
+      setSaveMessage({ type: 'danger', text: 'Failed to load layout' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     
     <div className="page-builder">
@@ -1643,17 +1690,22 @@ const renderProjectContext = () => (
                 {/* Current Layout Display */}
                 <Row className="mb-3">
                   <Col>
-                    <div className="d-flex align-items-center">
-                        {currentLayoutName && (
-                          <div className="d-flex align-items-center current-layout">
-                            <h2 className="mb-2 mr-2">{currentLayoutName}</h2>
-                          </div>
-                        )}
-                        {currentProject && (
-                          <div className="current-project">
-                            <h4>{currentProject.name}</h4>
-                          </div>
-                        )}
+                    <div className="current-layout-header">
+                      {currentLayoutName && (
+                        <>
+                          {currentProject ? (
+                            <div className="project-name">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M1.875 10.625V10C1.875 9.50272 2.07254 9.02581 2.42417 8.67417C2.77581 8.32254 3.25272 8.125 3.75 8.125H16.25C16.7473 8.125 17.2242 8.32254 17.5758 8.67417C17.9275 9.02581 18.125 9.50272 18.125 10V10.625M10.8833 5.25833L9.11667 3.49167C9.0006 3.37546 8.86278 3.28327 8.71107 3.22035C8.55936 3.15744 8.39674 3.12504 8.2325 3.125H3.75C3.25272 3.125 2.77581 3.32254 2.42417 3.67417C2.07254 4.02581 1.875 4.50272 1.875 5V15C1.875 15.4973 2.07254 15.9742 2.42417 16.3258C2.77581 16.6775 3.25272 16.875 3.75 16.875H16.25C16.7473 16.875 17.2242 16.6775 17.5758 16.3258C17.9275 15.9742 18.125 15.4973 18.125 15V7.5C18.125 7.00272 17.9275 6.52581 17.5758 6.17417C17.2242 5.82254 16.7473 5.625 16.25 5.625H11.7675C11.4361 5.62471 11.1175 5.49282 10.8833 5.25833Z" stroke="#999999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                              {currentProject.name}
+                            </div>
+                          ) : (
+                            <div className="text-muted">No project selected</div>
+                          )}
+                          <h2 className="layout-name">{currentLayoutName}</h2>
+                        </>
+                      )}
                     </div>
                   </Col>
                 </Row>
@@ -1661,123 +1713,120 @@ const renderProjectContext = () => (
                 <Row className="mb-4">
                   <Col>
                     <ButtonGroup>
-                      <ReactstrapButton
-                        color="transparent"
-                        onClick={() => {
-                          setIsProjectModalOpen(true);
-                          // clearProjectSelection()
-                        }}
-                        className="d-flex align-items-center gap-2"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                          <path d="M1.875 10.625V10C1.875 9.50272 2.07254 9.02581 2.42417 8.67417C2.77581 8.32254 3.25272 8.125 3.75 8.125H16.25C16.7473 8.125 17.2242 8.32254 17.5758 8.67417C17.9275 9.02581 18.125 9.50272 18.125 10V10.625M10.8833 5.25833L9.11667 3.49167C9.0006 3.37546 8.86278 3.28327 8.71107 3.22035C8.55936 3.15744 8.39674 3.12504 8.2325 3.125H3.75C3.25272 3.125 2.77581 3.32254 2.42417 3.67417C2.07254 4.02581 1.875 4.50272 1.875 5V15C1.875 15.4973 2.07254 15.9742 2.42417 16.3258C2.77581 16.6775 3.25272 16.875 3.75 16.875H16.25C16.7473 16.875 17.2242 16.6775 17.5758 16.3258C17.9275 15.9742 18.125 15.4973 18.125 15V7.5C18.125 7.00272 17.9275 6.52581 17.5758 6.17417C17.2242 5.82254 16.7473 5.625 16.25 5.625H11.7675C11.4361 5.62471 11.1175 5.49282 10.8833 5.25833Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Projects
-                      </ReactstrapButton>
-                      <ReactstrapButton
-                        color="transparent"
-                        onClick={() => {
-                          newLayout();
-                        }}
-                        className="d-flex align-items-center gap-2"
-                        disabled={isSyncing}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                          <path d="M14.0517 3.73913L15.4575 2.33246C15.7506 2.0394 16.148 1.87476 16.5625 1.87476C16.977 1.87476 17.3744 2.0394 17.6675 2.33246C17.9606 2.62553 18.1252 3.02301 18.1252 3.43746C18.1252 3.85192 17.9606 4.2494 17.6675 4.54246L8.81833 13.3916C8.37777 13.8319 7.83447 14.1556 7.2375 14.3333L5 15L5.66667 12.7625C5.8444 12.1655 6.16803 11.6222 6.60833 11.1816L14.0517 3.73913ZM14.0517 3.73913L16.25 5.93746M15 11.6666V15.625C15 16.1222 14.8025 16.5992 14.4508 16.9508C14.0992 17.3024 13.6223 17.5 13.125 17.5H4.375C3.87772 17.5 3.40081 17.3024 3.04917 16.9508C2.69754 16.5992 2.5 16.1222 2.5 15.625V6.87496C2.5 6.37768 2.69754 5.90077 3.04917 5.54914C3.40081 5.19751 3.87772 4.99996 4.375 4.99996H8.33333" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Create layout
-                        {isSyncing && <Spinner size="sm" className="ms-2" />}
-                      </ReactstrapButton>
-                      <ReactstrapButton
-                        color="transparent"
-                        onClick={() => {
-                          setNewLayoutName(currentLayoutName); // Pre-fill current name if editing
-                          setIsSaveModalOpen(true);
-                        }}
-                        className="d-flex align-items-center gap-2"
-                        disabled={isSyncing}
-                      >
-                        {/* <Save size={16} /> */}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11M11 8L8 11M8 11L5 8M8 11V2" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        {currentLayoutId ? 'Update' : 'Save'} layout
-                        {isSyncing && <Spinner size="sm" className="ms-2" />}
-                      </ReactstrapButton>
-                      <ReactstrapButton
+                      
+                        <ReactstrapButton
+                          color="transparent"
+                          onClick={() => {
+                            setIsProjectModalOpen(true);
+                            // clearProjectSelection()
+                          }}
+                          className="d-flex align-items-center gap-2"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M1.875 10.625V10C1.875 9.50272 2.07254 9.02581 2.42417 8.67417C2.77581 8.32254 3.25272 8.125 3.75 8.125H16.25C16.7473 8.125 17.2242 8.32254 17.5758 8.67417C17.9275 9.02581 18.125 9.50272 18.125 10V10.625M10.8833 5.25833L9.11667 3.49167C9.0006 3.37546 8.86278 3.28327 8.71107 3.22035C8.55936 3.15744 8.39674 3.12504 8.2325 3.125H3.75C3.25272 3.125 2.77581 3.32254 2.42417 3.67417C2.07254 4.02581 1.875 4.50272 1.875 5V15C1.875 15.4973 2.07254 15.9742 2.42417 16.3258C2.77581 16.6775 3.25272 16.875 3.75 16.875H16.25C16.7473 16.875 17.2242 16.6775 17.5758 16.3258C17.9275 15.9742 18.125 15.4973 18.125 15V7.5C18.125 7.00272 17.9275 6.52581 17.5758 6.17417C17.2242 5.82254 16.7473 5.625 16.25 5.625H11.7675C11.4361 5.62471 11.1175 5.49282 10.8833 5.25833Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          Projects
+                        </ReactstrapButton>
+                        <ReactstrapButton
+                          color="transparent"
+                          onClick={() => {
+                            newLayout();
+                          }}
+                          className="d-flex align-items-center gap-2"
+                          disabled={isSyncing}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M14.0517 3.73913L15.4575 2.33246C15.7506 2.0394 16.148 1.87476 16.5625 1.87476C16.977 1.87476 17.3744 2.0394 17.6675 2.33246C17.9606 2.62553 18.1252 3.02301 18.1252 3.43746C18.1252 3.85192 17.9606 4.2494 17.6675 4.54246L8.81833 13.3916C8.37777 13.8319 7.83447 14.1556 7.2375 14.3333L5 15L5.66667 12.7625C5.8444 12.1655 6.16803 11.6222 6.60833 11.1816L14.0517 3.73913ZM14.0517 3.73913L16.25 5.93746M15 11.6666V15.625C15 16.1222 14.8025 16.5992 14.4508 16.9508C14.0992 17.3024 13.6223 17.5 13.125 17.5H4.375C3.87772 17.5 3.40081 17.3024 3.04917 16.9508C2.69754 16.5992 2.5 16.1222 2.5 15.625V6.87496C2.5 6.37768 2.69754 5.90077 3.04917 5.54914C3.40081 5.19751 3.87772 4.99996 4.375 4.99996H8.33333" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          Create
+                          {isSyncing && <Spinner size="sm" className="ms-2" />}
+                        </ReactstrapButton>
+                        <ReactstrapButton
+                          color="transparent"
+                          onClick={() => {
+                            setNewLayoutName(currentLayoutName); // Pre-fill current name if editing
+                            setIsSaveModalOpen(true);
+                          }}
+                          className="d-flex align-items-center gap-2"
+                          disabled={isSyncing}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M10.682 6.23196H14.01L11.8894 4.10996C11.2066 3.42721 10.3562 2.93622 9.42352 2.68636C8.49086 2.4365 7.50885 2.43658 6.57623 2.68658C5.6436 2.93657 4.79322 3.42768 4.11058 4.11054C3.42794 4.79339 2.93709 5.64392 2.68738 6.57663M1.99005 13.096V9.76796M1.99005 9.76796H5.31805M1.99005 9.76796L4.11005 11.89C4.79279 12.5727 5.64324 13.0637 6.57591 13.3136C7.50857 13.5634 8.49057 13.5633 9.4232 13.3133C10.3558 13.0633 11.2062 12.5722 11.8888 11.8894C12.5715 11.2065 13.0623 10.356 13.312 9.42329M14.01 2.90396V6.23063" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          Save
+                          {isSyncing && <Spinner size="sm" className="ms-2" />}
+                        </ReactstrapButton>
+                      
+                      {/* <ReactstrapButton
                         color="transparent"
                         onClick={() => setIsLoadModalOpen(true)}
                         className="d-flex align-items-center gap-2"
                         disabled={isLoading}
                       >
-                        {/* <Upload size={16} /> */}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                           <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                           <path d="M5 5L8 2M8 2L11 5M8 2L8 11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Load layout
                         {isLoading && <Spinner size="sm" className="ms-2" />}
-                      </ReactstrapButton>
-                      <ReactstrapButton
+                      </ReactstrapButton> */}
+                      {/* <ReactstrapButton
                         color="transparent"
                         onClick={loadLayouts}
                         className="d-flex align-items-center gap-2"
                         disabled={isSyncing}
                       >
-                        {/* <Cloud size={16} /> */}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                           <path d="M10.682 6.23196H14.01L11.8894 4.10996C11.2066 3.42721 10.3562 2.93622 9.42352 2.68636C8.49086 2.4365 7.50885 2.43658 6.57623 2.68658C5.6436 2.93657 4.79322 3.42768 4.11058 4.11054C3.42794 4.79339 2.93709 5.64392 2.68738 6.57663M1.99005 13.096V9.76796M1.99005 9.76796H5.31805M1.99005 9.76796L4.11005 11.89C4.79279 12.5727 5.64324 13.0637 6.57591 13.3136C7.50857 13.5634 8.49057 13.5633 9.4232 13.3133C10.3558 13.0633 11.2062 12.5722 11.8888 11.8894C12.5715 11.2065 13.0623 10.356 13.312 9.42329M14.01 2.90396V6.23063" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Sync
                         {isSyncing && <Spinner size="sm" className="ms-2" />}
-                      </ReactstrapButton>
-                      <ReactstrapButton
-                        color="transparent"
-                        onClick={exportToPNG}
-                        className="d-flex align-items-center gap-2"
-                        disabled={isExporting || droppedComponents.length === 0}
-                        title={droppedComponents.length === 0 ? "Add components to export" : "Export as PNG"}
-                      >
-                        {/* <Camera size={16} /> */}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 14" fill="none">
-                          <path d="M4.55133 3.11656C4.43133 3.3065 4.27121 3.46788 4.08222 3.58938C3.89324 3.71088 3.67995 3.78956 3.45733 3.81989C3.204 3.85589 2.95267 3.89456 2.70133 3.93656C1.99933 4.05323 1.5 4.67123 1.5 5.38256V10.9999C1.5 11.3977 1.65804 11.7792 1.93934 12.0606C2.22064 12.3419 2.60218 12.4999 3 12.4999H13C13.3978 12.4999 13.7794 12.3419 14.0607 12.0606C14.342 11.7792 14.5 11.3977 14.5 10.9999V5.38256C14.5 4.67123 14 4.05323 13.2987 3.93656C13.0471 3.89465 12.7951 3.85576 12.5427 3.81989C12.3202 3.78947 12.107 3.71075 11.9181 3.58925C11.7293 3.46775 11.5693 3.30642 11.4493 3.11656L10.9013 2.23923C10.7783 2.03929 10.6088 1.87196 10.4074 1.75138C10.2059 1.63081 9.97836 1.56055 9.744 1.54656C8.58217 1.48415 7.41783 1.48415 6.256 1.54656C6.02164 1.56055 5.7941 1.63081 5.59264 1.75138C5.39118 1.87196 5.22174 2.03929 5.09867 2.23923L4.55133 3.11656Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                          <path d="M11 7.5C11 8.29565 10.6839 9.05871 10.1213 9.62132C9.55871 10.1839 8.79565 10.5 8 10.5C7.20435 10.5 6.44129 10.1839 5.87868 9.62132C5.31607 9.05871 5 8.29565 5 7.5C5 6.70435 5.31607 5.94129 5.87868 5.37868C6.44129 4.81607 7.20435 4.5 8 4.5C8.79565 4.5 9.55871 4.81607 10.1213 5.37868C10.6839 5.94129 11 6.70435 11 7.5ZM12.5 6H12.5053V6.00533H12.5V6Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Export PNG
-                        {isExporting && <Spinner size="sm" className="ms-2" />}
-                      </ReactstrapButton>
-                      <ReactstrapButton 
-                        color="transparent" 
-                        onClick={exportLayout} 
-                        className="d-flex align-items-center gap-2"
-                      >
-                        {/* <Download size={16} /> */}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11M11 8L8 11M8 11L5 8M8 11V2" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Export JSON
-                      </ReactstrapButton>
-                      <ReactstrapButton 
-                        color="transparent" 
-                        className="d-flex align-items-center gap-2">
-                        <label style={{ cursor: 'pointer', marginBottom: 0, gap: '.5rem', display: 'flex' }}>
-                          {/* <Upload size={16} /> */}
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M5 5L8 2M8 2L11 5M8 2L8 11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </ReactstrapButton> */}
+                      
+                        <ReactstrapButton
+                          color="transparent"
+                          onClick={exportToPNG}
+                          className="d-flex align-items-center gap-2"
+                          disabled={isExporting || droppedComponents.length === 0}
+                          title={droppedComponents.length === 0 ? "Add components to export" : "Export as PNG"}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 14" fill="none">
+                            <path d="M4.55133 3.11656C4.43133 3.3065 4.27121 3.46788 4.08222 3.58938C3.89324 3.71088 3.67995 3.78956 3.45733 3.81989C3.204 3.85589 2.95267 3.89456 2.70133 3.93656C1.99933 4.05323 1.5 4.67123 1.5 5.38256V10.9999C1.5 11.3977 1.65804 11.7792 1.93934 12.0606C2.22064 12.3419 2.60218 12.4999 3 12.4999H13C13.3978 12.4999 13.7794 12.3419 14.0607 12.0606C14.342 11.7792 14.5 11.3977 14.5 10.9999V5.38256C14.5 4.67123 14 4.05323 13.2987 3.93656C13.0471 3.89465 12.7951 3.85576 12.5427 3.81989C12.3202 3.78947 12.107 3.71075 11.9181 3.58925C11.7293 3.46775 11.5693 3.30642 11.4493 3.11656L10.9013 2.23923C10.7783 2.03929 10.6088 1.87196 10.4074 1.75138C10.2059 1.63081 9.97836 1.56055 9.744 1.54656C8.58217 1.48415 7.41783 1.48415 6.256 1.54656C6.02164 1.56055 5.7941 1.63081 5.59264 1.75138C5.39118 1.87196 5.22174 2.03929 5.09867 2.23923L4.55133 3.11656Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M11 7.5C11 8.29565 10.6839 9.05871 10.1213 9.62132C9.55871 10.1839 8.79565 10.5 8 10.5C7.20435 10.5 6.44129 10.1839 5.87868 9.62132C5.31607 9.05871 5 8.29565 5 7.5C5 6.70435 5.31607 5.94129 5.87868 5.37868C6.44129 4.81607 7.20435 4.5 8 4.5C8.79565 4.5 9.55871 4.81607 10.1213 5.37868C10.6839 5.94129 11 6.70435 11 7.5ZM12.5 6H12.5053V6.00533H12.5V6Z" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
-                          Import JSON
-                          <Input
-                            type="file"
-                            accept=".json"
-                            style={{ display: 'none' }}
-                            onChange={importLayout}
-                            onClick={(e) => {
-                              (e.target as HTMLInputElement).value = '';
-                            }}
-                          />
-                        </label>
-                      </ReactstrapButton>
+                          Export PNG
+                          {isExporting && <Spinner size="sm" className="ms-2" />}
+                        </ReactstrapButton>
+                        <ReactstrapButton 
+                          color="transparent" 
+                          onClick={exportLayout} 
+                          className="d-flex align-items-center gap-2"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11M11 8L8 11M8 11L5 8M8 11V2" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          Export JSON
+                        </ReactstrapButton>
+                        <ReactstrapButton 
+                          color="transparent" 
+                          className="d-flex align-items-center gap-2">
+                          <label style={{ cursor: 'pointer', marginBottom: 0, gap: '.5rem', display: 'flex' }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path d="M2 11V12.5C2 12.8978 2.15804 13.2794 2.43934 13.5607C2.72064 13.842 3.10218 14 3.5 14H12.5C12.8978 14 13.2794 13.842 13.5607 13.5607C13.842 13.2794 14 12.8978 14 12.5V11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M5 5L8 2M8 2L11 5M8 2L8 11" stroke="#0044C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Import JSON
+                            <Input
+                              type="file"
+                              accept=".json"
+                              style={{ display: 'none' }}
+                              onChange={importLayout}
+                              onClick={(e) => {
+                                (e.target as HTMLInputElement).value = '';
+                              }}
+                            />
+                          </label>
+                        </ReactstrapButton>
                     </ButtonGroup>
                   </Col>
                 </Row>
@@ -1807,7 +1856,7 @@ const renderProjectContext = () => (
                           </>
                         ) : (
                           <>
-                            Add Notes
+                            Notes
                           </>
                         )}
                       </ReactstrapButton>
@@ -1920,7 +1969,12 @@ const renderProjectContext = () => (
             currentProject={currentProject}
             layouts={layouts}
             onLayoutAssigned={handleLayoutAssigned}
+            onLayoutSelected={handleLayoutSelected}
+            loadLayout={loadLayout}
+            deleteLayout={deleteLayout}
+            renderComponentsList={renderComponentsList}
           />
+
         </Container>
       </DndProvider>
     </div>

@@ -512,6 +512,140 @@ body {
   }
 }
 
+.projects-modal {
+
+  h4 {
+    font-family: Lora;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%;
+  }
+
+  .btn-outline-primary {
+    border: none;
+    border-radius: 2px;
+    background-color: #0044C8;
+    color: #fff;
+    font-family: Inter;
+    font-size: 0.85rem;
+
+    &.disabled {
+      background-color: #000000;
+      color: #fff;
+      opacity: 1;
+    }
+  }
+
+  .remove-project {
+    background-color: transparent;
+    border-radius: 5px;
+    border: 2px solid var(--Boilerplate-Primary-P1, #0044C8);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .modal-content {
+    border-radius: 10px;
+    background: #F8F8F8;
+  }
+  
+  .modal-header{
+    border-bottom: none;
+  }
+
+  .btn-primary {
+    background-color: #0044C8;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #0036A6;
+    }
+  }
+
+  .btn-outline-none {
+    color: #0044C8;
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+      border: none;
+    }
+  }
+}
+
+.projects-list {
+  .card {
+    border: none;
+    background-color: #FFF;
+    transition: all 0.2s ease;
+    
+    &.border-primary {
+      background-color: #f8f9ff;
+    }
+  }
+
+  .layouts-section {
+    .layout-item {
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+      
+      &:last-child {
+        border-bottom: none !important;
+      }
+
+      .fw-medium {
+        color: #495057;
+      }
+    }
+  }
+}
+
+.current-layout-header {
+  margin-bottom: 2rem;
+
+  .project-name {
+    color: #999999;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+
+    svg {
+      margin-right: 0.5rem;
+      margin-top: -0.25rem;
+    }
+  }
+  
+  .layout-name {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.modal-title {
+  font-family: Lora;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 37.2px */
+}
+
   @media (max-width: 768px) {
     .page-builder {
       .container {
