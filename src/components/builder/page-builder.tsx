@@ -26,6 +26,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { X, Save, Upload, Download, Cloud, CloudOff, Camera, ImageOff, Folder } from 'lucide-react';
 import { db } from '../../../firebase';
 import { collection, addDoc, updateDoc, deleteDoc, getDocs, getDoc, doc, query, orderBy, Timestamp, where } from 'firebase/firestore';
+import { DroppedComponent, ComponentNote } from '../../types';
 
 import accordionsImage from '../../images/basic-elements/accordions.png';
 import buttonImage from '../../images/basic-elements/button.png';
@@ -75,22 +76,15 @@ import text2ColsImage from '../../images/layout-components/Text2Cols.png';
 import textParagraph6ColsImage from '../../images/layout-components/TextParagraph6Cols.png';
 import textParagraph9ColsImage from '../../images/layout-components/TextParagraph9Cols.png';
 import textParagraph12ColsImage from '../../images/layout-components/TextParagraph12Cols.png';
-
-
 import sidebar2HorizontalCardsRowImage from '../../images/sidebar-components/Sidebar2HorizontalCardsRow.png';
 import sidebar2VerticalCardsRowImage from '../../images/sidebar-components/Sidebar2VerticalCardsRow.png';
 import sidebar3VerticalCardsRowImage from '../../images/sidebar-components/Sidebar3VerticalCardsRow.png';
 import sidebarTextPlusFormImage from '../../images/sidebar-components/SidebarTextPlusForm.png';
 import sidebarTextPlusMediaImage from '../../images/sidebar-components/SidebarTextPlusMedia.png';
 
-
-// import formImage from '../../images/Form1x.png';
-// import headerImage from '../../images/Header1x.png';
-// import spacerImage from '../../images/spacer.png';
-
-
 import './page-builder.scss';
 import ProjectManagement from './ProjectManagement';
+import ComponentNoteModal from './ComponentNoteModal';
 import migrateLayouts from './migrateLayouts';
 
 // Define item types for drag and drop
@@ -101,13 +95,6 @@ const ItemTypes = {
 
 // Interfaces
 interface DraggableCardProps {
-  id: number;
-  text: string;
-  componentType: string;
-}
-
-interface DroppedComponent {
-  uniqueId: string;
   id: number;
   text: string;
   componentType: string;
@@ -583,6 +570,11 @@ function PageBuilder() {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState<boolean>(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
 
+  // Notes for components
+  const [selectedComponent, setSelectedComponent] = useState<DroppedComponent | null>(null);
+  const [isComponentNoteModalOpen, setIsComponentNoteModalOpen] = useState(false);
+  const [isSavingComponentNote, setIsSavingComponentNote] = useState(false);
+
   // Add the function
 const runMigration = async () => {
   try {
@@ -599,13 +591,11 @@ const runMigration = async () => {
   }
 };
 
-  // Add new handlers
   const handleProjectCreated = (project: Project): void => {
     setCurrentProject(project);
     setIsProjectModalOpen(false);
   };
 
-  // Update the project selection handler
   const handleProjectSelected = async (project: Project): Promise<void> => {
     try {
       setIsLoading(true);
@@ -678,7 +668,6 @@ const runMigration = async () => {
     }
   }, [currentProject?.firestoreId]);  
 
-// In page-builder.tsx
 const loadLayouts = async (projectId?: string): Promise<void> => {
   setIsLoading(true);
   try {
@@ -1071,6 +1060,78 @@ const loadLayouts = async (projectId?: string): Promise<void> => {
     }
   };
 
+// Add handlers for component notes
+const handleAddComponentNote = async (componentId: string, noteText: string) => {
+  setIsSavingComponentNote(true);
+  try {
+    const newNote: ComponentNote = {
+      id: generateUniqueId(),
+      text: noteText,
+      timestamp: Date.now()
+    };
+
+    const updatedComponents = droppedComponents.map(comp => {
+      if (comp.uniqueId === componentId) {
+        return {
+          ...comp,
+          notes: [...(comp.notes || []), newNote]
+        };
+      }
+      return comp;
+    });
+
+    setDroppedComponents(updatedComponents);
+
+    // If we have a current layout, update it in Firestore
+    if (currentLayoutId) {
+      const layout = layouts.find(l => l.id === currentLayoutId);
+      if (layout?.firestoreId) {
+        const layoutRef = doc(db, 'layouts', layout.firestoreId);
+        await updateDoc(layoutRef, {
+          components: updatedComponents,
+          lastModified: Timestamp.fromDate(new Date())
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error adding component note:', error);
+    setSaveMessage({ type: 'danger', text: 'Failed to save component note' });
+  } finally {
+    setIsSavingComponentNote(false);
+  }
+};
+
+const handleDeleteComponentNote = async (componentId: string, noteId: string) => {
+  try {
+    const updatedComponents = droppedComponents.map(comp => {
+      if (comp.uniqueId === componentId) {
+        return {
+          ...comp,
+          notes: (comp.notes || []).filter(note => note.id !== noteId)
+        };
+      }
+      return comp;
+    });
+
+    setDroppedComponents(updatedComponents);
+
+    // Update Firestore if needed
+    if (currentLayoutId) {
+      const layout = layouts.find(l => l.id === currentLayoutId);
+      if (layout?.firestoreId) {
+        const layoutRef = doc(db, 'layouts', layout.firestoreId);
+        await updateDoc(layoutRef, {
+          components: updatedComponents,
+          lastModified: Timestamp.fromDate(new Date())
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error deleting component note:', error);
+    setSaveMessage({ type: 'danger', text: 'Failed to delete component note' });
+  }
+};
+
   // Add note handlers
   const addNote = async () => {
     if (!newNote.trim() || !currentLayoutId) return;
@@ -1273,6 +1334,45 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
 
   drag(drop(ref));
 
+  // return (
+  //   <div
+  //     ref={ref}
+  //     style={{
+  //       opacity: isDragging ? 0.5 : 1,
+  //       cursor: 'move',
+  //       position: 'relative',
+  //       transition: 'all 0.2s ease',
+  //     }}
+  //     className="hover:shadow-sm"
+  //   >
+  //     <button
+  //       onClick={() => onDelete(id)}
+  //       style={{
+  //         position: 'absolute',
+  //         top: '0.5rem',
+  //         right: '0.5rem',
+  //         background: 'none',
+  //         border: 'none',
+  //         cursor: 'pointer',
+  //         padding: '4px',
+  //         display: 'flex',
+  //         alignItems: 'center',
+  //         justifyContent: 'center',
+  //         zIndex: 10,
+  //         borderRadius: '50%',
+  //         backgroundColor: '#ffffff',
+  //         boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+  //         transition: 'all 0.2s ease',
+  //       }}
+  //       title="Delete component"
+  //       className="delete-button hover:bg-gray-100"
+  //     >
+  //       <X size={16} color="#666666" />
+  //     </button>
+  //     {children}
+  //   </div>
+  // );
+
   return (
     <div
       ref={ref}
@@ -1282,35 +1382,39 @@ const DroppedComponentWrapper: React.FC<DroppedComponentProps> = ({ id, index, c
         position: 'relative',
         transition: 'all 0.2s ease',
       }}
-      className="hover:shadow-sm"
+      className="hover:shadow-sm component-wrapper"
+      onMouseOver={(e) => e.currentTarget.classList.add('component-hover')}
+      onMouseLeave={(e) => e.currentTarget.classList.remove('component-hover')}
     >
-      <button
-        onClick={() => onDelete(id)}
-        style={{
-          position: 'absolute',
-          top: '0.5rem',
-          right: '0.5rem',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: '4px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 10,
-          borderRadius: '50%',
-          backgroundColor: '#ffffff',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-          transition: 'all 0.2s ease',
-        }}
-        title="Delete component"
-        className="delete-button hover:bg-gray-100"
-      >
-        <X size={16} color="#666666" />
-      </button>
+      <div className="component-actions">
+        <button
+          onClick={() => {
+            const component = droppedComponents.find(c => c.uniqueId === id);
+            if (component) {
+              setSelectedComponent(component);
+              setIsComponentNoteModalOpen(true);
+            }
+          }}
+          title="Add/View Notes"
+          className="component-action-btn"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M1.875 10.6333C1.875 11.9667 2.81083 13.1283 4.13083 13.3225C5.03667 13.4558 5.95167 13.5583 6.875 13.63V17.5L10.2717 14.1033C10.502 13.8745 10.8112 13.7424 11.1358 13.7342C12.7203 13.6903 14.3009 13.5528 15.8692 13.3225C17.1892 13.1283 18.125 11.9675 18.125 10.6325V5.6175C18.125 4.2825 17.1892 3.12167 15.8692 2.9275C13.9258 2.64226 11.9642 2.49938 10 2.5C8.00667 2.5 6.04667 2.64584 4.13083 2.9275C2.81083 3.12167 1.875 4.28334 1.875 5.6175V10.6325V10.6333Z" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button
+          onClick={() => onDelete(id)}
+          title="Delete component"
+          className="component-action-btn"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M12.2833 7.49995L11.995 14.9999M8.005 14.9999L7.71667 7.49995M16.0233 4.82495C16.3083 4.86828 16.5917 4.91411 16.875 4.96328M16.0233 4.82495L15.1333 16.3941C15.097 16.8651 14.8842 17.3051 14.5375 17.626C14.1908 17.9469 13.7358 18.1251 13.2633 18.1249H6.73667C6.26425 18.1251 5.80919 17.9469 5.46248 17.626C5.11578 17.3051 4.90299 16.8651 4.86667 16.3941L3.97667 4.82495M16.0233 4.82495C15.0616 4.67954 14.0948 4.56919 13.125 4.49411M3.97667 4.82495C3.69167 4.86745 3.40833 4.91328 3.125 4.96245M3.97667 4.82495C4.93844 4.67954 5.9052 4.56919 6.875 4.49411M13.125 4.49411V3.73078C13.125 2.74745 12.3667 1.92745 11.3833 1.89661C10.4613 1.86714 9.53865 1.86714 8.61667 1.89661C7.63333 1.92745 6.875 2.74828 6.875 3.73078V4.49411M13.125 4.49411C11.0448 4.33334 8.95523 4.33334 6.875 4.49411" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
       {children}
     </div>
-  );
+  );  
 };  
 
 // Add a way to display current project context in the UI
@@ -1974,6 +2078,17 @@ const renderProjectContext = () => (
             deleteLayout={deleteLayout}
             renderComponentsList={renderComponentsList}
           />
+
+          {selectedComponent && (
+            <ComponentNoteModal
+              isOpen={isComponentNoteModalOpen}
+              toggle={() => setIsComponentNoteModalOpen(false)}
+              component={selectedComponent}
+              onAddNote={handleAddComponentNote}
+              onDeleteNote={handleDeleteComponentNote}
+              isSaving={isSavingComponentNote}
+            />
+          )}
 
         </Container>
       </DndProvider>
