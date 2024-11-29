@@ -2,22 +2,41 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import CustomDatoCMS from '../components/custom-seo-dato-cms';
 import BlocksBuilder from '../components/blocks/blocks-builder';
-import Dashboard from '../layout/dashboard/dashboard';
+import Header from '../layout/Header';
+import ProtectedRoute from '../components/ProtectedRoute';
 
-const Page = ({ pageContext, data: { page, navbar, favicon } }) => {
+const Page = ({ pageContext, data: { page, navbar, footer, favicon } }) => {
   const { seo, blocks = [] } = page;
 
+  const renderPage = () => {
+    return (
+      <>
+        <main style={{ overflow: 'hidden' }}>
+          <CustomDatoCMS seo={seo} favicon={favicon} />
+          <Header />
+          <BlocksBuilder blocks={blocks} footer={footer} allVisible={true} />
+          <style>{styles}</style>
+        </main>
+      </>
+    )
+  }
+
   return (
-    <main>
-      <CustomDatoCMS seo={seo} favicon={favicon} />
-      <Dashboard extraLinks={navbar.nodes}>
-        <div className="px-4">
-          <BlocksBuilder blocks={blocks} />
-        </div>
-      </Dashboard>
-    </main>
-  );
+    <ProtectedRoute component={renderPage} />
+  );  
 };
+
+const styles = `
+  .ui-narrative-block-component {
+    padding: 3rem 0;
+  }
+  .ui-carousel {
+    padding: 3rem 5rem;
+  }
+  .mega-menu {
+    top: 72px;
+  }
+`;
 
 export default Page;
 
@@ -55,8 +74,71 @@ export const PageQuery = graphql`
         ...GatsbyDatoCmsSeoMetaTags
       }
       blocks {
-        ... on DatoCmsNavbar {
+        # ...MainNavigation
+        ...HeroBasic
+        ...HeroHome
+        ...BlockNarrativeBlock
+        ... on DatoCmsFooter {
           __typename
+          internalName
+        }
+        ...BlockSlider
+        ...BlockNarrativeBlockAdvanced
+      }
+    }
+    footer: datoCmsFooterCopy1 {
+      copyright
+      logo {
+        url
+        alt
+        width
+        height
+        gatsbyImageData
+      }
+      socialLinks {
+        ... on DatoCmsSocialLink {
+          id
+          url
+          socialNetwork
+        }
+      }
+      columns {
+        ... on DatoCmsMenuColumn {
+          id
+          label
+          content
+          links {
+            ... on DatoCmsGlobalLink {
+              id
+              title
+              externalUrl
+              path {
+                ... on DatoCmsBasicPage {
+                  id
+                  slug
+                  model {
+                    apiKey
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      legalLinksAndExtras {
+        ... on DatoCmsGlobalLink {
+          id
+          title
+          externalUrl
+          path {
+            ... on DatoCmsHomepage {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+          }
         }
       }
     }

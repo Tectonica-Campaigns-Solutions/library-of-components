@@ -62,15 +62,18 @@ interface BlocksBuilderProps {
   blocks: Block[];
   footer: any; // Replace 'any' with the actual type of 'footer'
   activeItem?: number;
+  allVisible?: boolean;
 }
 
-export default function BlocksBuilder({ blocks, footer, activeItem = 0 }: BlocksBuilderProps) {
+export default function BlocksBuilder({ blocks, footer, activeItem = 0, allVisible = false }: BlocksBuilderProps) {
 
   const [isVisible, setIsVisible] = useState(true);
 
   return (
     <>
       {blocks.map((block, index) => {
+        allVisible ? activeItem = index : activeItem = activeItem; // For rendering all blocks at once in pages that are not the dashboard
+
         switch (block.__typename) {
           case 'DatoCmsNarrativeBlock':
             return (
