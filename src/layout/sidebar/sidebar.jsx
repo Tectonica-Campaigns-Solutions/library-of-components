@@ -20,6 +20,13 @@ const Sidebar = ({ links = [], activeItem, setActiveItem }) => {
   };
 
   const handleItemClick = (link, index) => {
+    // Workaround for premade layouts
+    if (link.type === "DatoCmsLink") {
+      // open link in new tab
+      window.open(link.link, '_blank');
+      return;
+    }
+    
     setActiveItem(index);
     toggleSidebar();
     document.querySelectorAll('.componentInfo').forEach((el) => el.classList.add('hide'));

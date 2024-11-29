@@ -19,6 +19,7 @@ export const getSidebarLinksFromBlocks = (blocks = []) => {
           wrapper: b.__typename === 'DatoCmsSectionTitle',
           icon: itemIcon,
           type: b.__typename,
+          link: b.__typename === 'DatoCmsLink' ? b.pageLink.externalUrl : null
         }
       )
     } else {

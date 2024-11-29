@@ -140,6 +140,20 @@ export const HomepageQuery = graphql`
           description
           composedBy
         }
+        ...on DatoCmsLink {
+          __typename
+          id: originalId
+          internalName
+          pageLink {
+            ... on DatoCmsGlobalLink {
+              id: originalId
+              externalUrl
+              model {
+                apiKey
+              }
+            }
+          }
+        }
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
