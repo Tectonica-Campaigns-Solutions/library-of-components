@@ -7,6 +7,7 @@ exports.createPages = ({ graphql, actions }) => {
   return new Promise((resolve, reject) => {
     const templates = {
       page: path.resolve('./src/templates/page.jsx'),
+      actionCenter: path.resolve('./src/templates/action-center.jsx'),
     };
 
     resolve(
@@ -18,6 +19,7 @@ exports.createPages = ({ graphql, actions }) => {
                 id
                 slug
                 title
+                typeOfPage
               }
             }
           }
@@ -29,10 +31,22 @@ exports.createPages = ({ graphql, actions }) => {
 
         // Create pages
         const pages = result.data.pages.edges;
+        let component = null;
         for (const page of pages) {
+          switch (page.node.typeOfPage) {
+            // Add here for different types of layouts
+            case 'action_center':
+              component = templates.actionCenter;
+              break
+            case 'Content':
+              component = templates.page;
+              break
+            default:
+              component = templates.page;
+          }
           createPage({
             path: page.node.slug,
-            component: templates.page,
+            component: component,
             context: {
               slug: page.node.slug,
               id: page.node.id,
